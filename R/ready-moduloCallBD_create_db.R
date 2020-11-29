@@ -6,25 +6,23 @@
 #' @return  Nothing
 #' @examples path <- '~/Projectos/R_packages/development/recLabel/inst/recordings/'
 #' name <- 'test'
-#' create_db(path, name)
+#' create_db(path, db_name, table_name)
 #' @details A sqlite3 database with the specified name with a predefined table
 #' is created inside the folder
 #' @export
 #' @author Bruno Silva
 #' @import dbplyr
 
-create_db <- function(path, name) {
-  db <- paste0(path, name, '.sqlite3')
+create_db <- function(path, db_name, table_name) {
+  db <- paste0(path, db_name, '.sqlite3')
   if(!file.exists(db)) {
     dplyr::src_sqlite(db, create = TRUE)
     my_db <- dplyr::src_sqlite(db, create = FALSE)
     table <- data.frame(recording = character(),
-                        calls_samples = numeric(),
-                        N = numeric(),
-                        FB = numeric(),
-                        SC = numeric(),
-                        spe = character())
-    dplyr::copy_to(my_db, table, "rec_labels", temporary = FALSE)
+                        label_position = numeric(),
+                        label_class = character(),
+                        observations = character())
+    dplyr::copy_to(my_db, table, table_name, temporary = FALSE)
     DBI::dbDisconnect(my_db$con)
   }
 }
