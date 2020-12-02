@@ -45,14 +45,6 @@ width: 300px;
                   # Define the sidebar panel
                   sidebarPanel(width = 3,
 
-                               # Button 2
-                               shinyFilesButton('db', #leva um shinyFileChoose no server
-                                                'Choose Database',
-                                                'Choose database file', FALSE),
-                               
-                               br(), # introduzir espacamento
-                               br(), # introduzir espacamento
-                               
                                # Button 1
                                shinyDirButton('folder',
                                               'Choose folder',
@@ -70,8 +62,6 @@ width: 300px;
                                  column(4, actionButton('Next', ">>"))),
 
                                hr(), # Introduzir linha divisoria
-                               
-                               
 
                                fluidRow(
                                  column(4,
@@ -174,35 +164,35 @@ width: 300px;
                                                   )),
 
 
-                               fluidRow(
-                                 column(3,
-                                        checkboxInput("Nav", "Navigation calls", value = TRUE)
-                                 ),
-                                 column(3,
-                                        checkboxInput("FB", "Feeding buzzes", value = FALSE)
-                                 ),
-                                 column(3,
-                                        checkboxInput("SC", "Social Calls", value= FALSE)
-
-                                 ),
-                                 column(3,
-                                        textInput("Comm", "Comments", value='')
-                                 )
-                               ),
-
                                # fluidRow(
-                               #   fluidRow(
-                               #     column(2,
-                               #            checkboxInput("Nav", "Navigation calls", value = TRUE),
-                               #            checkboxInput("FB", "Feeding buzzes", value = FALSE),
-                               #            checkboxInput("SC", "Social Calls", value= FALSE)
-                               #     ),
-                               #     column(2,
-                               #            textInput("Comm", "Comments", value='')
-                               #     )
+                               #   column(3,
+                               #          checkboxInput("Nav", "Navigation calls", value = TRUE)
                                #   ),
-                               # 
+                               #   column(3,
+                               #          checkboxInput("FB", "Feeding buzzes", value = FALSE)
+                               #   ),
+                               #   column(3,
+                               #          checkboxInput("SC", "Social Calls", value= FALSE)
+                               #
+                               #   ),
+                               #   column(3,
+                               #          textInput("Comm", "Comments", value='')
+                               #   )
                                # ),
+
+                               fluidRow(
+                                 fluidRow(
+                                   column(2,
+                                          checkboxInput("Nav", "Navigation calls", value = TRUE),
+                                          checkboxInput("FB", "Feeding buzzes", value = FALSE),
+                                          checkboxInput("SC", "Social Calls", value= FALSE)
+                                   ),
+                                   column(2,
+                                          textInput("Comm", "Comments", value='')
+                                   )
+                                 ),
+
+                               ),
 
 
 

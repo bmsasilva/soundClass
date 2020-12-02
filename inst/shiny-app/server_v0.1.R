@@ -16,17 +16,12 @@ counterCalls <<- 0
 
 shinyServer(function(input, output, session) {
 
-
-# Server-side file and folder chooser paths -------------------------------
+  # Server-side button 1 -----------------------------------------
   system <- Sys.info()[['sysname']]
   if (system == "Windows") roots <- c(home = 'C://')
-  if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
-  
-  # Server-side button 1 -----------------------------------------
+  if (system == "Linux") roots <- c(home = getVolumes())
+
   shinyDirChoose(input, 'folder', roots = roots)
-  
-  # Server-side button 2 -----------------------------------------
-  shinyFileChoose(input, 'db', roots = roots)
 
 #Criar as pastas Sem morcegos e analisada
 observeEvent(input$folder, {
