@@ -20,7 +20,7 @@ library(shinythemes)
 shinyUI(
   fluidPage(
     theme = shinytheme("slate"),
-    # theme = "bootstrap.css",
+    #  theme = "bootstrap.css",
 
     tags$head( #mudar a posicao da notification. posso tb usar width e height
       tags$style(
@@ -46,7 +46,7 @@ width: 300px;
                   sidebarPanel(width = 3,
 
                                # Button 2
-                               shinyFilesButton('db', #leva um shinyFileChoose no server
+                               shinyFilesButton('db', 
                                                 'Choose Database',
                                                 'Choose database file', FALSE),
                                
