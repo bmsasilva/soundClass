@@ -22,19 +22,60 @@ shinyServer(function(input, output, session) {
   if (system == "Windows") roots <- c(home = 'C://')
   if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
   
-  # Server-side button 1 -----------------------------------------
+  # Button  1 -----------------------------------------
+   observe({ 
+   shinyFileChoose(input, 'selected_db', roots = roots)
+   if(!is.null(input$selected_db)){
+     file_selected <- parseFilePaths(roots, input$selected_db)
+     db_path <- paste("Database =", as.character(file_selected$datapath))
+     output$db_path <- renderText(as.character(db_path)) #output para mostrar o path da bd escolhida
+   }
+   })
+  
+  db_path <- reactive({ # db_path para usar noutras funcoes
+  file_selected <- parseFilePaths(roots, input$selected_db)
+  db_path <- as.character(file_selected$datapath)
+  db_path
+     })
+
+  # output$db_path <- renderText({ # so para testar se db_path() funciona
+  #   db_path()
+  # })
+  
+  # Server-side button  -----------------------------------------
   shinyDirChoose(input, 'folder', roots = roots)
   
-  # Server-side button 2 -----------------------------------------
-  shinyFileChoose(input, 'db', roots = roots)#
+
 
 #Criar as pastas Sem morcegos e analisada
-observeEvent(input$folder, {
-  #setwd(parseDirPath(volumes, input$folder))
-  print(getwd())
- # dir_create(c("Analisadas", "Sem_morcegos", "temp"), "./")
- #  output_create("output_semiauto.csv", ".")
-})
+# observeEvent(db_path(), {
+#   #setwd(parseDirPath(volumes, input$folder))
+#   print(db_path())
+#  # dir_create(c("Analisadas", "Sem_morcegos", "temp"), "./")
+#  #  output_create("output_semiauto.csv", ".")
+# })
+
+# db_file <- observeEvent(input$selected_db,{ # em windows e difeernte, criar um if la dentro de for windows
+#   db_file <- unlist(input$selected_db)
+#   db_file <- db_file[-c(length(db_file))]
+#   db_file <- c( ".", db_file[-1]) 
+#   db_file <- paste(db_file, collapse = "/")
+#   db_file
+#   })
+
+
+
+
+
+# Nao estou a conseguir obter o nome do ficheiro seleccionado
+#   ob <<- input$selected_db
+# 
+# })
+
+
+
+
+
 
   # # Obter a listagem dos nomes dos ficheiros com monitorizacao continua de alteracoes nos ficheiros
   # fileNames <- reactivePoll(1000, session,

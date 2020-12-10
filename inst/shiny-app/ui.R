@@ -21,61 +21,59 @@ shinyUI(
   fluidPage(
     theme = shinytheme("slate"),
     #  theme = "bootstrap.css",
-
+    
     tags$head( #mudar a posicao da notification. posso tb usar width e height
       tags$style(
-        HTML(".shiny-notification {
-
-width: 300px;
+        HTML(
+          ".shiny-notification {
+             width: 300px;
              position:fixed;
-             top: calc(1%);;
-             left: calc(50%);;
-
-             }
-             "
+             top: calc(1%);
+             left: calc(50%);
+             }"
         )
       )
     ),
-
+    
     # Application title
     titlePanel("Labeler"),
-
-    sidebarLayout(fluid= FALSE,
-
+    
+    sidebarLayout(fluid = FALSE,
+                  
                   # Define the sidebar panel
                   sidebarPanel(width = 3,
 
-                               # Button 2
-                               shinyFilesButton('db', 
-                                                'Choose Database',
-                                                'Choose database file', FALSE),
-                               
-                               br(), # introduzir espacamento
-                               br(), # introduzir espacamento
-                               
                                # Button 1
+                               # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
+                               shinyFilesButton('selected_db', 
+                                                'Choose database',
+                                                'Choose database file', FALSE, style='width:175px'),
+                               br(), # introduzir espacamento
+                               br(), # introduzir espacamento
+ 
+                               # Button 2
                                shinyDirButton('folder',
                                               'Choose folder',
-                                              'Choose recordings folder', FALSE),
-
+                                              'Choose recordings folder', FALSE, style='width:175px'),
+                               
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
-
+                               
                                fluidRow(
                                  column(7,
-
+                                        
                                         # Variavel filenames e obtida com shinyFiles
                                         selectInput(inputId = "files", label = NULL, choices = NULL)),
-
+                                 
                                  column(4, actionButton('Next', ">>"))),
-
+                               
                                hr(), # Introduzir linha divisoria
                                
                                
-
+                               
                                fluidRow(
                                  column(4,
-
+                                        
                                         selectInput("dynamicRange",
                                                     "Thresh",
                                                     choices = c('4' = '40',
@@ -89,9 +87,9 @@ width: 300px;
                                                                 '12' = '120'),
                                                     '70')
                                  ),
-
+                                 
                                  column(4,
-
+                                        
                                         selectInput("windowLength",
                                                     "Window",
                                                     choices = c('1' = '1',
@@ -104,7 +102,7 @@ width: 300px;
                                ),
                                fluidRow(
                                  column(4,
-
+                                        
                                         selectInput("timeStep",
                                                     "Overlap",
                                                     choices = c('1' = '5',
@@ -113,11 +111,11 @@ width: 300px;
                                                                 '4' = '2',
                                                                 '5' = '1'),
                                                     '2')
-
-
+                                        
+                                        
                                  ),
                                  column(4,
-
+                                        
                                         selectInput("freqResolution", "Definicao",
                                                     choices = c('1' = '5',
                                                                 '2' = '4',
@@ -126,43 +124,43 @@ width: 300px;
                                                                 '5' = '1'),
                                                     '3')
                                  )
-
+                                 
                                ),
-
+                               
                                fluidRow(
                                  column(4,
-
+                                        
                                         textInput("low",
                                                   "Low filter (kHz)",
                                                   value = '10')
-
-
-
+                                        
+                                        
+                                        
                                  ),
                                  column(4,
-
+                                        
                                         textInput("high",
                                                   "High filter (kHz)",
                                                   value = '120')
                                  )
-
+                                 
                                ),
-
-
+                               
+                               
                                br(),
                                br(),
-
-
+                               
+                               
                                actionButton("analisar", "Insert peaks in database", width="90%"),
-
-
-
-
+                               
+                               
+                               
+                               
                                hr()
                   ),
-
+                  
                   # Create a spot for the barplot
-
+                  
                   mainPanel(
                     tabsetPanel(
                       tabPanel("Plot", plotOutput("spec",
@@ -172,24 +170,21 @@ width: 300px;
                                                     id = "plot1_brush",
                                                     resetOnNew = TRUE
                                                   )),
-
-
+                               
+                               
                                fluidRow(
-                                 column(3,
-                                        checkboxInput("Nav", "Navigation calls", value = TRUE)
+                                            column(6,
+                                        textInput("Lb", "Label", value='')
+                                        
                                  ),
-                                 column(3,
-                                        checkboxInput("FB", "Feeding buzzes", value = FALSE)
-                                 ),
-                                 column(3,
-                                        checkboxInput("SC", "Social Calls", value= FALSE)
-
-                                 ),
-                                 column(3,
-                                        textInput("Comm", "Comments", value='')
+                                 column(6,
+                                        textInput("Obs", "Observations", value='')
                                  )
                                ),
-
+                               
+                               fluidRow(textOutput("db_path")
+                               ),
+                               
                                # fluidRow(
                                #   fluidRow(
                                #     column(2,
@@ -203,26 +198,26 @@ width: 300px;
                                #   ),
                                # 
                                # ),
-
-
-
+                               
+                               
+                               
                                fluidRow(
                                  verbatimTextOutput("clickInfo") # So para ter no server uma funcao reactive que me grave os pulsos em ficheiro
                                )
                       ),
-
-
+                      
+                      
                       tabPanel("Database",  rHandsontableOutput("hot"),
                                actionButton("save", "Save"))
-
-
+                      
+                      
                     )# final tabSetPanel
-
+                    
                   )#Final main panel
-
+                  
     )# final side bar layout
-
-
+    
+    
   )# final fluid pane
 )# final shiny ui
 
