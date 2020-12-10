@@ -19,7 +19,7 @@ library(shinythemes)
 # Define UI for application that draws a plot
 shinyUI(
   fluidPage(
-    theme = shinytheme("slate"),
+    # theme = shinytheme("slate"),
     #  theme = "bootstrap.css",
     
     tags$head( #mudar a posicao da notification. posso tb usar width e height
@@ -182,7 +182,9 @@ shinyUI(
                                  )
                                ),
                                
-                               fluidRow(textOutput("db_path")
+                               fluidRow(column(6,
+                                               textOutput("db_path")
+                               )
                                ),
                                
                                # fluidRow(
