@@ -17,7 +17,7 @@ counterCalls <<- 0
 shinyServer(function(input, output, session) {
 
 
-# Server-side file and folder chooser paths -------------------------------
+# File and folder chooser paths -------------------------------
   system <- Sys.info()[['sysname']]
   if (system == "Windows") roots <- c(home = 'C://')
   if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
@@ -27,7 +27,7 @@ shinyServer(function(input, output, session) {
    shinyFileChoose(input, 'selected_db', roots = roots)
    if(!is.null(input$selected_db)){
      file_selected <- parseFilePaths(roots, input$selected_db)
-     db_path <- paste("Database =", as.character(file_selected$datapath))
+     db_path <- paste("Database file =", as.character(file_selected$datapath))
      output$db_path <- renderText(as.character(db_path)) #output para mostrar o path da bd escolhida
    }
    })
@@ -42,11 +42,52 @@ shinyServer(function(input, output, session) {
   #   db_path()
   # })
   
-  # Server-side button  -----------------------------------------
-  shinyDirChoose(input, 'folder', roots = roots)
+  # Button  2 -----------------------------------------
+  observe({
+    shinyDirChoose(input, 'folder', roots = roots)
+    if(!is.null(input$folder)){
+      folder_selected <- parseDirPath(roots, input$folder)
+      folder_path <- paste("Recordings folder =", as.character(folder_selected))
+      output$folder_path <- renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
+    }
+  })
+  
+  observeEvent(input$folder, {
+    if(length(parseDirPath(roots, input$folder))>0){ 
+      setwd(parseDirPath(roots, input$folder))
+    }
+  })
+  
+  file_names <- reactivePoll(1000, session,
+                             checkFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")},
+                             valueFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")}
+  )
+  
+  observeEvent(file_names(), {
+    if(length(parseDirPath(roots, input$folder)) > 0){ 
+      updateSelectInput(session, "files", choices = file_names())
+    }
+  })
   
 
 
+  
+  
+  
+
+  
+  
+  # # Obtain file names from folder
+  #  fileNames <- reactivePoll(1000, session,
+  #    checkFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")},
+  #    valueFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")}
+  #      )
+  #Update filenames in UI
+  # observeEvent(folder_path(), {
+  #   # Update do menu "files" na UI
+  #   updateSelectInput(session,"files", choices = folder_path())
+  # })
+####################################################################################333
 #Criar as pastas Sem morcegos e analisada
 # observeEvent(db_path(), {
 #   #setwd(parseDirPath(volumes, input$folder))
@@ -55,33 +96,8 @@ shinyServer(function(input, output, session) {
 #  #  output_create("output_semiauto.csv", ".")
 # })
 
-# db_file <- observeEvent(input$selected_db,{ # em windows e difeernte, criar um if la dentro de for windows
-#   db_file <- unlist(input$selected_db)
-#   db_file <- db_file[-c(length(db_file))]
-#   db_file <- c( ".", db_file[-1]) 
-#   db_file <- paste(db_file, collapse = "/")
-#   db_file
-#   })
 
 
-
-
-
-# Nao estou a conseguir obter o nome do ficheiro seleccionado
-#   ob <<- input$selected_db
-# 
-# })
-
-
-
-
-
-
-  # # Obter a listagem dos nomes dos ficheiros com monitorizacao continua de alteracoes nos ficheiros
-  # fileNames <- reactivePoll(1000, session,
-  #   checkFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")},
-  #   valueFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")}
-  #     )
   #
   # pngPlots <- reactivePoll(1000, session,
   #                           checkFunc = function() {list.files("./temp")},
