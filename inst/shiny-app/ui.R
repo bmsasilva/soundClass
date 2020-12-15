@@ -9,14 +9,6 @@ require(neuralnet)
 library(rhandsontable)
 library(shinythemes)
 
-# # Obter o caminho da pasta com as gravacoes
-# dirname <- tclvalue(tkchooseDirectory())
-#
-# # Obter a listagem dos nomes dos ficheiros
-# fileNames <- list.files(dirname, recursive = FALSE, pattern=c("wav", "WAV"))
-
-
-# Define UI for application that draws a plot
 shinyUI(
   fluidPage(
     # theme = shinytheme("slate"),
@@ -42,7 +34,7 @@ shinyUI(
                   
                   # Define the sidebar panel
                   sidebarPanel(width = 2,
-
+                               
                                # Button 1
                                # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
                                shinyFilesButton('selected_db', 
@@ -50,7 +42,7 @@ shinyUI(
                                                 'Choose database file', FALSE, style='width:100%'),
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
- 
+                               
                                # Button 2
                                shinyDirButton('folder',
                                               'Choose folder',
@@ -58,14 +50,13 @@ shinyUI(
                                
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
+                               hr(), # Introduzir linha divisoria
                                
-                               fluidRow(
-                                 column(7,
-                                        
-                                        # Variavel filenames e obtida com shinyFiles
-                                        selectInput(inputId = "files", label = NULL, choices = NULL)),
-                                 
-                                 column(4, actionButton('Next', ">>"))),
+                               # Box
+                               selectInput(inputId = "files", label = NULL, choices = NULL, width="100%"),#, ),
+                               
+                               # Button 3
+                               actionButton('Next', "Next recording", width="100%"),
                                
                                hr(), # Introduzir linha divisoria
                                h5("Butterworth filter (kHz)", align = "center"),
@@ -152,7 +143,7 @@ shinyUI(
                                hr(),
                                
                                
-                               actionButton("analisar", "Labels", width="100%")
+                               actionButton("analisar", "Set labels", width="100%")
                                
                                
                                
@@ -174,7 +165,7 @@ shinyUI(
                                
                                
                                fluidRow(
-                                            column(6,
+                                 column(6,
                                         textInput("Lb", "Label", value='')
                                         
                                  ),
