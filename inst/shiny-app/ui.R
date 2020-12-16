@@ -62,61 +62,7 @@ shinyUI(
                                h5("Butterworth filter (kHz)", align = "center"),
                                
                                
-                               # fluidRow(
-                               #   column(4,
-                               #          
-                               #          selectInput("dynamicRange",
-                               #                      "Thresh",
-                               #                      choices = c('4' = '40',
-                               #                                  '5' = '50',
-                               #                                  '6' = '60',
-                               #                                  '7' = '70',
-                               #                                  '8' = '80',
-                               #                                  '9' = '90',
-                               #                                  '10' = '100',
-                               #                                  '11' = '110',
-                               #                                  '12' = '120'),
-                               #                      '70')
-                               #   ),
-                               #   
-                               #   column(4,
-                               #          
-                               #          selectInput("windowLength",
-                               #                      "Window",
-                               #                      choices = c('1' = '1',
-                               #                                  '2' = '2',
-                               #                                  '3' = '3',
-                               #                                  '4' = '4',
-                               #                                  '5' = '5'),
-                               #                      '5')
-                               #   )
-                               # ),
-                               # fluidRow(
-                               #   column(4,
-                               #          
-                               #          selectInput("timeStep",
-                               #                      "Overlap",
-                               #                      choices = c('1' = '5',
-                               #                                  '2' = '4',
-                               #                                  '3' = '3',
-                               #                                  '4' = '2',
-                               #                                  '5' = '1'),
-                               #                      '2')
-                               #          
-                               #          
-                               #   ),
-                               #   column(4,
-                               #          
-                               #          selectInput("freqResolution", "Definicao",
-                               #                      choices = c('1' = '5',
-                               #                                  '2' = '4',
-                               #                                  '3' = '3',
-                               #                                  '4' = '2',
-                               #                                  '5' = '1'),
-                               #                      '3')
-                               #   )
-                               #   
-                               # ),
+
                                
                                fluidRow(
                                  column(6, align = "center",
@@ -154,8 +100,10 @@ shinyUI(
                   # Create a spot for the barplot
                   
                   mainPanel(
-                    tabsetPanel(
-                      tabPanel("Plot", plotOutput("spec",
+                    tabsetPanel(id = "inTabset",
+                      tabPanel("Plot", 
+                               value = "panel_plot",
+                               plotOutput("spec",
                                                   click="specClick",
                                                   dblclick = "plot1_dblclick", #esta linha e as finais controlam o zoom
                                                   brush = brushOpts(
@@ -183,19 +131,7 @@ shinyUI(
                                )
                                ),
                                
-                               # fluidRow(
-                               #   fluidRow(
-                               #     column(2,
-                               #            checkboxInput("Nav", "Navigation calls", value = TRUE),
-                               #            checkboxInput("FB", "Feeding buzzes", value = FALSE),
-                               #            checkboxInput("SC", "Social Calls", value= FALSE)
-                               #     ),
-                               #     column(2,
-                               #            textInput("Comm", "Comments", value='')
-                               #     )
-                               #   ),
-                               # 
-                               # ),
+
                                
                                
                                
@@ -205,8 +141,64 @@ shinyUI(
                       ),
                       
                       
-                      tabPanel("Options",  rHandsontableOutput("hot"),
-                               actionButton("save", "Save"))
+                      tabPanel(title = "Options", 
+                               value = "panel_options", 
+                               fluidRow(
+                                 column(4,
+
+                                        selectInput("dynamicRange",
+                                                    "Thresh",
+                                                    choices = c('4' = '40',
+                                                                '5' = '50',
+                                                                '6' = '60',
+                                                                '7' = '70',
+                                                                '8' = '80',
+                                                                '9' = '90',
+                                                                '10' = '100',
+                                                                '11' = '110',
+                                                                '12' = '120'),
+                                                    '70')
+                                 ),
+
+                                 column(4,
+
+                                        selectInput("windowLength",
+                                                    "Window",
+                                                    choices = c('1' = '1',
+                                                                '2' = '2',
+                                                                '3' = '3',
+                                                                '4' = '4',
+                                                                '5' = '5'),
+                                                    '5')
+                                 )
+                               ),
+                               fluidRow(
+                                 column(4,
+
+                                        selectInput("timeStep",
+                                                    "Overlap",
+                                                    choices = c('1' = '5',
+                                                                '2' = '4',
+                                                                '3' = '3',
+                                                                '4' = '2',
+                                                                '5' = '1'),
+                                                    '2')
+
+
+                                 ),
+                                 column(4,
+
+                                        selectInput("freqResolution", "Definicao",
+                                                    choices = c('1' = '5',
+                                                                '2' = '4',
+                                                                '3' = '3',
+                                                                '4' = '2',
+                                                                '5' = '1'),
+                                                    '3')
+                                 )
+
+                               ),
+                               actionButton("save", "Update spectrogram"))
                       
                       
                     )# final tabSetPanel

@@ -43,7 +43,7 @@ import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
   fs <- dados@samp.rate
   if(tx == "auto" & fs < 50000){
     tx <- 10
-  } else if(tx == "auto" & fs > 50000){
+  } else if(tx == "auto" & fs >= 50000){
     tx <- 1
   } else {
     tx <- tx
@@ -75,5 +75,5 @@ import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
     som <- as.integer(signal::filter(bt_high, som))
   }
   structure(list(sound_samples = som, file_name = file_name, file_time = file_time,
-                 fs = fs, tx = tx), class='bat_recording')
+                 fs = fs, tx = tx), class='recording')
 }

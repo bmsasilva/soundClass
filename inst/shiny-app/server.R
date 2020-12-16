@@ -58,9 +58,20 @@ shinyServer(function(input, output, session) {
     }
   })
   
+   
+  observeEvent(input$timeStep, {
+    
+      print(input$timeStep)
+    
+  })
   
-  
-  
+  observeEvent(input$save, {
+    updateTabsetPanel(session, "inTabset",
+                      selected = "panel_plot")
+
+  })
+
+ 
   
   
   

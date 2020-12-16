@@ -1,16 +1,23 @@
-ui <- shinyUI(bootstrapPage(
-  shinyFilesButton('files', 'File select', 'Please select a file', FALSE),
-  verbatimTextOutput('rawInputValue'),
-  verbatimTextOutput('filepaths')
+ui <- fluidPage(sidebarLayout(
+  sidebarPanel(
+    sliderInput("controller", "Controller", 1, 3, 1)
+  ),
+  mainPanel(
+    tabsetPanel(id = "inTabset",
+                tabPanel(title = "Panel 1", value = "panel1", "Panel 1 content"),
+                tabPanel(title = "Panel 2", value = "panel2", "Panel 2 content"),
+                tabPanel(title = "Panel 3", value = "panel3", "Panel 3 content")
+    )
+  )
 ))
-server <- shinyServer(function(input, output) {
-  roots = c(wd='.')
-  shinyFileChoose(input, 'files', roots=roots, filetypes=c('', 'txt'))
-  output$rawInputValue <- renderPrint({str(input$files)})
-  output$filepaths <- renderPrint({parseFilePaths(roots, input$files)})
-})
 
-runApp(list(
-  ui=ui,
-  server=server
-))
+server <- function(input, output, session) {
+  observeEvent(input$controller, {
+    updateTabsetPanel(session, "inTabset",
+                      selected = paste0("panel", input$controller)
+    )
+  })
+}
+
+shinyApp(ui, server)
+
