@@ -198,7 +198,7 @@ shinyUI(
                                  )
 
                                ),
-                               actionButton("save", "Update spectrogram"))
+                               actionButton("save", "Save and update spectrogram"))
                       
                       
                     )# final tabSetPanel

@@ -3,6 +3,7 @@ counterCalls <<- 0
 
 shinyServer(function(input, output, session) {
   
+  ## 1) A FAZER: Passar os valores do filtro butterworth para o panel options
   
   # File and folder chooser paths -------------------------------
   system <- Sys.info()[['sysname']]
