@@ -1,10 +1,13 @@
 read.csv_bs <- function(x) read.csv(x, stringsAsFactors = F)
 counterCalls <<- 0
 
+##### Load all #####
+files <- list.files("/home/bruno/Projectos/phd/0.workfolder/meus_papers/ms02_package_cnn/soundClass/R/", pattern = ".R", full.names = TRUE)
+for(file in files) source(file)
+
 shinyServer(function(input, output, session) {
   
-  ## 1) A FAZER: Passar os valores do filtro butterworth para o panel options
-  
+
   # File and folder chooser paths -------------------------------
   system <- Sys.info()[['sysname']]
   if (system == "Windows") roots <- c(home = 'C://')
@@ -60,12 +63,8 @@ shinyServer(function(input, output, session) {
   })
   
    
-  observeEvent(input$timeStep, {
-    
-      print(input$timeStep)
-    
-  })
-  
+
+  # Button "save" -------------------------------------
   observeEvent(input$save, {
     updateTabsetPanel(session, "inTabset",
                       selected = "panel_plot")
@@ -145,8 +144,6 @@ Spectrogram visualization:
                           low = input$low,
                           high = input$high)
     
-    
-    
     sound
   })
   
@@ -214,7 +211,29 @@ Spectrogram visualization:
   # Plotar o espectrograma
   output$spec <- renderPlot({
     
-    powSpec(as.numeric(sound), xlim = ranges$x, ylim = ranges$y)
+ 
+     Spectrogram(as.numeric(sound()$sound_samples),                   
+                  SamplingFrequency=NULL,  
+                  WindowLength = 5,        
+                  FrequencyResolution = input$freqResolution, 
+                  TimeStepSize = input$timeStep,     
+                  nTimeSteps = NULL,       
+                  Preemphasis = TRUE,      
+                  DynamicRange = input$dynamicRange,       
+                  Omit0Frequency = FALSE,  
+                  WindowType = "hanning",   
+                  WindowParameter = NULL,  
+                  plot = TRUE,             
+                  PlotFast = TRUE,         
+                  add = FALSE,             
+                  col = NULL,              
+                  xlim = ranges$x,             
+                  ylim = ranges$y,             
+                  main = "",               
+                  xlab = "Time (ms)",      
+                  ylab = "Frequency (kHz)")
+    
+    
   })
   
   # # Cria a tabela reactive
