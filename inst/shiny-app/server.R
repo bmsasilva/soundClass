@@ -2,7 +2,7 @@ read.csv_bs <- function(x) read.csv(x, stringsAsFactors = F)
 counterCalls <<- 0
 
 ##### Load all #####
-files <- list.files("/home/bruno/Projectos/phd/0.workfolder/meus_papers/ms02_package_cnn/soundClass/R/", pattern = ".R", full.names = TRUE)
+files <- list.files("C://Users//silva//Projects//R_packages//soundClass//R", pattern = ".R", full.names = TRUE)
 for(file in files) source(file)
 
 shinyServer(function(input, output, session) {
@@ -138,26 +138,25 @@ Spectrogram visualization:
     WINDOW - window size in ms, smaller windows best suited for short calls
     OVERLAP - overlap between consecutive windows, higher values give best visualization but lower performance")
     )
-    
-    
+
     sound <- import_audio(path = input$files, butt = TRUE,
-                          low = input$low,
-                          high = input$high)
-    
+                          low = as.numeric(input$low),
+                          high = as.numeric(input$high))
+
     sound
   })
   
-  
+
   # Preparar opcoes para o spectrogram --------------------------------------
   
   
-  opts <- reactive({
-    opts <- list(windowLength = as.numeric(input$windowLength),
-                 freqResolution = as.numeric(input$freqResolution),
-                 timeStep = as.numeric(input$timeStep),
-                 dynamicRange = as.numeric(input$dynamicRange))
-    opts
-  })
+  # opts <- reactive({
+  #   opts <- list(windowLength = as.numeric(input$windowLength),
+  #                freqResolution = as.numeric(input$freqResolution),
+  #                timeStep = as.numeric(input$timeStep),
+  #                dynamicRange = as.numeric(input$dynamicRange))
+  #   opts
+  # })
   
   # Controles do zoom ------------------------------------------------------------
   
@@ -213,13 +212,13 @@ Spectrogram visualization:
     
  
      Spectrogram(as.numeric(sound()$sound_samples),                   
-                  SamplingFrequency=NULL,  
+                  SamplingFrequency=sound()$fs,  
                   WindowLength = 5,        
-                  FrequencyResolution = input$freqResolution, 
-                  TimeStepSize = input$timeStep,     
+                  FrequencyResolution = as.numeric(input$freqResolution), 
+                  TimeStepSize = as.numeric(input$timeStep),     
                   nTimeSteps = NULL,       
                   Preemphasis = TRUE,      
-                  DynamicRange = input$dynamicRange,       
+                  DynamicRange = as.numeric(input$dynamicRange),       
                   Omit0Frequency = FALSE,  
                   WindowType = "hanning",   
                   WindowParameter = NULL,  
@@ -227,8 +226,8 @@ Spectrogram visualization:
                   PlotFast = TRUE,         
                   add = FALSE,             
                   col = NULL,              
-                  xlim = ranges$x,             
-                  ylim = ranges$y,             
+                  xlim = NULL,             
+                  ylim = NULL,             
                   main = "",               
                   xlab = "Time (ms)",      
                   ylab = "Frequency (kHz)")
