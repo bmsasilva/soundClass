@@ -4,14 +4,12 @@
 #' @param path Path to the folder where the database will be created
 #' @param name Name of the database to be created
 #' @return  Nothing
-#' @examples path <- '~/Projectos/R_packages/development/recLabel/inst/recordings/'
-#' name <- 'test'
-#' create_db(path, db_name, table_name)
+#' @examples create_db(".", db_name = "test", table_name = "rec_labels")
 #' @details A sqlite3 database with the specified name with a predefined table
 #' is created inside the folder
 #' @export
 #' @author Bruno Silva
-#' @import dbplyr
+#' @import dbplyr dplyr
 
 create_db <- function(path, db_name, table_name) {
   db <- paste0(path, db_name, '.sqlite3')
