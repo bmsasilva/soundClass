@@ -12,13 +12,10 @@
 #' @author Bruno Silva
 #' @export
 ms2samples <- function(value, fs = 300000, tx = 1, inv = F){
-
   if(inv){
-
-    ms <- floor( value / (fs * tx) * 1000)
+    ms <- floor(value / (fs * tx) * 1000)
     return(ms)
   } else {
-
   samples <- floor(fs * tx * value / 1000)
   return(samples)
   }
