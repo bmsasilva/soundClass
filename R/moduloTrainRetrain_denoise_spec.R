@@ -1,3 +1,13 @@
+#' @title Denoise a spectrogram
+#' @description Applies noise removal to a spectrogram matrix, by subtracting
+#' the mean of the time or/and frequency bin to all pixels of that bin.
+#' @param spec Spectrogram matrix 
+#' @param frequency_bin Logical. If TRUE applies denoising by frequency bin
+#' @param time_bin Logical. If TRUE applies denoising by timebin
+#' @usage denoise_spec(spec, frequency_bin = T, time_bin = F)
+#' @return A denoised matrix spectrogram 
+#' @export
+#' @author Bruno Silva
 
 denoise_spec <- function(spec, frequency_bin = T, time_bin = F){
 
