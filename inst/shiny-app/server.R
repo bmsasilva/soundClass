@@ -124,11 +124,12 @@ shinyServer(function(input, output, session) {
     validate(
       need(input$files != "",
            "Analysis steps:
-1)Select folder with recordings
-2) Select bat calls by clicking in the spectrogram before and after the call
-3) Press CLASSIFY button to perform bat species classification and store the result is .csv format
-4) Repeat step 2 and 3 if more than one bat is in the recording
-5) Press NEXT button to advance to next recording
+1) Select folder with recordings
+2) Select database to store recording labels
+3) Select calls by clicking in the spectrogram before and after the call
+4) Press 'Set labels' button to add labels to database
+5) Repeat step 3 and 4 if more than one indivudual is in the recording
+6) Press 'Next' button to advance to next recording
 
 Spectrogram visualization:
 - Zoom spectrogram by click and drag to select area and then double click on it
@@ -145,19 +146,6 @@ Spectrogram visualization:
 
     sound
   })
-  
-
-  # Preparar opcoes para o spectrogram --------------------------------------
-  
-  
-  # opts <- reactive({
-  #   opts <- list(windowLength = as.numeric(input$windowLength),
-  #                freqResolution = as.numeric(input$freqResolution),
-  #                timeStep = as.numeric(input$timeStep),
-  #                dynamicRange = as.numeric(input$dynamicRange))
-  #   opts
-  # })
-  
   # Controles do zoom ------------------------------------------------------------
   
   # Variavel para controlar o zoom
@@ -202,7 +190,7 @@ Spectrogram visualization:
                 row.names= FALSE)
     
     # Mostrar o valor de x do click na caixa de texto reactiva
-    print(posicao())
+    print(round(posicao(), 0))
   })
   
   # Plotar espectrograma ----------------------------------------------------------
@@ -213,7 +201,7 @@ Spectrogram visualization:
  
      Spectrogram(as.numeric(sound()$sound_samples),                   
                   SamplingFrequency=sound()$fs,  
-                  WindowLength = 5,        
+                  WindowLength = as.numeric(input$windowLength),        
                   FrequencyResolution = as.numeric(input$freqResolution), 
                   TimeStepSize = as.numeric(input$timeStep),     
                   nTimeSteps = NULL,       
@@ -226,8 +214,8 @@ Spectrogram visualization:
                   PlotFast = TRUE,         
                   add = FALSE,             
                   col = NULL,              
-                  xlim = NULL,             
-                  ylim = NULL,             
+                  xlim = ranges$x,             
+                  ylim = ranges$y,             
                   main = "",               
                   xlab = "Time (ms)",      
                   ylab = "Frequency (kHz)")
@@ -290,7 +278,7 @@ td.style.color = 'black';
     if(file.exists('pulsos.csv')){
       aux <- read.csv(file = "pulsos.csv", header = FALSE)[,1]
       file.remove("pulsos.csv")
-      if(!isEven(length(aux))) {
+      if(!is_even(length(aux))) {
         showNotification("Please choose calls again", type = "error", closeButton = T, duration = 3)
         remove(pulsos)
         file.remove("pulsos.csv")
