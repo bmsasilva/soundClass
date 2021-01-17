@@ -35,14 +35,6 @@ shinyUI(
                   # Define the sidebar panel
                   sidebarPanel(width = 2,
                                
-                               # Button 1
-                               # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
-                               shinyFilesButton('selected_db', 
-                                                'Choose database',
-                                                'Choose database file', FALSE, style='width:100%'),
-                               br(), # introduzir espacamento
-                               br(), # introduzir espacamento
-                               
                                # Button 2
                                shinyDirButton('folder',
                                               'Choose folder',
@@ -50,6 +42,27 @@ shinyUI(
                                
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
+                              
+                                # Button "create db" and respective modal box
+                               actionButton("create_db", "Create database", style='width:100%'),
+                               
+                               bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
+                                       HTML("What is the database name?"),
+                                       textInput("name", "", ""),
+                                       actionButton("conf", "Confirm")),
+                               
+                               
+                               br(), # introduzir espacamento
+                               br(), # introduzir espacamento
+                               
+                               # Button 1
+                               # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
+                               shinyFilesButton('selected_db', 
+                                                'Choose database',
+                                                'Choose database file', FALSE, style='width:100%'),
+
+                               br(), # introduzir espacamento
+                               
                                hr(), # Introduzir linha divisoria
                                
                                # Box

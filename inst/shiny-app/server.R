@@ -13,6 +13,12 @@ shinyServer(function(input, output, session) {
   if (system == "Windows") roots <- c(home = 'C://')
   if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
   
+  # Ask user for db name -------------------------------
+  observeEvent(input$conf, {
+    toggleModal(session, "modal", toggle = "open")
+    create_db(".//", input$name)
+  })
+  
   # Button  1 -----------------------------------------
   observe({ 
     shinyFileChoose(input, 'selected_db', roots = roots)
@@ -28,10 +34,6 @@ shinyServer(function(input, output, session) {
     db_path <- as.character(file_selected$datapath)
     db_path
   })
-  
-  # output$db_path <- renderText({ # so para testar se db_path() funciona
-  #   db_path()
-  # })
   
   # Button  2 -----------------------------------------
   observe({
@@ -72,51 +74,6 @@ shinyServer(function(input, output, session) {
   })
 
  
-  
-  
-  
-  
-  
-  # # Obtain file names from folder
-  #  fileNames <- reactivePoll(1000, session,
-  #    checkFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")},
-  #    valueFunc = function() {list.files(".", recursive = FALSE, pattern="wav|WAV")}
-  #      )
-  #Update filenames in UI
-  # observeEvent(folder_path(), {
-  #   # Update do menu "files" na UI
-  #   updateSelectInput(session,"files", choices = folder_path())
-  # })
-  ####################################################################################333
-  #Criar as pastas Sem morcegos e analisada
-  # observeEvent(db_path(), {
-  #   #setwd(parseDirPath(volumes, input$folder))
-  #   print(db_path())
-  #  # dir_create(c("Analisadas", "Sem_morcegos", "temp"), "./")
-  #  #  output_create("output_semiauto.csv", ".")
-  # })
-  
-  
-  
-  #
-  # pngPlots <- reactivePoll(1000, session,
-  #                           checkFunc = function() {list.files("./temp")},
-  #                           valueFunc = function() {list.files("./temp")}
-  # )
-  #
-  # # Observador para obter a listagem dos ficheiros da pasta escolhida
-  # # e actualizar a listagem de especies na UI para escolher
-  # observeEvent(fileNames(), {
-  #   # Update do menu "files" na UI
-  #   updateSelectInput(session,"files", choices=fileNames())
-  # })
-  
-  observeEvent(input$files, {
-    #reset ao numero de calls qd se muda de ficheiro
-    counterCalls <<- 0
-  })
-  
-  
   # Importar gravacao ----------------------------------------------------
   sound <- reactive({
     # https://shiny.rstudio.com/articles/validation.html
@@ -125,11 +82,12 @@ shinyServer(function(input, output, session) {
       need(input$files != "",
            "Analysis steps:
 1) Select folder with recordings
-2) Select database to store recording labels
-3) Select calls by clicking in the spectrogram before and after the call
-4) Press 'Set labels' button to add labels to database
-5) Repeat step 3 and 4 if more than one indivudual is in the recording
-6) Press 'Next' button to advance to next recording
+2) If needed, create new database to store recording labels
+3) Select pre-existing database to store recording labels
+4) Select calls by clicking in the spectrogram before and after the call
+5) Press 'Set labels' button to add labels to database
+6) Repeat step 4 and 5 if more than one indivudual is in the recording
+7) Press 'Next' button to advance to next recording or pick another recording from the dropdown list
 
 Spectrogram visualization:
 - Zoom spectrogram by click and drag to select area and then double click on it
@@ -242,31 +200,19 @@ td.style.color = 'black';
   # Botoes (server side actions) ----------------------------------------------------------
   
   ## Botao proxima gravacao
-  observeEvent(input$proxRec, {
+  observeEvent(input$Next, {
     
-    # # Obter a posicao do ficheiro carregado da lista de ficheiros
-    # fileInUse <- which(fileNames() %in% c(input$files))
-    #
-    # # so corre se nao for a ultima gravacao
-    # if (fileInUse < length(fileNames())){
-    #   # Update do menu "files" na UI com o novo ficheiro escolhido
-    #   updateSelectInput(session,"files", choices=fileNames(), selected = fileNames()[fileInUse + 1])
-    if(counterCalls == 0 ) {
-      file.rename(input$files,paste("Sem_morcegos",input$files,sep="/"))
-    } else {file.rename(input$files,paste("Analisadas",input$files,sep="/"))}
-    
-  })
+    # Obter a posicao do ficheiro carregado da lista de ficheiros
+    fileInUse <- which(file_names() %in% c(input$files))
+
+    # so corre se nao for a ultima gravacao
+    if (fileInUse < length(file_names())){
+      # Update do menu "files" na UI com o novo ficheiro escolhido
+      updateSelectInput(session,"files", choices = file_names(), selected = file_names()[fileInUse + 1])
+    }
+      })
   
-  # observeEvent(input$antRec, {
-  #
-  #   # Obter a posicao do ficheiro carregado da lista de ficheiros
-  #   fileInUse <- which(fileNames() %in% c(input$files))
-  #
-  #   if (fileInUse > 1){ # so corre se nao for a primeira gravacao
-  #   # Update do menu "files" na UI com o novo ficheiro escolhido
-  #   updateSelectInput(session,"files", choices=fileNames(), selected = fileNames()[fileInUse - 1])
-  #   }
-  # })
+
   
   # observeEvent(input$analisar, {
   #   showNotification("This is a notification.")
@@ -274,9 +220,11 @@ td.style.color = 'black';
   
   ## Botao ANALISAR
   observeEvent(input$analisar, {
+    
     # Validar o numero de clicks para escolha dos pulsos
     if(file.exists('pulsos.csv')){
       aux <- read.csv(file = "pulsos.csv", header = FALSE)[,1]
+      aux <- ms2samples(aux, fs = isolate(sound()$fs), tx = isolate(sound()$tx))
       file.remove("pulsos.csv")
       if(!is_even(length(aux))) {
         showNotification("Please choose calls again", type = "error", closeButton = T, duration = 3)
@@ -284,102 +232,43 @@ td.style.color = 'black';
         file.remove("pulsos.csv")
       } else{
         pulsos <- matrix(aux, byrow=TRUE, ncol = 2)
-      }
+        print(pulsos)
+        np <- nrow(pulsos)
+        label <- 
+        obs <- 
+        ## Obtém o local de fmaxe de cada pulso seleccionado anteriormente
+        j <- 1
+        maxpos<-NULL
+        for (i in 1:np) {
+          maxpos[i]<-(which.max(abs(isolate(sound()$sound_samples[pulsos[j]:pulsos[j+1]]))) + pulsos[j]) 
+          j <- j+2
+        }
+        
+        output <- data.frame("recording" = isolate(sound()$file_name),
+                             "label_position" = maxpos,
+                             "label_class" = isolate(input$Lb),
+                             "observations" = isolate(input$Obs))
+
+        
+         add_record(path = isolate(db_path()), df = output)
+        
+        
+        
+        
+      } # final do else
     }
     
-    ##analisar
-    try({
-      # print(getwd())
-      updateTextInput(session,"FB", value='')
-      updateTextInput(session,"SC", value='')
-      updateTextInput(session,"Comm", value='')
-      counterCalls <<- counterCalls + 1
-      print(counterCalls)
-      
-      analisar(som(), pulsos, input$files, input$FB, input$SC, input$Comm, counterCalls)
-      
-      plotCalls(som(),np, input$files, counterCalls)
-      
-      # eliminar o ficheiro auxiliar com os pulsos escolhidos no final da analise
-      file.remove("pulsos.csv")
-    })#final try
+  
+    
+    # 
+
+  
   })
   
+
+
   
-  ## Save file
-  # observe({
-  #   # remove button and isolate to update file automatically
-  #   # after each table change
-  #   input$save
-  #   hot = isolate(input$hot)
-  #   if (!is.null(hot)) {
-  #     write.csv(hot_to_r(input$hot), "teste.csv")
-  #
-  #   }
-  # })
-  
-  observeEvent(input$save, {
-    hot = isolate(input$hot)
-    if (!is.null(hot)) {
-      write.csv(hot_to_r(input$hot), "output_semiauto.csv")#mudar path
-    }
-  })
-  
-  output$plotCalls1 <- renderImage({
-    
-    folder <- pngPlots() # apenas para tornar este plot reactivo qd se acresecentam ficheiros png
-    # Return a list containing the filename
-    list(src = files_spectrograms[1],
-         contentType = 'image/png',
-         width = 150,
-         height = 150,
-         alt = "No bat call to show")
-    
-    
-    
-  }, deleteFile = FALSE)
-  
-  output$plotCalls2 <- renderImage({
-    
-    folder <- pngPlots()
-    # Return a list containing the filename
-    list(src = files_spectrograms[2],
-         contentType = 'image/png',
-         width = 150,
-         height = 150,
-         alt = "No bat call to show")
-    
-    
-    
-  }, deleteFile = FALSE)
-  
-  
-  output$plotCalls3 <- renderImage({
-    
-    folder <- pngPlots()
-    # Return a list containing the filename
-    list(src = files_spectrograms[3],
-         contentType = 'image/png',
-         width = 150,
-         height = 150,
-         alt = "No bat call to show")
-    
-    
-    
-  }, deleteFile = FALSE)
-  output$plotCalls4 <- renderImage({
-    
-    folder <- pngPlots()
-    # Return a list containing the filename
-    list(src = files_spectrograms[4],
-         contentType = 'image/png',
-         width = 150,
-         height = 150,
-         alt = "No bat call to show")
-    
-    
-    
-  }, deleteFile = FALSE)
+
   
 })
 
