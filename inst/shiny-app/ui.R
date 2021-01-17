@@ -117,6 +117,7 @@ shinyUI(
                       tabPanel("Plot", 
                                value = "panel_plot",
                                plotOutput("spec",
+                                          height = "auto", #controlar a altura do plot. no sevrer define o tamanho
                                                   click="specClick",
                                                   dblclick = "plot1_dblclick", #esta linha e as finais controlam o zoom
                                                   brush = brushOpts(
@@ -142,46 +143,36 @@ shinyUI(
                                fluidRow(column(6,
                                                textOutput("folder_path")
                                )
-                               ),
-                               
-
-                               
-                               
-                               
-                               fluidRow(
-                                 verbatimTextOutput("clickInfo") # So para ter no server uma funcao reactive que me grave os pulsos em ficheiro
-                               )
+                                )
                       ),
                       
                       
-                      tabPanel(title = "Options", 
+                      tabPanel(title = "Spectrogram options", 
                                value = "panel_options", 
                                fluidRow(
                                  column(4,
 
                                         selectInput("dynamicRange",
-                                                    "Thresh",
-                                                    choices = c('4' = '40',
-                                                                '5' = '50',
-                                                                '6' = '60',
-                                                                '7' = '70',
-                                                                '8' = '80',
-                                                                '9' = '90',
-                                                                '10' = '100',
-                                                                '11' = '110',
-                                                                '12' = '120'),
+                                                    "Threshold",
+                                                    choices = c('40 dB' = '40',
+                                                                '50 dB' = '50',
+                                                                '60 dB' = '60',
+                                                                '70 dB' = '70',
+                                                                '80 dB' = '80',
+                                                                '90 dB' = '90',
+                                                                '100 dB' = '100'),
                                                     '70')
                                  ),
 
                                  column(4,
 
                                         selectInput("windowLength",
-                                                    "Window",
-                                                    choices = c('1' = '1',
-                                                                '2' = '2',
-                                                                '3' = '3',
-                                                                '4' = '4',
-                                                                '5' = '5'),
+                                                    "Window length",
+                                                    choices = c('1 ms' = '1',
+                                                                '2 ms' = '2',
+                                                                '3 ms' = '3',
+                                                                '4 ms' = '4',
+                                                                '5 ms' = '5'),
                                                     '5')
                                  )
                                ),
@@ -190,24 +181,21 @@ shinyUI(
 
                                         selectInput("timeStep",
                                                     "Overlap",
-                                                    choices = c('1' = '5',
-                                                                '2' = '4',
-                                                                '3' = '3',
-                                                                '4' = '2',
-                                                                '5' = '1'),
-                                                    '2')
+                                                    choices = c('60%' = '0.4',
+                                                                '70%' = '0.3',
+                                                                '80%' = '0.2',
+                                                                '90%' = '0.1'),
+                                                    '0.2')
 
 
                                  ),
                                  column(4,
 
-                                        selectInput("freqResolution", "Definicao",
-                                                    choices = c('1' = '5',
-                                                                '2' = '4',
-                                                                '3' = '3',
-                                                                '4' = '2',
-                                                                '5' = '1'),
-                                                    '3')
+                                        selectInput("freqResolution", "Resolution",
+                                                    choices = c('low resolution' = '1',
+                                                                'medium resolution' = '4',
+                                                                'high resolution' = '8'),
+                                                    '4')
                                  )
 
                                ),

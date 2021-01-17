@@ -123,6 +123,13 @@ Spectrogram visualization:
     }
   })
   
+  # eliminar ficheiro de pulsos qd se cria uma caixa para zoom
+  observeEvent(input$plot1_brush, {
+         file.remove("pulsos.csv")
+  })
+  
+  
+  
   # Eliminar os valores do zoom quando se muda de ficheiro
   observeEvent(input$files, {
     ranges$x <- NULL
@@ -132,36 +139,27 @@ Spectrogram visualization:
   
   # Lidar com os clicks do rato ----------------------------------------------
   
-  # Guardar as posicoes do rato quando clickado, numa variavel
-  posicao <- eventReactive(input$specClick$x, {
-    input$specClick$x
-  })
-  
-  # Guardar os clicks do rato em ficheiro externo
-  output$clickInfo <- renderText({
+  # Guardar as posicoes do rato quando clickado, em ficheiro externo
+  observeEvent(input$specClick$x, {
     
-    # Criar a tabela externa com a posicao x dos clicks do rato
-    write.table(posicao(),
+    write.table(input$specClick$x,
                 file = "pulsos.csv",
                 append = TRUE,
                 col.names = FALSE,
                 row.names= FALSE)
-    
-    # Mostrar o valor de x do click na caixa de texto reactiva
-    print(round(posicao(), 0))
   })
   
+
   # Plotar espectrograma ----------------------------------------------------------
   
   # Plotar o espectrograma
   output$spec <- renderPlot({
     
- 
      Spectrogram(as.numeric(sound()$sound_samples),                   
                   SamplingFrequency=sound()$fs,  
                   WindowLength = as.numeric(input$windowLength),        
                   FrequencyResolution = as.numeric(input$freqResolution), 
-                  TimeStepSize = as.numeric(input$timeStep),     
+                  TimeStepSize = as.numeric(input$timeStep) * as.numeric(input$windowLength),     
                   nTimeSteps = NULL,       
                   Preemphasis = TRUE,      
                   DynamicRange = as.numeric(input$dynamicRange),       
@@ -179,6 +177,8 @@ Spectrogram visualization:
                   ylab = "Frequency (kHz)")
     
     
+  }, height = function() {
+    0.6 * (session$clientData$output_spec_width) #crontolar a altura do plot (0.6 * o comprimento)
   })
   
   # # Cria a tabela reactive
@@ -214,10 +214,7 @@ td.style.color = 'black';
   
 
   
-  # observeEvent(input$analisar, {
-  #   showNotification("This is a notification.")
-  # })
-  
+
   ## Botao ANALISAR
   observeEvent(input$analisar, {
     
