@@ -84,7 +84,8 @@ shinyServer(function(input, output, session) {
 1) Select folder with recordings
 2) If needed, create new database to store recording labels
 3) Select pre-existing database to store recording labels
-4) Select calls by clicking in the spectrogram before and after the call
+4) Select events by clicking in the spectrogram before and after the event of interest (bat call, bird song, etc) 
+   Important: Be carefull not to drag mouse while clicking as it will erase previously selected positions
 5) Press 'Set labels' button to add labels to database
 6) Repeat step 4 and 5 if more than one indivudual is in the recording
 7) Press 'Next' button to advance to next recording or pick another recording from the dropdown list
@@ -178,7 +179,7 @@ Spectrogram visualization:
     
     
   }, height = function() {
-    0.6 * (session$clientData$output_spec_width) #crontolar a altura do plot (0.6 * o comprimento)
+    0.6 * (session$clientData$output_spec_width) #controlar a altura do plot (0.6 * o comprimento)
   })
   
   # # Cria a tabela reactive
