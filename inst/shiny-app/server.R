@@ -1,8 +1,11 @@
 read.csv_bs <- function(x) read.csv(x, stringsAsFactors = F)
-counterCalls <<- 0
+
 
 ##### Load all #####
-files <- list.files("C://Users//silva//Projects//R_packages//soundClass//R", pattern = ".R", full.names = TRUE)
+system <- Sys.info()[['sysname']]
+if (system == "Windows") files <- list.files("C://Users//silva//Projects//R_packages//soundClass//R", pattern = ".R", full.names = TRUE)
+if (system == "Linux") files <- list.files("~/Projectos/phd/0.workfolder/meus_papers/ms02_package_cnn/soundClass/R/", pattern = ".R", full.names = TRUE)
+
 for(file in files) source(file)
 
 shinyServer(function(input, output, session) {
@@ -15,7 +18,7 @@ shinyServer(function(input, output, session) {
   
   # Ask user for db name -------------------------------
   observeEvent(input$conf, {
-    toggleModal(session, "modal", toggle = "open")
+    shinyBS::toggleModal(session, "modal", toggle = "open")
     create_db(".//", input$name)
   })
   
@@ -116,17 +119,17 @@ Spectrogram visualization:
     if (!is.null(brush)) {
       ranges$x <- c(brush$xmin, brush$xmax)
       ranges$y <- c(brush$ymin, brush$ymax)
-      file.remove("pulsos.csv")
+      file.remove("temp_file.csv")
     } else {
       ranges$x <- NULL
       ranges$y <- NULL
-      file.remove("pulsos.csv")
+      file.remove("temp_file.csv")
     }
   })
   
   # eliminar ficheiro de pulsos qd se cria uma caixa para zoom
   observeEvent(input$plot1_brush, {
-         file.remove("pulsos.csv")
+         file.remove("temp_file.csv")
   })
   
   
@@ -135,7 +138,7 @@ Spectrogram visualization:
   observeEvent(input$files, {
     ranges$x <- NULL
     ranges$y <- NULL
-    file.remove("pulsos.csv")
+    file.remove("temp_file.csv")
   })
   
   # Lidar com os clicks do rato ----------------------------------------------
@@ -144,7 +147,7 @@ Spectrogram visualization:
   observeEvent(input$specClick$x, {
     
     write.table(input$specClick$x,
-                file = "pulsos.csv",
+                file = "temp_file.csv",
                 append = TRUE,
                 col.names = FALSE,
                 row.names= FALSE)
@@ -183,20 +186,20 @@ Spectrogram visualization:
   })
   
   # # Cria a tabela reactive
-  DF <- reactiveFileReader(1000, session=session, filePath = "output_semiauto.csv", readFunc = read.csv_bs)
-  
-  # Mostra a tabela
-  output$hot <- renderRHandsontable({
-    if (!is.null(DF()))
-      rhandsontable(DF(),  stretchH = "all") %>%
-      hot_cols(renderer = "
-           function (instance, td, row, col, prop, value, cellProperties) {
-             Handsontable.renderers.TextRenderer.apply(this, arguments);
-td.style.background = 'lightgray';
-td.style.color = 'black';
-
-           }")
-  })
+#   DF <- reactiveFileReader(1000, session=session, filePath = "output_semiauto.csv", readFunc = read.csv_bs)
+#   
+#   # Mostra a tabela
+#   output$hot <- renderRHandsontable({
+#     if (!is.null(DF()))
+#       rhandsontable(DF(),  stretchH = "all") %>%
+#       hot_cols(renderer = "
+#            function (instance, td, row, col, prop, value, cellProperties) {
+#              Handsontable.renderers.TextRenderer.apply(this, arguments);
+# td.style.background = 'lightgray';
+# td.style.color = 'black';
+# 
+#            }")
+#   })
   
   # Botoes (server side actions) ----------------------------------------------------------
   
@@ -220,14 +223,14 @@ td.style.color = 'black';
   observeEvent(input$analisar, {
     
     # Validar o numero de clicks para escolha dos pulsos
-    if(file.exists('pulsos.csv')){
-      aux <- read.csv(file = "pulsos.csv", header = FALSE)[,1]
+    if(file.exists('temp_file.csv')){
+      aux <- read.csv(file = "temp_file.csv", header = FALSE)[,1]
       aux <- ms2samples(aux, fs = isolate(sound()$fs), tx = isolate(sound()$tx))
-      file.remove("pulsos.csv")
+      file.remove("temp_file.csv")
       if(!is_even(length(aux))) {
         showNotification("Please choose calls again", type = "error", closeButton = T, duration = 3)
         remove(pulsos)
-        file.remove("pulsos.csv")
+        file.remove("temp_file.csv")
       } else{
         pulsos <- matrix(aux, byrow=TRUE, ncol = 2)
         print(pulsos)
@@ -241,35 +244,12 @@ td.style.color = 'black';
           maxpos[i]<-(which.max(abs(isolate(sound()$sound_samples[pulsos[j]:pulsos[j+1]]))) + pulsos[j]) 
           j <- j+2
         }
-        
         output <- data.frame("recording" = isolate(sound()$file_name),
                              "label_position" = maxpos,
                              "label_class" = isolate(input$Lb),
                              "observations" = isolate(input$Obs))
-
-        
          add_record(path = isolate(db_path()), df = output)
-        
-        
-        
-        
-      } # final do else
+        } # final do else
     }
-    
-  
-    
-    # 
-
-  
   })
-  
-
-
-  
-
-  
 })
-
-
-
-

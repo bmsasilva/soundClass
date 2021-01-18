@@ -7,13 +7,13 @@
 #' @usage add_record(path, df)
 #' @return Nothing
 #' @author Bruno Silva
-#' @export
-#' @import dplyr
+#' @keywords internal
+#' @import dplyr DBI
 
 add_record <- function(path, df) {
 if(!file.exists(path)) stop("Database doesn't exist. Run create_db() first")
 my_db <- dplyr::src_sqlite(path, create = FALSE)
-if(!DBI::dbExistsTable(my_db$con, "labels")) stop("Table was not found in database")
+if(!DBI::dbExistsTable(my_db$con, "labels")) stop("Table 'labels' was not found in database")
 DBI::dbWriteTable(my_db$con, "labels", df, append = TRUE, row.names = FALSE)
 DBI::dbDisconnect(my_db$con)
 }

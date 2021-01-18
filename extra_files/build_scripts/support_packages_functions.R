@@ -1,0 +1,8 @@
+devtools::use_package("leaflet")
+devtools::use_package("shiny")
+devtools::use_package("shinyFiles")
+devtools::use_package("shinydashboard")
+devtools::use_package("raster")
+devtools::use_package("rgdal")
+devtools::use_package("MASS")
+devtools::use_package("sp")
