@@ -1,31 +1,30 @@
-# Spectrogram()
+#' @title Spectrogram
+#' @description Plots a spectrogram or returns a spectrogram matrix
+#' @param Audio An object of class 'recording', created with the 'import_audio' function
+#' @param 
+#' @param 
+#' @param 
+#' @param 
+#' @param 
+#' @param 
+#' 
+#' @return If plot=FALSE, returns a spectrogram matrix, with the parameters used in the analysis as attributes.
+#' If plot=TRUE a plot of the spectrogram is produced but the matrix is not exported.
+#' 
+#' @details 
+#' @export
+#' @author Bruno Silva
 
-# Input: a soundfile stored on the user's computer (or a numeric vector containing the equivalent information therein)
-
-# Output: if plot=FALSE, returns a matrix containing the result of the spectrographic analysis, with attributes indicating all the non-NULL argument specifications that influenced the result of the analysis;
-#         if plot=TRUE, nothing is returned, and instead a filled-contour plot of the spectrogram is produced
 
 # -------------------------------------------------------------------------------
-
-# This script is released under the Berkeley Software Distribution (BSD) license ( http://opensource.org/licenses/BSD-3-Clause ):
-
-# Copyright (c) 2013, Aaron Albin
 
 # Modified from the spectrogram() function in the 'phonTools' package of R by Santiago Barreda
 # http://cran.r-project.org/web/packages/phonTools/index.html
-
 # All rights reserved.
-
-#Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-#Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#The name of the author of this software may not be used to endorse or promote products derived from this software without specific prior written permission.
-
-#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # -------------------------------------------------------------------------------
 
-Spectrogram = function( # Begin argument list
+Spectrogram = function( 
 
   # [1]
   Audio,

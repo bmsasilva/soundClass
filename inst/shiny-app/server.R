@@ -1,4 +1,4 @@
-read.csv_bs <- function(x) read.csv(x, stringsAsFactors = F)
+library(shinyBS)
 
 
 ##### Load all #####
@@ -113,7 +113,7 @@ Spectrogram visualization:
   # Variavel para controlar o zoom
   ranges <- reactiveValues(x = NULL, y = NULL)
   
-  # Observador para o evento duplo click
+  # Observador para o evento duplo click. Preparear isto para os eliminar maxpos.x qd se mete zoom
   observeEvent(input$plot1_dblclick, {
     brush <- input$plot1_brush
     if (!is.null(brush)) {
@@ -127,17 +127,18 @@ Spectrogram visualization:
     }
   })
   
-  # eliminar ficheiro de pulsos qd se cria uma caixa para zoom
-  observeEvent(input$plot1_brush, {
-         file.remove("temp_file.csv")
-  })
+  # # eliminar ficheiro de pulsos qd se cria uma caixa para zoom
+  # observeEvent(input$plot1_brush, {
+  #        file.remove("temp_file.csv")
+  # })
   
   
   
-  # Eliminar os valores do zoom quando se muda de ficheiro
+  # Eliminar os valores do zoom e de maxpos$x quando se muda de ficheiro
   observeEvent(input$files, {
     ranges$x <- NULL
     ranges$y <- NULL
+    maxpos$x <- NULL
     file.remove("temp_file.csv")
   })
   
@@ -176,11 +177,14 @@ Spectrogram visualization:
                   col = NULL,              
                   xlim = ranges$x,             
                   ylim = ranges$y,             
-                  main = "",               
+                  main = sound()$file_name,               
                   xlab = "Time (ms)",      
                   ylab = "Frequency (kHz)")
-    
-    
+
+    # Obriga a recriar o spectrograma antes de adicionar as linhas
+     abline(v= ms2samples(maxpos$x, tx = sound()$tx, fs = sound()$fs,
+                    inv=T))
+
   }, height = function() {
     0.6 * (session$clientData$output_spec_width) #controlar a altura do plot (0.6 * o comprimento)
   })
@@ -219,36 +223,41 @@ Spectrogram visualization:
 
   
 
+  
   ## Botao ANALISAR
+  maxpos <- reactiveValues(x=NULL) # reactive para depois dar para plotar no spec
+  
   observeEvent(input$analisar, {
     
     # Validar o numero de clicks para escolha dos pulsos
     if(file.exists('temp_file.csv')){
-      aux <- read.csv(file = "temp_file.csv", header = FALSE)[,1]
-      aux <- ms2samples(aux, fs = isolate(sound()$fs), tx = isolate(sound()$tx))
+      labs <- read.csv(file = "temp_file.csv", header = FALSE)[,1]
+      labs <- ms2samples(labs, fs = isolate(sound()$fs), tx = isolate(sound()$tx))
+      np <- length(labs)/2
       file.remove("temp_file.csv")
-      if(!is_even(length(aux))) {
+      if(!is_even(length(labs))) {
         showNotification("Please choose calls again", type = "error", closeButton = T, duration = 3)
-        remove(pulsos)
+        remove(labs)
         file.remove("temp_file.csv")
       } else{
-        pulsos <- matrix(aux, byrow=TRUE, ncol = 2)
-        print(pulsos)
-        np <- nrow(pulsos)
-        label <- 
-        obs <- 
+        #pulsos <- matrix(aux, byrow=TRUE, ncol = 2)
+        
         ## Obtém o local de fmaxe de cada pulso seleccionado anteriormente
         j <- 1
-        maxpos<-NULL
+        maxpos$x <- NULL #para eliminar outros pulsos ja escolhidos nesta rec
         for (i in 1:np) {
-          maxpos[i]<-(which.max(abs(isolate(sound()$sound_samples[pulsos[j]:pulsos[j+1]]))) + pulsos[j]) 
+          maxpos$x[i]<-(which.max(abs(isolate(sound()$sound_samples[labs[j]:labs[j+1]]))) + labs[j]) 
           j <- j+2
         }
         output <- data.frame("recording" = isolate(sound()$file_name),
-                             "label_position" = maxpos,
+                             "label_position" = maxpos$x,
                              "label_class" = isolate(input$Lb),
                              "observations" = isolate(input$Obs))
+        
          add_record(path = isolate(db_path()), df = output)
+       
+
+
         } # final do else
     }
   })

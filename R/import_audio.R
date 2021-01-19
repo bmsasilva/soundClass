@@ -74,6 +74,6 @@ import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
     som <- as.integer(signal::filter(bt_low, som))
     som <- as.integer(signal::filter(bt_high, som))
   }
-  structure(list(sound_samples = som, file_name = file_name, file_time = file_time,
+  structure(list(sound_samples = as.numeric(som), file_name = file_name, file_time = file_time,
                  fs = fs, tx = tx), class='recording')
 }

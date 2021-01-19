@@ -46,7 +46,7 @@ shinyUI(
                                 # Button "create db" and respective modal box
                                actionButton("create_db", "Create database", style='width:100%'),
                                
-                               bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
+                               shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
                                        HTML("What is the database name?"),
                                        textInput("name", "", ""),
                                        actionButton("conf", "Confirm")),
