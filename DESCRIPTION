@@ -1,8 +1,9 @@
 Package: soundClass
-Title: Automatically Classify Sound Recordings 
+Title: Train convolutional neural networks for automatic sound classification 
 Version: 0.0.0.9000
 Authors@R: person("Bruno", "Silva", email = "bmsasilva@gmail.com", role = c("aut","cre"))
-Description: Label audio recordings, train or retrain models based on labels and automatically classify new recordings
+Description: Label audio recordings, train or retrain convolutional neural networks
+based on labels and automatically classify new recordings
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
