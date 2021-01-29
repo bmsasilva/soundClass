@@ -42,7 +42,7 @@ spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem d
 
   # get table from database
   conn <- dplyr::src_sqlite(db_path, create = FALSE) # open connection
-  query <- dplyr::tbl(conn, "rec_labels")
+  query <- dplyr::tbl(conn, "labels")
   db_table <- dplyr::collect(query)
   audio_files <- unique(db_table$recording)
 
@@ -50,7 +50,7 @@ spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem d
   label <- c()
   for(i in seq(audio_files)){
 try({
-    sound_peaks <- pull(db_table[db_table$recording == audio_files[i], "calls_samples"], 1)
+    sound_peaks <- dplyr::pull(db_table[db_table$recording == audio_files[i], "label_position"], 1)
 
     ## Tenho de por isto porque alguns nomes na bd tem .wav e outros nao
     if(grepl(".wav", audio_files[i])){
@@ -61,11 +61,11 @@ try({
 
     morc <- import_audio(name, low = 10, high = 125)
     calls <- peaks2spec(morc, sound_peaks, frequency_bin=T,
-                        time_bin=F, version = "v2")# desta funcao tem de sair um vector com o label que esta na bd
+                        time_bin=F, version = version)# desta funcao tem de sair um vector com o label que esta na bd
 
     # Como sai uma matriz da peaks2spec vou usar rbind() mas sei que tenho trocar
     spec_image <- rbind(spec_image, calls$spec_calls)
-    label <- c(label, pull(db_table[db_table$recording == audio_files[i], "spe"], 1))
+    label <- c(label, pull(db_table[db_table$recording == audio_files[i], "label_class"], 1))
     print(i)
     print(audio_files[i])
 })#final try
