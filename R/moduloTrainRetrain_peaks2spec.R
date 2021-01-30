@@ -129,7 +129,7 @@ peaks2spec <- function(bat_recording, sound_peaks, frequency_bin = T,
     
     spec <- denoise_spec(spec2_filt, frequency_bin = frequency_bin, time_bin = time_bin)
     spec[is.na(spec)] <- 0
-    spec_df[k,] <- as.numeric(r(spec))
+    spec_df[k,] <- as.numeric(r(spec)) #necessario o r() para as imagens entrarem bem no tensorflow
     fmaxe_df[k] <- as.numeric(fmaxe)
   }
   
