@@ -19,7 +19,7 @@
 #' @export
 peaks2spec <- function(bat_recording, sound_peaks, frequency_bin = T,
                        time_bin = F, version = "v1"){
-
+  
   if(!is.btr(bat_recording)){
     stop("Input object must be of class bat_recording. Use
       import_audio() as constructor." , call. =  FALSE)
@@ -27,20 +27,20 @@ peaks2spec <- function(bat_recording, sound_peaks, frequency_bin = T,
   if(!is.vector(sound_peaks)) stop("Parameter sound_peaks must be numeric", call. = FALSE)
   if(!is.logical(frequency_bin)) stop("Parameter frequency_bin must be numeric", call. = FALSE)
   if(!is.logical(time_bin)) stop("Parameter time_bin must be numeric", call. = FALSE)
-
+  
   fs <- bat_recording$fs
   sound_samples <- bat_recording$sound_samples
   tx <- bat_recording$tx
-
-    if(version == "v1"){
+  
+  if(version == "v1"){
     # all species # smaller image
     size <- 20 # ms
-  window_length <- 1 # em milisegundos
-  frequency_resolution <- 1 # valor normal e 2
-  time_step_size <- 0.25
-  dynamic_range <- 90
-  freq_range <- c(10, 125) #hertz
-  input_shape <- c(size / time_step_size, 115)
+    window_length <- 1 # em milisegundos
+    frequency_resolution <- 1 # valor normal e 2
+    time_step_size <- 0.25
+    dynamic_range <- 90
+    freq_range <- c(10, 125) #hertz
+    input_shape <- c(size / time_step_size, 115)
   } else if(version == "v2"){
     # without rhinolophus # smaller image
     size <- 20 # ms
@@ -71,7 +71,7 @@ peaks2spec <- function(bat_recording, sound_peaks, frequency_bin = T,
   } else {
     stop("No valid version selected", call. = FALSE)
   }
-
+  
   # Dividir o ficheiro em janelas de tamanho size (definido na versao escolhida - 20ms neste caso)
   # em volta dos sound_peaks de fmaxe
   windows <- matrix(NA, nrow = length(sound_peaks),
@@ -90,16 +90,16 @@ peaks2spec <- function(bat_recording, sound_peaks, frequency_bin = T,
   
   for (i in 1:length(sound_peaks)) {
     windows[i,] <- sound_samples[(sound_peaks[i] - half_window):
-                                 (sound_peaks[i] + half_window - 1)]
+                                   (sound_peaks[i] + half_window - 1)]
   }
-
+  
   n_calls <- length(windows[,1])
   spec_df <- matrix(NA, nrow=n_calls, ncol=input_shape[1]*input_shape[2])
   fmaxe_df <- c()
   for(k in 1:n_calls){
     sound_samples_xs <- windows[k,]
-
-spec2 <- Spectrogram(Audio = as.numeric(sound_samples_xs),
+    
+    spec2 <- Spectrogram(Audio = as.numeric(sound_samples_xs),
                          norm = 150,
                          SamplingFrequency = fs * tx,
                          WindowLength = window_length,
@@ -108,7 +108,7 @@ spec2 <- Spectrogram(Audio = as.numeric(sound_samples_xs),
                          DynamicRange = dynamic_range,
                          WindowType = "hanning",
                          plot = F)
-
+    
     ## Cut to desired frequency range
     filt <- c(which(as.numeric(colnames(spec2)) < freq_range[1] * 1000), which(as.numeric(colnames(spec2)) > freq_range[2] * 1000))
     spec2_filt <- spec2[,-filt] # eliminar range de frequencia nao necessario
@@ -116,24 +116,23 @@ spec2 <- Spectrogram(Audio = as.numeric(sound_samples_xs),
     
     ## get fmaxe
     fmaxe <- dimnames(spec2)[[2]][which(spec2 == max(spec2), arr.ind = TRUE)[2]]
-
+    
     ## Force to desired spectrogram size # only because of fs=44100, with fs=300000 this step is not needed
     while(dim(spec2_filt)[1] > input_shape[1]) spec2_filt <- spec2_filt[-1,]
     while(dim(spec2_filt)[2] > input_shape[2]) spec2_filt <- spec2_filt[,-c(length(spec2_filt[1,]))]
-
-
+    
+    
     ## Limpar o espectrograma por frequency bin - usado para criar a base de dados
     ## Vou experimentar limpar tambem por time bin
-      ncol <- length(colnames(spec2_filt)) # frequencia
-      nrow <- length(rownames(spec2_filt)) # tempo
-
-      spec <- denoise_spec(spec2_filt, frequency_bin = frequency_bin, time_bin = time_bin)
-      spec[is.na(spec)] <- 0
-      spec_df[k,] <- as.numeric(r(spec))
-      fmaxe_df[k] <- as.numeric(fmaxe)
+    ncol <- length(colnames(spec2_filt)) # frequencia
+    nrow <- length(rownames(spec2_filt)) # tempo
+    
+    spec <- denoise_spec(spec2_filt, frequency_bin = frequency_bin, time_bin = time_bin)
+    spec[is.na(spec)] <- 0
+    spec_df[k,] <- as.numeric(r(spec))
+    fmaxe_df[k] <- as.numeric(fmaxe)
   }
-
+  
   structure(list(spec_calls = spec_df, img_cols = input_shape[1],
                  img_rows = input_shape[2], fmaxe = fmaxe_df), class='calls')
-  }
-
+}
