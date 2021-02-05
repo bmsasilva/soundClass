@@ -1,13 +1,12 @@
 #' Convert sound to spectrogram
 #' @title Sound to spectrogram
 #' @description Convert sound to spectrogram
-#' @param bat_recording Object of class "bat_recording"
+#' @param recording Object of class "recording"
 #' @param sound_peaks Peaks detected in recording samples
 #' @param frequency_bin If TRUE filter by frequency mean subtraction
 #' @param time_bin If TRUE filter by time mean subtraction
 #' @param version Set of parameters for the analysis.
-#' @usage peaks2spec(bat_recording, sound_peaks, frequency_bin = T,
-#'time_bin = F,version = "v1")
+#' @usage peaks2spec(recording, sound_peaks, version = "v1")
 #' @return an object of class "calls". This object is a list
 #' with the following components:
 #' \itemize{
@@ -17,20 +16,18 @@
 #' }
 #' @author Bruno Silva
 #' @export
-peaks2spec <- function(bat_recording, sound_peaks, frequency_bin = T,
-                       time_bin = F, version = "v1"){
+peaks2spec <- function(recording, sound_peaks, version = "v1"){
   
-  if(!is.btr(bat_recording)){
-    stop("Input object must be of class bat_recording. Use
+  if(!is.rc(recording)){
+    stop("Input object must be of class recording. Use
       import_audio() as constructor." , call. =  FALSE)
   }
   if(!is.vector(sound_peaks)) stop("Parameter sound_peaks must be numeric", call. = FALSE)
-  if(!is.logical(frequency_bin)) stop("Parameter frequency_bin must be numeric", call. = FALSE)
-  if(!is.logical(time_bin)) stop("Parameter time_bin must be numeric", call. = FALSE)
+
   
-  fs <- bat_recording$fs
-  sound_samples <- bat_recording$sound_samples
-  tx <- bat_recording$tx
+  fs <- recording$fs
+  sound_samples <- recording$sound_samples
+  tx <- recording$tx
   
   if(version == "v1"){
     # all species # smaller image
@@ -127,7 +124,7 @@ peaks2spec <- function(bat_recording, sound_peaks, frequency_bin = T,
     ncol <- length(colnames(spec2_filt)) # frequencia
     nrow <- length(rownames(spec2_filt)) # tempo
     
-    spec <- denoise_spec(spec2_filt, frequency_bin = frequency_bin, time_bin = time_bin)
+    spec <- denoise(spec2_filt)
     spec[is.na(spec)] <- 0
     spec_df[k,] <- as.numeric(r(spec)) #necessario o r() para as imagens entrarem bem no tensorflow
     fmaxe_df[k] <- as.numeric(fmaxe)

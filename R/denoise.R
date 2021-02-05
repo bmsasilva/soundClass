@@ -4,13 +4,13 @@
 #' columns must represent frequency and rows must represent time.Energy values are afterwards standartized
 #' to min = 0 and max = 1 by dividing by maximum energy value of the spectrogram matrix.
 #' @param spec Spectrogram matrix 
-#' @usage denoise_spec(spec)
+#' @usage denoise(spec)
 #' @return A denoised spectrogram matrix, with standardized energy values 
 #' between 0 and 1
 #' @keywords internal
 #' @author Bruno Silva
 
-denoise_spec <- function(spec){
+denoise <- function(spec){
   ncol <- dim(spec)[2] 
   nrow <- dim(spec)[1] 
   mean_frequency_bin <- apply(spec, 2, mean)
