@@ -1,6 +1,21 @@
+#' Generate spectrograms from labels
+#' @title Generates spectrograms from recording's labels. 
+#' @description Generates spectrograms from recording's labels for
+#' classification purposes. The spectrogram parameters are user defined
+#' and should be selected depending on the type of sound event to classify. Four  
+#' sets of parameters for the spectrograms are provided, with values prepared for
+#' classification of vocalizations of insectivorous bats, birds and crickets. 
+#' @param files_path
+#' @param db_path
+#' @param version
+#' @usage spectro_calls(files_path, db_path, version)
+#' @return blablablablablablabla
+#' @author Bruno Silva
+#' @export
+
 spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem de acabar em /
   
-  if(version == "v1"){
+  if(version == "v1"){ # morcegos
     # all species # smaller image
     size <- 20 # ms
     window_length <- 1 # em milisegundos
@@ -9,7 +24,7 @@ spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem d
     dynamic_range <- 90
     freq_range <- c(10, 125) #hertz
     input_shape <- c(size / time_step_size, 115)
-  } else if(version == "v2"){
+  } else if(version == "v2"){ # morcegos
     # without rhinolophus # smaller image
     size <- 20 # ms
     window_length <- 1 # em milisegundos
@@ -18,7 +33,7 @@ spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem d
     dynamic_range <- 90
     freq_range <- c(10, 80) #khertz
     input_shape <- c(size / time_step_size, 70)
-  } else if(version == "v3"){
+  } else if(version == "v3"){ # aves (ver parametros optimos no artigo das aves do github)
     # all species  # better resolution
     size <- 20 # ms
     window_length <- 1 # em milisegundos
@@ -27,7 +42,7 @@ spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem d
     dynamic_range <- 90
     freq_range <- c(10, 125) #hertz
     input_shape <- c(size / time_step_size, 230)
-  } else if(version == "v4"){
+  } else if(version == "v4"){ # grilos (procurar para metros optimos)
     # without rhinolophus # better resolution
     size <- 20 # ms
     window_length <- 1 # em milisegundos

@@ -120,7 +120,6 @@ peaks2spec <- function(recording, sound_peaks, version = "v1"){
     
     
     ## Limpar o espectrograma por frequency bin - usado para criar a base de dados
-    ## Vou experimentar limpar tambem por time bin
     ncol <- length(colnames(spec2_filt)) # frequencia
     nrow <- length(rownames(spec2_filt)) # tempo
     
