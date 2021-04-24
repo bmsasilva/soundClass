@@ -28,7 +28,7 @@ shinyUI(
     ),
     
     # Application title
-    titlePanel("Labeler"),
+    titlePanel("Fit model"),
     
     sidebarLayout(fluid = FALSE,
                   
@@ -44,16 +44,16 @@ shinyUI(
                                br(), # introduzir espacamento
                               
                                 # Button "create db" and respective modal box
-                               actionButton("create_db", "Create database", style='width:100%'),
+                               #actionButton("create_db", "Create database", style='width:100%'),
                                
-                               shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
-                                       HTML("What is the database name?"),
-                                       textInput("name", "", ""),
-                                       actionButton("conf", "Confirm")),
+                               # shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
+                               #         HTML("What is the database name?"),
+                               #         textInput("name", "", ""),
+                               #         actionButton("conf", "Confirm")),
                                
                                
-                               br(), # introduzir espacamento
-                               br(), # introduzir espacamento
+                               # br(), # introduzir espacamento
+                               # br(), # introduzir espacamento
                                
                                # Button 1
                                # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
@@ -62,47 +62,54 @@ shinyUI(
                                                 'Choose database file', FALSE, style='width:100%'),
 
                                br(), # introduzir espacamento
+                               br(), # introduzir espacamento
+                               shinyFilesButton('selected_model', 
+                                                'Choose model',
+                                                'Choose model file', FALSE, style='width:100%')
                                
-                               hr(), # Introduzir linha divisoria
-                               
-                               # Box
-                               selectInput(inputId = "files", label = NULL, choices = NULL, width="100%"),#, ),
-                               
-                               # Button 3
-                               actionButton('Next', "Next recording", width="100%"),
-                               
-                               hr(), # Introduzir linha divisoria
-                               h5("Butterworth filter (kHz)", align = "center"),
+                               # br(), # introduzir espacamento
+                               # 
+                               # 
+                               # hr(), # Introduzir linha divisoria
+                               # 
+                               # # Box
+                               # selectInput(inputId = "files", label = NULL, choices = NULL, width="100%"),#, ),
+                               # 
+                               # # Button 3
+                               # actionButton('Next', "Next recording", width="100%"),
+                               # 
+                               # hr(), # Introduzir linha divisoria
+                               # h5("Butterworth filter (kHz)", align = "center"),
                                
                                
 
                                
-                               fluidRow(
-                                 column(6, align = "center",
-                                        
-                                        textInput("low",
-                                                  "Low",
-                                                  value = '10')
-                                        
-                                        
-                                        
-                                 ),
-                                 column(6, align = "center",
-                                        
-                                        textInput("high",
-                                                  "High",
-                                                  value = '120')
-                                 )
-                                 
-                               ),
+                               # fluidRow(
+                               #   column(6, align = "center",
+                               #          
+                               #          textInput("low",
+                               #                    "Low",
+                               #                    value = '10')
+                               #          
+                               #          
+                               #          
+                               #   ),
+                               #   column(6, align = "center",
+                               #          
+                               #          textInput("high",
+                               #                    "High",
+                               #                    value = '120')
+                               #   )
+                               #   
+                               # ),
                                
                                
                                # br(),
                                # br(),
-                               hr(),
+                            #   hr(),
                                
                                
-                               actionButton("analisar", "Set labels", width="100%")
+                              # actionButton("analisar", "Set labels", width="100%")
                                
                                
                                
@@ -114,8 +121,9 @@ shinyUI(
                   
                   mainPanel(
                     tabsetPanel(id = "inTabset",
-                      tabPanel("Plot", 
+                      tabPanel("Create train data", 
                                value = "panel_plot",
+                             
                                plotOutput("spec",
                                           height = "auto", #controlar a altura do plot. no sevrer define o tamanho
                                                   click="specClick",
@@ -136,18 +144,22 @@ shinyUI(
                                  )
                                ),
                                
-                               fluidRow(column(6,
+                               fluidRow(column(4,
                                                textOutput("db_path")
                                )
                                ),
-                               fluidRow(column(6,
+                               fluidRow(column(4,
                                                textOutput("folder_path")
                                )
-                                )
+                                ),
+                               fluidRow(column(4,
+                                               textOutput("model_path")
+                               )
+                               )
                       ),
                       
                       
-                      tabPanel(title = "Spectrogram options", 
+                      tabPanel(title = "Fit model", 
                                value = "panel_options", 
                                fluidRow(
                                  column(4,
@@ -189,6 +201,9 @@ shinyUI(
 
 
                                  ),
+                                 
+
+                                 
                                  column(4,
 
                                         selectInput("freqResolution", "Resolution",
