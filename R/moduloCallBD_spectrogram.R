@@ -380,7 +380,7 @@ Spectrogram = function(
     NegativeDecibelThreshold = -1 * DynamicRange # 'DynamicRange' is assumed to be positive. Perhaps eventually enforce this with 'stop()'.
     SpectrogramMatrix[which(SpectrogramMatrix < NegativeDecibelThreshold)] = NegativeDecibelThreshold
   } # End 'if DynamicRange is non-NULL'
-
+  
   # Determine the time and frequency values for every row and column in the matrix
   TimeSequence = (LeftEdgeLocations + floor(nSamplesInWindow/2)) * (1000/SamplingFrequency)
   FrequencySequence = (0:(nSamplesInPaddedWindow/2)) * (SamplingFrequency/nSamplesInPaddedWindow)

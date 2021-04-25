@@ -1,3 +1,16 @@
+#' XXXXXXX
+#' @title XXXXXXX
+#' @description XXXXXXX
+#' @param files_path XXXXXXX
+#' @param db_path XXXXXXX
+#' @param parameters XXXXXXX
+#' @usage classify_calls(calls, sound_peaks, model)
+#' @return XXXXXXXX
+#' @author Bruno Silva
+#' @export
+
+
+
 classify_calls <- function(calls, sound_peaks, model){
 
   spec_calls <- calls$spec_calls
