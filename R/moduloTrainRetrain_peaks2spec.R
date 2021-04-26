@@ -5,8 +5,8 @@
 #' @param sound_peaks Peaks detected in recording samples
 #' @param frequency_bin If TRUE filter by frequency mean subtraction
 #' @param time_bin If TRUE filter by time mean subtraction
-#' @param version Set of parameters for the analysis.
-#' @usage peaks2spec(recording, sound_peaks, version = "v1")
+#' @param parameters Set of parameters for the analysis.
+#' @usage peaks2spec(recording, sound_peaks, parameters = "v1")
 #' @return an object of class "calls". This object is a list
 #' with the following components:
 #' \itemize{
@@ -16,9 +16,9 @@
 #' }
 #' @author Bruno Silva
 #' @export
-peaks2spec <- function(recording, sound_peaks, version = "v1"){
+peaks2spec <- function(recording, sound_peaks, parameters = "v1"){
   
-  if(!is.rc(recording)){
+  if(!is_rc(recording)){
     stop("Input object must be of class recording. Use
       import_audio() as constructor." , call. =  FALSE)
   }
@@ -28,7 +28,7 @@ peaks2spec <- function(recording, sound_peaks, version = "v1"){
   sound_samples <- recording$sound_samples
   tx <- recording$tx
   
-  if(version == "v1"){
+  if(parameters == "v1"){
     # all species # smaller image
     size <- 20 # ms
     window_length <- 1 # em milisegundos
@@ -37,7 +37,7 @@ peaks2spec <- function(recording, sound_peaks, version = "v1"){
     dynamic_range <- 90
     freq_range <- c(10, 125) #hertz
     input_shape <- c(size / time_step_size, 115)
-  } else if(version == "v2"){
+  } else if(parameters == "v2"){
     # without rhinolophus # smaller image
     size <- 20 # ms
     window_length <- 1 # em milisegundos
@@ -46,7 +46,7 @@ peaks2spec <- function(recording, sound_peaks, version = "v1"){
     dynamic_range <- 90
     freq_range <- c(10, 80) #khertz
     input_shape <- c(size / time_step_size, 70)
-  } else if(version == "v3"){
+  } else if(parameters == "v3"){
     # all species  # better resolution
     size <- 20 # ms
     window_length <- 1 # em milisegundos
@@ -55,7 +55,7 @@ peaks2spec <- function(recording, sound_peaks, version = "v1"){
     dynamic_range <- 90
     freq_range <- c(10, 125) #hertz
     input_shape <- c(size / time_step_size, 230)
-  } else if(version == "v4"){
+  } else if(parameters == "v4"){
     # without rhinolophus # better resolution
     size <- 20 # ms
     window_length <- 1 # em milisegundos
@@ -65,7 +65,7 @@ peaks2spec <- function(recording, sound_peaks, version = "v1"){
     freq_range <- c(10, 80) #hertz
     input_shape <- c(size / time_step_size, 140)
   } else {
-    stop("No valid version selected", call. = FALSE)
+    stop("No valid parameters selected", call. = FALSE)
   }
   
   # Dividir o ficheiro em janelas de tamanho size (definido na versao escolhida - 20ms neste caso)

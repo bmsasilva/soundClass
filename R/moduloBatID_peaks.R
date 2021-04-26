@@ -1,6 +1,8 @@
-#' Detect peaks in sound files
-#' @title Detect peaks
-#' @description  Detect peaks
+#' Detect peaks in recordings
+#' @title Detect energy peaks in recordings
+#' @description Splits the recording in segments using a pre-defined window size
+#' and detects the temporal position of the peak (event with most energy) in each
+#' window.
 #' @param bat_recording Object of class "bat_recording"
 #' @param win_size Window size in ms to search peaks. Sound is divided into
 #' equal size chunks of win_size duration and one peak is identified in each chunk.

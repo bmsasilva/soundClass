@@ -1,58 +1,70 @@
 #' Generate spectrograms from labels
-#' @title Generates spectrograms from recording's labels. 
+#' @title Generates spectrograms from recording labels. 
 #' @description Generates spectrograms from recording's labels for
 #' classification purposes. The spectrogram parameters are user defined
-#' and should be selected depending on the type of sound event to classify. Four  
+#' and should be selected depending on the type of sound event to classify. Three  
 #' sets of parameters for the spectrograms are provided, with values prepared for
-#' classification of vocalizations of insectivorous bats, birds and crickets. 
-#' @param files_path
-#' @param db_path
-#' @param version
-#' @usage spectro_calls(files_path, db_path, version)
-#' @return blablablablablablabla
+#' classification of vocalizations of european bat species (one set for all species
+#' and another excluding Rhinolophus species) and birds. Aditional sets of parameters 
+#' for other vocalizations or sound events may also be provided by the user.
+#' @param files_path Path for the folder containing sound recordings
+#' @param db_path Path for the database of recording labels created with the 
+#' shinny app provided in the package
+#' @param parameters Parameters for the spectrograms. A list with: 
+#' spectrogram size in ms (spec_size - integer),
+#' moving window length used to create the spectrogram in ms (window_length),
+#' spectrogram frequency resolution in kHz (frequency_resolution - integer),
+#' moving window step in ms (time_step_size - positive numeric),
+#' threshold intensity value (dynamic_range - integer),
+#' frequency range of the spectrogram (freq_range - integer vector).
+#' The predefined values are indicated with: "v1", "v2", "v3".
+#' @usage spectro_calls(files_path, db_path, parameters)
+#' @return A list with the spectrogram and the respective label
 #' @author Bruno Silva
 #' @export
 
-spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem de acabar em /
+spectro_calls <- function(files_path, db_path, parameters){ # nota: file_path tem de acabar em /
   
-  if(version == "v1"){ # morcegos
-    # all species # smaller image
-    size <- 20 # ms
+  if(parameters == "v1"){ # morcegos
+    # all species 
+    spec_size <- 20 # ms
     window_length <- 1 # em milisegundos
     frequency_resolution <- 1 # valor normal e 2
     time_step_size <- 0.25
     dynamic_range <- 90
     freq_range <- c(10, 125) #hertz
-    input_shape <- c(size / time_step_size, 115)
-  } else if(version == "v2"){ # morcegos
-    # without rhinolophus # smaller image
-    size <- 20 # ms
+    input_shape <- c(size / time_step_size, 
+                     (freq_range[2]-freq_range[1])*frequency_resolution)
+  } else if(parameters == "v2"){ # morcegos
+    # without rhinolophus 
+    spec_size <- 20 # ms
     window_length <- 1 # em milisegundos
     frequency_resolution <- 1 # valor normal e 2
     time_step_size <- 0.25
     dynamic_range <- 90
     freq_range <- c(10, 80) #khertz
-    input_shape <- c(size / time_step_size, 70)
-  } else if(version == "v3"){ # aves (ver parametros optimos no artigo das aves do github)
-    # all species  # better resolution
-    size <- 20 # ms
-    window_length <- 1 # em milisegundos
-    frequency_resolution <- 2 # valor normal e 2
-    time_step_size <- 0.1
+    input_shape <- c(size / time_step_size, 
+                     (freq_range[2]-freq_range[1])*frequency_resolution)
+  } else if(parameters == "v3"){ # aves
+    spec_size <- 2000 # ms
+    window_length <- 100 # em milisegundos
+    frequency_resolution <- 1 # valor normal e 2
+    time_step_size <- 25
     dynamic_range <- 90
-    freq_range <- c(10, 125) #hertz
-    input_shape <- c(size / time_step_size, 230)
-  } else if(version == "v4"){ # grilos (procurar para metros optimos)
-    # without rhinolophus # better resolution
-    size <- 20 # ms
+    freq_range <- c(1, 12) #hertz
+    input_shape <- c(size / time_step_size, 
+                     (freq_range[2]-freq_range[1])*frequency_resolution)
+  } else if(parameters == "v4"){ # grilos # acho que existe uma variabilidade demasiado grande no tamanho do som. talvez eliminar este
+    spec_size <- 20 # ms
     window_length <- 1 # em milisegundos
-    frequency_resolution <- 2 # valor normal e 2
+    frequency_resolution <- 1 # valor normal e 2
     time_step_size <- 0.1
     dynamic_range <- 90
     freq_range <- c(10, 80) #hertz
-    input_shape <- c(size / time_step_size, 140)
+    input_shape <- c(size / time_step_size, 
+                     (freq_range[2]-freq_range[1])*frequency_resolution)
   } else {
-    stop("No valid version selected", call. = FALSE)
+    stop("No valid parameters selected", call. = FALSE)
   }
   
   # get table from database
@@ -75,8 +87,7 @@ spectro_calls <- function(files_path, db_path, version){ # nota: file_path tem d
       }
       
       morc <- import_audio(name, low = 10, high = 125)
-      calls <- peaks2spec(morc, sound_peaks, frequency_bin=T,
-                          time_bin=F, version = version)# desta funcao tem de sair um vector com o label que esta na bd
+      calls <- peaks2spec(morc, sound_peaks, parameters = parameters)# desta funcao tem de sair um vector com o label que esta na bd
       
       # Como sai uma matriz da peaks2spec vou usar rbind() mas sei que tenho trocar
       spec_image <- rbind(spec_image, calls$spec_calls)
