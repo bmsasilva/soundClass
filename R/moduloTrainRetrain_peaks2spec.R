@@ -24,7 +24,6 @@ peaks2spec <- function(recording, sound_peaks, version = "v1"){
   }
   if(!is.vector(sound_peaks)) stop("Parameter sound_peaks must be numeric", call. = FALSE)
 
-  
   fs <- recording$fs
   sound_samples <- recording$sound_samples
   tx <- recording$tx
