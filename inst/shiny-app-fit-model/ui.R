@@ -123,6 +123,22 @@ shinyUI(
                     tabsetPanel(id = "inTabset",
                       tabPanel("Create train data", 
                                value = "panel_plot",
+                               br(),
+                               
+                               fluidRow(
+                                 column(6, align="center", offset = 3,
+                                 # Button "create db" and respective modal box
+                                 actionButton("create_db", "Create spectrograms from labels", style='width:100%'),
+                                 tags$style(type='text/css', "#create_db { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}"),
+                                # Code to generate modal boxwith inputs
+                                  shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
+                                                  HTML("What is the database name?"),
+                                                  textInput("name", "", ""),
+                                                  ## inserir os parametros para criar os espectrogramas a partir da base de dados
+                                                  actionButton("conf", "Confirm")),
+                                 )
+                               ),
+                               
                              
                                plotOutput("spec",
                                           height = "auto", #controlar a altura do plot. no sevrer define o tamanho
@@ -134,15 +150,15 @@ shinyUI(
                                                   )),
                                
                                
-                               fluidRow(
-                                 column(6,
-                                        textInput("Lb", "Label", value='')
-                                        
-                                 ),
-                                 column(6,
-                                        textInput("Obs", "Observations", value='')
-                                 )
-                               ),
+                               # fluidRow(
+                               #   column(6,
+                               #          textInput("Lb", "Label", value='')
+                               #          
+                               #   ),
+                               #   column(6,
+                               #          textInput("Obs", "Observations", value='')
+                               #   )
+                               # ),
                                
                                fluidRow(column(4,
                                                textOutput("db_path")

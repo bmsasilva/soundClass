@@ -16,7 +16,7 @@ shinyServer(function(input, output, session) {
   if (system == "Windows") roots <- c(home = 'C://')
   if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
   
-  # Ask user for db name -------------------------------
+  # run function activated by action button -------------------------------
   observeEvent(input$conf, {
     shinyBS::toggleModal(session, "modal", toggle = "open")
     create_db(".//", input$name)
@@ -100,23 +100,14 @@ shinyServer(function(input, output, session) {
     # Mensagem para substituir o erro enquanto nao abre o primeiro ficheiro.
     validate(
       need(input$files != "",
-           "Analysis steps:
+           
+           
+           "\n \n Create spectrograms from label database:
 1) Select folder with recordings
-2) If needed, create new database to store recording labels
-3) Select pre-existing database to store recording labels
-4) Select events by clicking in the spectrogram before and after the event of interest (bat call, bird song, etc) 
-   Important: Be carefull not to drag mouse while clicking as it will erase previously selected positions
-5) Press 'Set labels' button to add labels to database
-6) Repeat step 4 and 5 if more than one indivudual is in the recording
-7) Press 'Next' button to advance to next recording or pick another recording from the dropdown list
-
-Spectrogram visualization:
-- Zoom spectrogram by click and drag to select area and then double click on it
-- Unzoom by double clicking on spectrogram without area selected
-- Adjust spectrogram settings with:
-    THRESHOLD - minimum energy values displayed, higher values best suited for low quality recordings
-    WINDOW - window size in ms, smaller windows best suited for short calls
-    OVERLAP - overlap between consecutive windows, higher values give best visualization but lower performance")
+2) Select pre-existing database with recording labels
+3) Press 'Create spectrograms from labels' button
+6) Input spectrogram parameters in modal box
+7) Press 'Confirm' button \n \n" )
     )
 
     sound <- import_audio(path = input$files, butt = TRUE,
