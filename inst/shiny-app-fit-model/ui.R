@@ -8,6 +8,7 @@ require(tcltk)
 require(neuralnet)
 library(rhandsontable)
 library(shinythemes)
+library(shinyjs)
 
 shinyUI(
   fluidPage(
@@ -67,53 +68,10 @@ shinyUI(
                                                 'Choose model',
                                                 'Choose model file', FALSE, style='width:100%')
                                
-                               # br(), # introduzir espacamento
-                               # 
-                               # 
-                               # hr(), # Introduzir linha divisoria
-                               # 
-                               # # Box
-                               # selectInput(inputId = "files", label = NULL, choices = NULL, width="100%"),#, ),
-                               # 
-                               # # Button 3
-                               # actionButton('Next', "Next recording", width="100%"),
-                               # 
-                               # hr(), # Introduzir linha divisoria
-                               # h5("Butterworth filter (kHz)", align = "center"),
+                              
                                
                                
-
-                               
-                               # fluidRow(
-                               #   column(6, align = "center",
-                               #          
-                               #          textInput("low",
-                               #                    "Low",
-                               #                    value = '10')
-                               #          
-                               #          
-                               #          
-                               #   ),
-                               #   column(6, align = "center",
-                               #          
-                               #          textInput("high",
-                               #                    "High",
-                               #                    value = '120')
-                               #   )
-                               #   
-                               # ),
-                               
-                               
-                               # br(),
-                               # br(),
-                            #   hr(),
-                               
-                               
-                              # actionButton("analisar", "Set labels", width="100%")
-                               
-                               
-                               
-                               
+                         
                                
                   ),
                   
@@ -135,7 +93,7 @@ shinyUI(
                                                   HTML("What is the database name?"),
                                                   textInput("name", "", ""),
                                                   ## inserir os parametros para criar os espectrogramas a partir da base de dados
-                                                  actionButton("conf", "Confirm")),
+                                                  actionButton("conf", "Confirm"))
                                  )
                                ),
                                
