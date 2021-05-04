@@ -10,7 +10,7 @@ for(file in files) source(file)
 
 shinyServer(function(input, output, session) {
   
-
+  
   # File and folder chooser paths -------------------------------
   system <- Sys.info()[['sysname']]
   if (system == "Windows") roots <- c(home = 'C://')
@@ -19,7 +19,7 @@ shinyServer(function(input, output, session) {
   # run function activated by action button -------------------------------
   observeEvent(input$conf, {
     shinyBS::toggleModal(session, "modal", toggle = "open")
-    create_db(".//", input$name)
+    create_specs(".//", input$name)
   })
   
   # Button  1 -----------------------------------------
@@ -73,9 +73,9 @@ shinyServer(function(input, output, session) {
   
   file_names <- reactivePoll(1000, session,
                              checkFunc = function() 
-                               {list.files(".", recursive = FALSE, pattern="wav|WAV")},
+                             {list.files(".", recursive = FALSE, pattern="wav|WAV")},
                              valueFunc = function() 
-                               {list.files(".", recursive = FALSE, pattern="wav|WAV")}
+                             {list.files(".", recursive = FALSE, pattern="wav|WAV")}
   )
   
   observeEvent(file_names(), {
@@ -84,16 +84,16 @@ shinyServer(function(input, output, session) {
     }
   })
   
-   
-
+  
+  
   # Button "save" -------------------------------------
   observeEvent(input$save, {
     updateTabsetPanel(session, "inTabset",
                       selected = "panel_plot")
-
+    
   })
-
- 
+  
+  
   # Importar gravacao ----------------------------------------------------
   sound <- reactive({
     # https://shiny.rstudio.com/articles/validation.html
@@ -109,11 +109,11 @@ shinyServer(function(input, output, session) {
 6) Input spectrogram parameters in modal box
 7) Press 'Confirm' button \n \n" )
     )
-
+    
     sound <- import_audio(path = input$files, butt = TRUE,
                           low = as.numeric(input$low),
                           high = as.numeric(input$high))
-
+    
     sound
   })
   # Controles do zoom ------------------------------------------------------------
@@ -162,56 +162,56 @@ shinyServer(function(input, output, session) {
                 row.names= FALSE)
   })
   
-
+  
   # Plotar espectrograma ----------------------------------------------------------
   
   # Plotar o espectrograma
   output$spec <- renderPlot({
     
-     Spectrogram(as.numeric(sound()$sound_samples),                   
-                  SamplingFrequency=sound()$fs,  
-                  WindowLength = as.numeric(input$windowLength),        
-                  FrequencyResolution = as.numeric(input$freqResolution), 
-                  TimeStepSize = as.numeric(input$timeStep) * as.numeric(input$windowLength),     
-                  nTimeSteps = NULL,       
-                  Preemphasis = TRUE,      
-                  DynamicRange = as.numeric(input$dynamicRange),       
-                  Omit0Frequency = FALSE,  
-                  WindowType = "hanning",   
-                  WindowParameter = NULL,  
-                  plot = TRUE,             
-                  PlotFast = TRUE,         
-                  add = FALSE,             
-                  col = NULL,              
-                  xlim = ranges$x,             
-                  ylim = ranges$y,             
-                  main = sound()$file_name,               
-                  xlab = "Time (ms)",      
-                  ylab = "Frequency (kHz)")
-
+    Spectrogram(as.numeric(sound()$sound_samples),                   
+                SamplingFrequency=sound()$fs,  
+                WindowLength = as.numeric(input$windowLength),        
+                FrequencyResolution = as.numeric(input$freqResolution), 
+                TimeStepSize = as.numeric(input$timeStep) * as.numeric(input$windowLength),     
+                nTimeSteps = NULL,       
+                Preemphasis = TRUE,      
+                DynamicRange = as.numeric(input$dynamicRange),       
+                Omit0Frequency = FALSE,  
+                WindowType = "hanning",   
+                WindowParameter = NULL,  
+                plot = TRUE,             
+                PlotFast = TRUE,         
+                add = FALSE,             
+                col = NULL,              
+                xlim = ranges$x,             
+                ylim = ranges$y,             
+                main = sound()$file_name,               
+                xlab = "Time (ms)",      
+                ylab = "Frequency (kHz)")
+    
     # Obriga a recriar o spectrograma antes de adicionar as linhas
-     abline(v= ms2samples(maxpos$x, tx = sound()$tx, fs = sound()$fs,
-                    inv=T))
-
+    abline(v= ms2samples(maxpos$x, tx = sound()$tx, fs = sound()$fs,
+                         inv=T))
+    
   }, height = function() {
     0.6 * (session$clientData$output_spec_width) #controlar a altura do plot (0.6 * o comprimento)
   })
   
   # # Cria a tabela reactive
-#   DF <- reactiveFileReader(1000, session=session, filePath = "output_semiauto.csv", readFunc = read.csv_bs)
-#   
-#   # Mostra a tabela
-#   output$hot <- renderRHandsontable({
-#     if (!is.null(DF()))
-#       rhandsontable(DF(),  stretchH = "all") %>%
-#       hot_cols(renderer = "
-#            function (instance, td, row, col, prop, value, cellProperties) {
-#              Handsontable.renderers.TextRenderer.apply(this, arguments);
-# td.style.background = 'lightgray';
-# td.style.color = 'black';
-# 
-#            }")
-#   })
+  #   DF <- reactiveFileReader(1000, session=session, filePath = "output_semiauto.csv", readFunc = read.csv_bs)
+  #   
+  #   # Mostra a tabela
+  #   output$hot <- renderRHandsontable({
+  #     if (!is.null(DF()))
+  #       rhandsontable(DF(),  stretchH = "all") %>%
+  #       hot_cols(renderer = "
+  #            function (instance, td, row, col, prop, value, cellProperties) {
+  #              Handsontable.renderers.TextRenderer.apply(this, arguments);
+  # td.style.background = 'lightgray';
+  # td.style.color = 'black';
+  # 
+  #            }")
+  #   })
   
   # Botoes (server side actions) ----------------------------------------------------------
   
@@ -220,17 +220,17 @@ shinyServer(function(input, output, session) {
     
     # Obter a posicao do ficheiro carregado da lista de ficheiros
     fileInUse <- which(file_names() %in% c(input$files))
-
+    
     # so corre se nao for a ultima gravacao
     if (fileInUse < length(file_names())){
       # Update do menu "files" na UI com o novo ficheiro escolhido
       updateSelectInput(session,"files", choices = file_names(), selected = file_names()[fileInUse + 1])
     }
-      })
+  })
   
-
   
-
+  
+  
   
   ## Botao ANALISAR
   maxpos <- reactiveValues(x=NULL) # reactive para depois dar para plotar no spec
@@ -262,11 +262,11 @@ shinyServer(function(input, output, session) {
                              "label_class" = isolate(input$Lb),
                              "observations" = isolate(input$Obs))
         
-         add_record(path = isolate(db_path()), df = output)
-       
-
-
-        } # final do else
+        add_record(path = isolate(db_path()), df = output)
+        
+        
+        
+      } # final do else
     }
   })
 })
