@@ -10,6 +10,10 @@ library(rhandsontable)
 library(shinythemes)
 
 shinyUI(
+
+# fluidPage ---------------------------------------------------------------
+
+  
   fluidPage(
     # theme = shinytheme("slate"),
     #  theme = "bootstrap.css",
@@ -30,9 +34,11 @@ shinyUI(
     # Application title
     titlePanel("Fit model"),
     
+
+# sidebar_layout ---------------------------------------------------------
     sidebarLayout(fluid = FALSE,
-                  
-                  # Define the sidebar panel
+# sidebarPanel ------------------------------------------------------------
+
                   sidebarPanel(width = 2,
                                
                                # Button 2
@@ -43,18 +49,7 @@ shinyUI(
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
                               
-                                # Button "create db" and respective modal box
-                               #actionButton("create_db", "Create database", style='width:100%'),
-                               
-                               # shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
-                               #         HTML("What is the database name?"),
-                               #         textInput("name", "", ""),
-                               #         actionButton("conf", "Confirm")),
-                               
-                               
-                               # br(), # introduzir espacamento
-                               # br(), # introduzir espacamento
-                               
+
                                # Button 1
                                # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
                                shinyFilesButton('selected_db', 
@@ -63,183 +58,151 @@ shinyUI(
 
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
+                               
                                shinyFilesButton('selected_model', 
                                                 'Choose model',
-                                                'Choose model file', FALSE, style='width:100%')
+                                                'Choose model file', FALSE, style='width:100%'),
                                
-                               # br(), # introduzir espacamento
-                               # 
-                               # 
-                               # hr(), # Introduzir linha divisoria
-                               # 
-                               # # Box
-                               # selectInput(inputId = "files", label = NULL, choices = NULL, width="100%"),#, ),
-                               # 
-                               # # Button 3
-                               # actionButton('Next', "Next recording", width="100%"),
-                               # 
-                               # hr(), # Introduzir linha divisoria
-                               # h5("Butterworth filter (kHz)", align = "center"),
                                
                                
 
-                               
-                               # fluidRow(
-                               #   column(6, align = "center",
-                               #          
-                               #          textInput("low",
-                               #                    "Low",
-                               #                    value = '10')
-                               #          
-                               #          
-                               #          
-                               #   ),
-                               #   column(6, align = "center",
-                               #          
-                               #          textInput("high",
-                               #                    "High",
-                               #                    value = '120')
-                               #   )
-                               #   
-                               # ),
-                               
-                               
-                               # br(),
-                               # br(),
-                            #   hr(),
-                               
-                               
-                              # actionButton("analisar", "Set labels", width="100%")
-                               
-                               
-                               
-                               
-                               
-                  ),
-                  
-                  # Create a spot for the barplot
-                  
-                  mainPanel(
-                    tabsetPanel(id = "inTabset",
-                      tabPanel("Create train data", 
-                               value = "panel_plot",
-                               br(),
-                               
-                               fluidRow(
-                                 column(6, align="center", offset = 3,
-                                 # Button "create db" and respective modal box
-                                 actionButton("create_db", "Create spectrograms from labels", style='width:100%'),
-                                 tags$style(type='text/css', "#create_db { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}"),
-                                # Code to generate modal boxwith inputs
-                                  shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
-                                                  HTML("What is the database name?"),
-                                                  textInput("name", "", ""),
-                                                  ## inserir os parametros para criar os espectrogramas a partir da base de dados
-                                                  actionButton("conf", "Confirm")),
-                                 )
-                               ),
-                               
-                             
-                               plotOutput("spec",
-                                          height = "auto", #controlar a altura do plot. no sevrer define o tamanho
-                                                  click="specClick",
-                                                  dblclick = "plot1_dblclick", #esta linha e as finais controlam o zoom
-                                                  brush = brushOpts(
-                                                    id = "plot1_brush",
-                                                    resetOnNew = TRUE
-                                                  )),
-                               
-                               
-                               # fluidRow(
-                               #   column(6,
-                               #          textInput("Lb", "Label", value='')
-                               #          
-                               #   ),
-                               #   column(6,
-                               #          textInput("Obs", "Observations", value='')
-                               #   )
-                               # ),
-                               
-                               fluidRow(column(4,
-                                               textOutput("db_path")
-                               )
-                               ),
-                               fluidRow(column(4,
-                                               textOutput("folder_path")
-                               )
-                                ),
-                               fluidRow(column(4,
-                                               textOutput("model_path")
-                               )
-                               )
-                      ),
-                      
-                      
-                      tabPanel(title = "Fit model", 
-                               value = "panel_options", 
-                               fluidRow(
-                                 column(4,
+   ),
 
-                                        selectInput("dynamicRange",
-                                                    "Threshold",
-                                                    choices = c('40 dB' = '40',
-                                                                '50 dB' = '50',
-                                                                '60 dB' = '60',
-                                                                '70 dB' = '70',
-                                                                '80 dB' = '80',
-                                                                '90 dB' = '90',
-                                                                '100 dB' = '100'),
-                                                    '70')
-                                 ),
-
-                                 column(4,
-
-                                        selectInput("windowLength",
-                                                    "Window length",
-                                                    choices = c('1 ms' = '1',
-                                                                '2 ms' = '2',
-                                                                '3 ms' = '3',
-                                                                '4 ms' = '4',
-                                                                '5 ms' = '5'),
-                                                    '5')
-                                 )
-                               ),
-                               fluidRow(
-                                 column(4,
-
-                                        selectInput("timeStep",
-                                                    "Overlap",
-                                                    choices = c('60%' = '0.4',
-                                                                '70%' = '0.3',
-                                                                '80%' = '0.2',
-                                                                '90%' = '0.1'),
-                                                    '0.2')
+# end sidebarPanel ----------------------------------------------------------
 
 
-                                 ),
-                                 
 
-                                 
-                                 column(4,
+# main_panel --------------------------------------------------------------
+mainPanel(
 
-                                        selectInput("freqResolution", "Resolution",
-                                                    choices = c('low resolution' = '1',
-                                                                'medium resolution' = '4',
-                                                                'high resolution' = '8'),
-                                                    '4')
-                                 )
+# tab_set_panel -----------------------------------------------------------
 
-                               ),
-                               actionButton("save", "Save and update spectrogram"))
-                      
-                      
-                    )# final tabSetPanel
-                    
-                  )#Final main panel
-                  
-    )# final side bar layout
-    
-    
-  )# final fluid pane
-)# final shiny ui
+  
+  tabsetPanel(id = "inTabset",
 
+# tab_panel_training_data -----------------------------------             
+              tabPanel("Training data", 
+                       value = "panel_plot",
+                       
+                       plotOutput("spec",
+                                  height = "auto", #controlar a altura do plot. no sevrer define o tamanho
+                                  click="specClick",
+                                  dblclick = "plot1_dblclick", #esta linha e as finais controlam o zoom
+                                  brush = brushOpts(
+                                    id = "plot1_brush",
+                                    resetOnNew = TRUE
+                                  )),
+                       
+                       
+                       fluidRow(
+                         column(6,
+                                textInput("Lb", "Label", value='')
+                                
+                         ),
+                         column(6,
+                                textInput("Obs", "Observations", value='')
+                         )
+                       ),
+                       
+                       fluidRow(column(6,
+                                       textOutput("db_path")
+                       )
+                       ),
+                       fluidRow(column(6,
+                                       textOutput("folder_path")
+                       )
+                       ),
+                       fluidRow(column(6,
+                                       textOutput("model_path")
+                       )
+                       )
+                       
+              ),
+# end_tab_panel_training_data ---------------------------------------------
+
+# tab_panel_fit_model -----------------------------------------------------
+
+  
+              tabPanel(title = "Fit model", 
+                       value = "panel_options", 
+                       fluidRow(
+                         column(4,
+                                
+                                selectInput("dynamicRange",
+                                            "Threshold",
+                                            choices = c('40 dB' = '40',
+                                                        '50 dB' = '50',
+                                                        '60 dB' = '60',
+                                                        '70 dB' = '70',
+                                                        '80 dB' = '80',
+                                                        '90 dB' = '90',
+                                                        '100 dB' = '100'),
+                                            '70')
+                         ),
+                         
+                         column(4,
+                                
+                                selectInput("windowLength",
+                                            "Window length",
+                                            choices = c('1 ms' = '1',
+                                                        '2 ms' = '2',
+                                                        '3 ms' = '3',
+                                                        '4 ms' = '4',
+                                                        '5 ms' = '5'),
+                                            '5')
+                         )
+                       ),
+                       fluidRow(
+                         column(4,
+                                
+                                selectInput("timeStep",
+                                            "Overlap",
+                                            choices = c('60%' = '0.4',
+                                                        '70%' = '0.3',
+                                                        '80%' = '0.2',
+                                                        '90%' = '0.1'),
+                                            '0.2')
+                                
+                                
+                         ),
+                         column(4,
+                                
+                                selectInput("freqResolution", "Resolution",
+                                            choices = c('low resolution' = '1',
+                                                        'medium resolution' = '4',
+                                                        'high resolution' = '8'),
+                                            '4')
+                         )
+                         
+                       ),
+                       actionButton("save", "Save and update spectrogram")
+                       )
+# end_tab_panel_fit_model ------------------------------------------
+
+  )
+
+# end_tab_set_panel -------------------------------------------------------
+
+
+)
+# end_main_panel ----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+)
+
+# end_sidebar_layout ----------------------------------------------------------
+
+
+)
+
+# end_fluidPage ----------------------------------------------------------------
+
+
+)
