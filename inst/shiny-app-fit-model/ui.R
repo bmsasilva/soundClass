@@ -44,17 +44,7 @@ shinyUI(
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
                               
-                                # Button "create db" and respective modal box
-                               #actionButton("create_db", "Create database", style='width:100%'),
-                               
-                               # shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
-                               #         HTML("What is the database name?"),
-                               #         textInput("name", "", ""),
-                               #         actionButton("conf", "Confirm")),
-                               
-                               
-                               # br(), # introduzir espacamento
-                               # br(), # introduzir espacamento
+
                                
                                # Button 1
                                # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
@@ -86,14 +76,23 @@ shinyUI(
                                fluidRow(
                                  column(6, align="center", offset = 3,
                                  # Button "create db" and respective modal box
-                                 actionButton("create_db", "Create spectrograms from labels", style='width:100%'),
-                                 tags$style(type='text/css', "#create_db { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}"),
+                                 actionButton("create_specs", "Create spectrograms from labels", style='width:100%'),
+                                 tags$style(type='text/css', "#create_specs { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}"),
                                 # Code to generate modal boxwith inputs
-                                  shinyBS::bsModal(id = "modal", Title = "Database name", trigger = "create_db", size = "small",
+                                  shinyBS::bsModal(id = "modal", Title = "Training spectrograms settings", trigger = "create_specs", size = "small",
                                                   HTML("What is the database name?"),
                                                   textInput("name", "", ""),
+                                                  numericInput("spec_size", "", 20, min = NA, max = NA, step = NA, width = NULL ),
                                                   ## inserir os parametros para criar os espectrogramas a partir da base de dados
                                                   actionButton("conf", "Confirm"))
+                                # spec_size <- 20 # ms
+                                # window_length <- 1 # em milisegundos
+                                # frequency_resolution <- 1 # valor normal e 2
+                                # time_step_size <- 0.25
+                                # dynamic_range <- 90
+                                # freq_range <- c(10, 125) #hertz
+                                
+                                
                                  )
                                ),
                                
@@ -108,16 +107,7 @@ shinyUI(
                                                   )),
                                
                                
-                               # fluidRow(
-                               #   column(6,
-                               #          textInput("Lb", "Label", value='')
-                               #          
-                               #   ),
-                               #   column(6,
-                               #          textInput("Obs", "Observations", value='')
-                               #   )
-                               # ),
-                               
+
                                fluidRow(column(4,
                                                textOutput("db_path")
                                )

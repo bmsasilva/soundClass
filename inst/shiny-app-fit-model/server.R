@@ -19,7 +19,7 @@ shinyServer(function(input, output, session) {
   # run function activated by action button -------------------------------
   observeEvent(input$conf, {
     shinyBS::toggleModal(session, "modal", toggle = "open")
-    create_db(".//", input$name)
+    create_specs(".//", input$name)
   })
   
   # Button  1 -----------------------------------------
