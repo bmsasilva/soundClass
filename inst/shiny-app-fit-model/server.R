@@ -16,11 +16,18 @@ shinyServer(function(input, output, session) {
   if (system == "Windows") roots <- c(home = 'C://')
   if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
   
-  # run function activated by action button -------------------------------
-  observeEvent(input$conf, {
-    shinyBS::toggleModal(session, "modal", toggle = "open")
-    create_specs(".//", input$name)
+  #run function activated by action button -------------------------------
+  # Estou a usar isto so para testar os paths para a spectro_calls
+  observeEvent(input$create_specs, {
+    print(files_path())
   })
+  
+  # https://stackoverflow.com/questions/53016404/advantages-of-reactive-vs-observe-vs-observeevent
+  spectro_calls <- eventReactive(input$create_specs,{
+   # spectro_calls(files_path(), db_path(), parameters)
+   
+  })
+  
   
   # Button  1 -----------------------------------------
   observe({ 
@@ -48,10 +55,17 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  
   observeEvent(input$folder, {
     if(length(parseDirPath(roots, input$folder))>0){ 
       setwd(parseDirPath(roots, input$folder))
     }
+  })
+  
+  files_path <- reactive({ # files_path para usar noutras funcoes
+    folder_selected <- parseDirPath(roots, input$folder)
+    files_path <- as.character(paste0(folder_selected, "//")) #dupla barra para funcionar em linux e windows
+    files_path
   })
   
   # Button  3 -----------------------------------------

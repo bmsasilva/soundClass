@@ -23,7 +23,9 @@
 #' @author Bruno Silva
 #' @export
 
-spectro_calls <- function(files_path, db_path, parameters){ # nota: file_path tem de acabar em /
+spectro_calls <- function(files_path, db_path, parameters){ # nota: files_path tem de acabar em /
+  # parameters tem de ser uma lista para aceitar os varios valores
+  
   
   if(parameters == "v1"){ # morcegos
     # all species 
