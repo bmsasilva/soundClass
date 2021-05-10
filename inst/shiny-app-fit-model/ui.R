@@ -39,7 +39,7 @@ shinyUI(
                                # Button 2
                                shinyDirButton('folder',
                                               'Choose folder',
-                                              'Choose recordings folder', FALSE, style='width:100%'),
+                                              'Choose recordings folder', style='width:100%'),
                                
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento
@@ -72,6 +72,9 @@ shinyUI(
                                 tabPanel("Create train data", 
                                          value = "panel_plot",
                                          br(),
+#####
+                                         
+
                                          
                                          fluidRow(
                                            column(4,
@@ -86,27 +89,27 @@ shinyUI(
                                            ),
                                            column(4,
                                                   
-                                                  selectInput("timeStep",
+                                                  selectInput("time_step_size",
                                                               "Moving window overlap",
                                                               choices = c('25%' = '0.75',
                                                                           '50%' = '0.50',
                                                                           '75%' = '0.25'
                                                                           ),
-                                                              '0.2')
+                                                              '0.25')
                                            )
                                          ),
                                          
                                          fluidRow(
                                            column(4,
-                                                  selectInput("freqResolution", 
-                                                              "frequency resolution",
+                                                  selectInput("frequency_resolution", 
+                                                              "Frequency resolution",
                                                               choices = c('low resolution' = '1',
                                                                           'normal resolution' = '2',
                                                                           'high resolution' = '3'),
                                                               '1')
                                            ),
                                            column(4,
-                                                  selectInput("dynamicRange",
+                                                  selectInput("dynamic_range",
                                                               "Threshold",
                                                               choices = c('40 dB' = '40',
                                                                           '50 dB' = '50',
@@ -115,7 +118,7 @@ shinyUI(
                                                                           '80 dB' = '80',
                                                                           '90 dB' = '90',
                                                                           '100 dB' = '100'),
-                                                              '70')
+                                                              '90')
                                            ),
                                          
                                           
@@ -132,7 +135,7 @@ shinyUI(
                                                     
                                                     textInput("high",
                                                               "Max frequency (kHz)",
-                                                              value = '120')
+                                                              value = '80')
                                              )
                                              
                                            
@@ -151,16 +154,9 @@ shinyUI(
                                            )
                                          ),
                                          
-                                         
-                                         plotOutput("spec",
-                                                    height = "auto", #controlar a altura do plot. no sevrer define o tamanho
-                                                    click="specClick",
-                                                    dblclick = "plot1_dblclick", #esta linha e as finais controlam o zoom
-                                                    brush = brushOpts(
-                                                      id = "plot1_brush",
-                                                      resetOnNew = TRUE
-                                                    )),
-                                         
+                                       
+                                         tableOutput("spec"),
+                                       
                                          
                                          
                                          fluidRow(column(4,

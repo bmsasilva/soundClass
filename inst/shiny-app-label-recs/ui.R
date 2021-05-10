@@ -38,7 +38,7 @@ shinyUI(
                                # Button 2
                                shinyDirButton('folder',
                                               'Choose folder',
-                                              'Choose recordings folder', FALSE, style='width:100%'),
+                                              'Choose recordings folder', style='width:100%'),
                                
                                br(), # introduzir espacamento
                                br(), # introduzir espacamento

@@ -1,3 +1,13 @@
+library(seewave)
+library(DBI)
+library(dplyr)
+library(signal)
+library(tuneR)
+library(zoo)
+library(dbplyr)
+library(magrittr)
+
+
 
 files_path <- "/home/bruno/Projectos/phd/0.workfolder/meus_papers/ms02_package_cnn/soundClass/inst/recordings/"
 db_path <- "/home/bruno/Projectos/phd/0.workfolder/meus_papers/ms02_package_cnn/soundClass/inst/recordings/demo_db.sqlite3"
