@@ -1,5 +1,4 @@
 library(shiny)
-
 library(zoo) # funcao rollmean()
 #library(Peaks) # Package para explorar com opcoes para escolha dos pulsos
 #library.dynam('Peaks', 'Peaks', lib.loc=NULL) # Patch para um bug do Peaks nesta versao de R, mas parece que tb nao funciona
@@ -9,6 +8,8 @@ require(neuralnet)
 library(rhandsontable)
 library(shinythemes)
 library(shinyjs)
+library(DBI)
+library(dplyr)
 
 shinyUI(
   fluidPage(
