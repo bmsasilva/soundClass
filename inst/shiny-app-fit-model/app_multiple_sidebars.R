@@ -111,7 +111,7 @@ shinyApp(
                                hr(),
                                fluidRow(
                                  column(6, align="center", offset = 3,
-                                        # Button 3 - Create specs
+                                        # Button 3 - Create train data
                                         # Should be disabled while spec_calls is running. See how in:
                                         # https://stackoverflow.com/questions/40621393/disabling-buttons-in-shiny
                                         actionButton("create_specs", "Create training data from labels", style='width:100%'),
@@ -183,7 +183,7 @@ shinyApp(
     
     
     
-    # Panel create train data -------------------------------------------------
+    # 1) Panel create train data -------------------------------------------------
     # Button 1 - Choose folder
     observe({
       shinyDirChoose(input, 'folder', roots = roots)
@@ -222,7 +222,7 @@ shinyApp(
       db_path
     })
     
-    # Button 3 - Create specs
+    # Button 3 - Create train data
     spectro_calls <- eventReactive(input$create_specs,{
       sp_data <- spectro_calls_shiny(files_path(), db_path(), 
                                      spec_size = as.numeric(input$spec_size), 
