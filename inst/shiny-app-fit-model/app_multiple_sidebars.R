@@ -13,6 +13,14 @@ library(shinyjs)
 library(DBI)
 library(dplyr)
 
+##### Function to read RDATA #####
+# This function, borrowed from http://www.r-bloggers.com/safe-loading-of-rdata-files/, 
+# load the Rdata into a new environment to avoid side effects
+LoadToEnvironment <- function(RData, env=new.env()) {
+  load(RData, env)
+  return(env)
+}
+
 ##### Load all #####
 system <- Sys.info()[['sysname']]
 if (system == "Windows") files <- list.files("C://Users//silva//Projects//R_packages//soundClass//R", pattern = ".R", full.names = TRUE)
@@ -134,13 +142,45 @@ shinyApp(
       
       
       # 2) Panel fit model ---------------------------------------------------------
-      tabPanel("Fit model", fluid = FALSE,
-               sidebarLayout(
-                 sidebarPanel(sliderInput("year", "Year:", min = 1968, max = 2009, value = 2009, sep='')),
-                 mainPanel(fluidRow(
-                   column(7,  plotlyOutput("")),
-                   column(5, plotlyOutput(""))   
-                 )#fluidRow
+      tabPanel("Fit model", 
+               sidebarLayout(fluid = FALSE,
+# 2.1) Sidebar panel ------------------------------------------------------
+                 sidebarPanel(width = 2,
+                   # Button 1 - Choose RDATA with spectrogram matrices
+                   shinyFilesButton(id = 'selected_rdata', 
+                                    label = 'Choose train data',
+                                    title = 'Choose train data file',
+                                    multiple = FALSE, 
+                                    style='width:100%'),
+                   hr(), # Introduzir linha divisoria
+                   h4("Model parameters", align = "left"),
+                   hr(), # Introduzir linha divisoria
+                   # Input 1
+                   numericInput(inputId ="train_per",  
+                                label = "Train %",
+                                value = '0.7'),
+                   # Input 2
+                   numericInput(inputId ="batch",  
+                                label = "Batch size",
+                                value = '2'),
+                   # Input 3
+                   numericInput(inputId ="lr",  
+                                label = "Learning rate",
+                                value = '0.01'),
+                   # Input 4
+                   numericInput(inputId ="stop",  
+                                label = "Early stop",
+                                value = '2'),
+                   # Input 5
+                   numericInput(inputId ="epochs",  
+                                label = "Max epochs",
+                                value = '2')
+                   
+                 ), #sidebarPanel
+
+# 2.2) Main panel ---------------------------------------------------------
+                 mainPanel(
+                   textOutput("selected_rdata")
                  )#mainPanel
                )#sidebarLayout
       ),#tabPanel plot
@@ -193,13 +233,11 @@ shinyApp(
         output$folder_path <- renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
       }
     })
-    
     observeEvent(input$folder, {
       if(length(parseDirPath(roots, input$folder))>0){ 
         setwd(parseDirPath(roots, input$folder))
       }
     })
-    
     files_path <- reactive({ # files_path para usar noutras funcoes
       folder_selected <- parseDirPath(roots, input$folder)
       files_path <- as.character(paste0(folder_selected, "//")) #dupla barra para funcionar em linux e windows
@@ -215,7 +253,6 @@ shinyApp(
         output$db_path <- renderText(as.character(db_path)) #output para mostrar o path da bd escolhida
       }
     })
-    
     db_path <- reactive({ # db_path para usar noutras funcoes
       file_selected <- parseFilePaths(roots, input$selected_db)
       db_path <- as.character(file_selected$datapath)
@@ -223,7 +260,7 @@ shinyApp(
     })
     
     # Button 3 - Create train data
-    spectro_calls <- eventReactive(input$create_specs,{
+    spectro_calls <- eventReactive(input$create_specs, {
       sp_data <- spectro_calls_shiny(files_path(), db_path(), 
                                      spec_size = as.numeric(input$spec_size), 
                                      window_length = as.numeric(input$window_length), 
@@ -238,6 +275,25 @@ shinyApp(
     
     output$spec <- renderTable({
       table(spectro_calls()[[2]])
+    })
+    
+
+# 2) Panel fit model ------------------------------------------------------
+    # Button 1 - Choose train rdata
+    shinyFileChoose(input, 'selected_rdata', roots = roots)
+
+    rdata_list <- reactive({ # reactive com a lista importada no rdata
+      if(length(input$selected_rdata) > 1){ 
+      file_selected <- parseFilePaths(roots, input$selected_rdata)
+      env <- LoadToEnvironment(as.character(file_selected$datapath))
+      rdata_list <- env[[names(env)[1]]]
+      return(rdata_list)
+      }
+    })
+    
+    #so para testar a importacao do rdata_list
+    output$selected_rdata <- renderText({
+     as.character(rdata_list()[[3]][1])
     })
     
   }#server
