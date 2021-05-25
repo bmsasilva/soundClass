@@ -5,7 +5,7 @@ LoadToEnvironment <- function(RData, env=new.env()) {
   return(env)
 }
 
-rdata_list <- LoadToEnvironment("/home/bruno/packages_test_data/recordings/sp_data.RDATA")
+rdata_list <- LoadToEnvironment("C://Users//silva//recordings_test//sp_data.RDATA")
 rdata_list <- rdata_list[[names(rdata_list)[1]]]
 
 # Parametros para o treino
@@ -49,10 +49,11 @@ model %>%
 history<-model %>% fit(data_x, data_y, 
                        batch_size = 64, 
                        epochs = 20,
-                       callbacks = list(callback_early_stopping(patience = 10, monitor = 'accuracy'),
-                                        callback_model_checkpoint("./model_{epoch:02d}-{accuracy:.4f}.hdf5", monitor = "accuracy")),
+                       callbacks = list(callback_early_stopping(patience = 1, monitor = 'val_accuracy'),
+                                        callback_model_checkpoint("./epoch-{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5", 
+                                                                  monitor = "val_accuracy")),
                        shuffle = TRUE,
-                       validation_split = 0.2,
+                       validation_split = 0.3,
                        verbose = 1)
 
 save(history, file="./history_model.RDATA")
@@ -64,10 +65,10 @@ save(history, file="./history_model.RDATA")
   gen_images %>% fit_image_data_generator(data_x)
   
   #Generates batches of augmented/normalized data from image data and #labels to visually see the input images to the Model
-  model %>% fit(
+  model %>% fit( #fit_generator em versoes antigas
     flow_images_from_data(data_x, data_y,
                           gen_images,
                           batch_size=64,
-                          save_to_dir="./extra_files/"),
+                          save_to_dir=".//extra_files//"),
     steps_per_epoch=5,
     epochs = 80 )
