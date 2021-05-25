@@ -10,10 +10,11 @@ rdata_list <- rdata_list[[names(rdata_list)[1]]]
 
 # Parametros para o treino
 total <- dim(rdata_list[[1]])[1]
-img_rows = rdata_list[[3]]$input_shape_rows # img_rows e img_cols estao trocados aqui pq aplico o rotate no script antes (com rotate as imagens aparecem como devem. sem rotate aparecem de pernas para o ar)
+
+# img_rows e img_cols estao trocados aqui pq aplico o rotate no script antes (com rotate as imagens aparecem como devem. sem rotate aparecem de pernas para o ar)
+img_rows = rdata_list[[3]]$input_shape_rows
 img_cols = rdata_list[[3]]$input_shape_cols
 
-#input_shape=c(img_rows, img_cols, 1)
 input_shape=c(img_cols, img_rows, 1)
 seed = 1002
 
@@ -69,6 +70,12 @@ save(history, file="./history_model.RDATA")
     flow_images_from_data(data_x, data_y,
                           gen_images,
                           batch_size=64,
-                          save_to_dir=".//extra_files//"),
+                          save_to_dir=".//ext
+                          
+                          
+                          
+                          
+                          
+                          ra_files//"),
     steps_per_epoch=5,
     epochs = 80 )
