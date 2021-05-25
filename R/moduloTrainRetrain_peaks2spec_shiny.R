@@ -29,7 +29,7 @@ peaks2spec_shiny <- function(recording, sound_peaks, spec_size = NA, window_leng
   fs <- recording$fs
   sound_samples <- recording$sound_samples
   tx <- recording$tx
-  input_shape <- c(size / time_step_size, 
+  input_shape <- c(spec_size / time_step_size, 
                    (freq_range[2]-freq_range[1])*frequency_resolution)
   
   # if(parameters == "v1"){
@@ -75,17 +75,17 @@ peaks2spec_shiny <- function(recording, sound_peaks, spec_size = NA, window_leng
   # Dividir o ficheiro em janelas de tamanho size (definido na versao escolhida - 20ms neste caso)
   # em volta dos sound_peaks de fmaxe
   windows <- matrix(NA, nrow = length(sound_peaks),
-                    ncol = ms2samples(size, fs, tx))
-  half_window <- ms2samples(size / 2, fs, tx)
+                    ncol = ms2samples(spec_size, fs, tx))
+  half_window <- ms2samples(spec_size / 2, fs, tx)
   
   # Necessario mudar o primeiro ou o ultimo peak caso
   # fiquem a menos de 20ms do inicio ou do fim da gravacao
-  if(sound_peaks[1] < ms2samples(size / 2, fs, tx)) {
-    sound_peaks[1] <- ms2samples(size / 2, fs, tx) + 100
+  if(sound_peaks[1] < ms2samples(spec_size / 2, fs, tx)) {
+    sound_peaks[1] <- ms2samples(spec_size / 2, fs, tx) + 100
   }
   
-  if(sound_peaks[length(sound_peaks)] > length(sound_samples) - ms2samples(size / 2, fs, tx)) {
-    sound_peaks[length(sound_peaks)] <- length(sound_samples) - ms2samples(size / 2, fs, tx) - 100 
+  if(sound_peaks[length(sound_peaks)] > length(sound_samples) - ms2samples(spec_size / 2, fs, tx)) {
+    sound_peaks[length(sound_peaks)] <- length(sound_samples) - ms2samples(spec_size / 2, fs, tx) - 100 
   }
   
   for (i in 1:length(sound_peaks)) {

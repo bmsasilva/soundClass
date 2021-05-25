@@ -11,7 +11,10 @@ library(rhandsontable)
 library(shinythemes)
 library(shinyjs)
 library(DBI)
+library(dbplyr)
 library(dplyr)
+library(RSQLite)
+library(tuneR)
 
 ##### Function to read RDATA #####
 # This function, borrowed from http://www.r-bloggers.com/safe-loading-of-rdata-files/, 
@@ -24,11 +27,11 @@ LoadToEnvironment <- function(RData, env=new.env()) {
 ##### Load all #####
 system <- Sys.info()[['sysname']]
 if (system == "Windows") files <- list.files("C://Users//silva//Projects//R_packages//soundClass//R", pattern = ".R", full.names = TRUE)
-if (system == "Linux") files <- list.files("~/Projectos/phd/0.workfolder/meus_papers/ms02_package_cnn/soundClass/R/", pattern = ".R", full.names = TRUE)
+if (system == "Linux") files <- list.files("/mnt/5F9DC8AD3B9B9A40/Bruno/r_packages/soundClass/R/", pattern = ".R", full.names = TRUE)
 
 for(file in files) source(file)
 
-shinyApp(
+#shinyApp(
   
   # UI ----------------------------------------------------------------------
   ui = fluidPage(
@@ -210,7 +213,7 @@ shinyApp(
                )#sidebarLayout
       )#tabPanel plot
     ) # tabsetPanel
-  ), # fluidPage
+  ) # fluidPage
   
   
   # Server ------------------------------------------------------------------
@@ -219,7 +222,7 @@ shinyApp(
     # File and folder chooser paths -------------------------------
     system <- Sys.info()[['sysname']]
     if (system == "Windows") roots <- c(home = 'C://')
-    if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
+    if (system == "Linux") roots <- c(Computer = "/") #getVolumes()#funciona no HP mas nao no myotis # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
     
     
     
@@ -227,14 +230,14 @@ shinyApp(
     # Button 1 - Choose folder
     observe({
       shinyDirChoose(input, 'folder', roots = roots)
-      if(!is.null(input$folder)){
-        folder_selected <- parseDirPath(roots, input$folder)
-        folder_path <- paste("Recordings folder =", as.character(folder_selected))
-        output$folder_path <- renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
-      }
-    })
+    if(!is.null(input$folder)){
+    folder_selected <- parseDirPath(roots, input$folder)
+    folder_path <- paste("Recordings folder =", as.character(folder_selected))
+    output$folder_path <- renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
+    }
+     })
     observeEvent(input$folder, {
-      if(length(parseDirPath(roots, input$folder))>0){ 
+      if(length(parseDirPath(roots, input$folder))>0){
         setwd(parseDirPath(roots, input$folder))
       }
     })
@@ -297,4 +300,7 @@ shinyApp(
     })
     
   }#server
-) #shinyApp
+#) #shinyApp
+
+# Run the application 
+shinyApp(ui = ui, server = server)

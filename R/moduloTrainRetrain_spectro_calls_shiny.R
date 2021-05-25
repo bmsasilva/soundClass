@@ -35,7 +35,7 @@ spectro_calls_shiny <- function(files_path, db_path, spec_size = NA, window_leng
     # time_step_size <- 0.25
     # dynamic_range <- 90
     # freq_range <- c(10, 80) #khertz
-     input_shape <- c(size / time_step_size, 
+     input_shape <- c(spec_size / time_step_size, 
                      (freq_range[2]-freq_range[1])*frequency_resolution)
  
     

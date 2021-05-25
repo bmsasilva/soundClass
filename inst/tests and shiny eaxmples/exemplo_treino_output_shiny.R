@@ -28,9 +28,7 @@ server <- function(input, output) {
         callbacks = list(cb),
         verbose = 1
       )
-    
   })
-  
 }
 
 # Run the application 

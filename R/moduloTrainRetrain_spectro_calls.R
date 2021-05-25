@@ -35,7 +35,7 @@ spectro_calls <- function(files_path, db_path, parameters){ # nota: files_path t
     time_step_size <- 0.25
     dynamic_range <- 90
     freq_range <- c(10, 125) #hertz
-    input_shape <- c(size / time_step_size, 
+    input_shape <- c(spec_size / time_step_size, 
                      (freq_range[2]-freq_range[1])*frequency_resolution)
   } else if(parameters == "v2"){ # morcegos
     # without rhinolophus 
@@ -45,7 +45,7 @@ spectro_calls <- function(files_path, db_path, parameters){ # nota: files_path t
     time_step_size <- 0.25
     dynamic_range <- 90
     freq_range <- c(10, 80) #khertz
-    input_shape <- c(size / time_step_size, 
+    input_shape <- c(spec_size / time_step_size, 
                      (freq_range[2]-freq_range[1])*frequency_resolution)
   } else if(parameters == "v3"){ # aves
     spec_size <- 2000 # ms
@@ -54,7 +54,7 @@ spectro_calls <- function(files_path, db_path, parameters){ # nota: files_path t
     time_step_size <- 25
     dynamic_range <- 90
     freq_range <- c(1, 12) #hertz
-    input_shape <- c(size / time_step_size, 
+    input_shape <- c(spec_size / time_step_size, 
                      (freq_range[2]-freq_range[1])*frequency_resolution)
   } else if(parameters == "v4"){ # grilos # acho que existe uma variabilidade demasiado grande no tamanho do som. talvez eliminar este
     spec_size <- 20 # ms
@@ -63,7 +63,7 @@ spectro_calls <- function(files_path, db_path, parameters){ # nota: files_path t
     time_step_size <- 0.1
     dynamic_range <- 90
     freq_range <- c(10, 80) #hertz
-    input_shape <- c(size / time_step_size, 
+    input_shape <- c(spec_size / time_step_size, 
                      (freq_range[2]-freq_range[1])*frequency_resolution)
   } else {
     stop("No valid parameters selected", call. = FALSE)
