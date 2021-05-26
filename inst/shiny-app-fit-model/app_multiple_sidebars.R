@@ -192,7 +192,6 @@ for(file in files) source(file)
 
 # 2.2) Main panel ---------------------------------------------------------
                  mainPanel(
-                   textOutput("model_fit"),##
                    br(),
                    fluidRow(
                      column(6,
@@ -367,16 +366,14 @@ for(file in files) source(file)
     ### O action button nao funciona se nao tiver 
     ### um output para o eventReactive. A alternativa é usar observeEvent
 
-    output$model_fit <- renderText({
-      model_fit()
-    })
+    # output$model_fit <- renderText({
+    #   model_fit()
+    # })
 
     # Action Button - Fit model (se nao usar model_fit() tem de se usar
     # observeEvent em vez de eventReative)
     
-    # output$yyy <- renderText({
-    #   model_fit()
-    # })
+
     
     #model_fit <- eventReactive(input$fit_model, {
     observeEvent(input$fit_model, {
