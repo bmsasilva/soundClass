@@ -81,8 +81,8 @@ spectro_calls_shiny <- function(files_path, db_path, spec_size = NA, window_leng
      dynamic_range = dynamic_range,
      freq_range_low = freq_range[1],
     freq_range_high = freq_range[2],
-    input_shape_rows = input_shape[1],
-    input_shape_cols = input_shape[2])
+    img_rows = input_shape[2],
+    img_cols = input_shape[1])
   
   return(list(spec_image, label, parameters))
 }
