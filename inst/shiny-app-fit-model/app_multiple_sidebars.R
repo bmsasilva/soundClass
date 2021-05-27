@@ -1,3 +1,7 @@
+## clean environment including hidden objects
+#rm(list = ls(all.names = TRUE))
+#rm(list = ls())  deixa packages e hidden objects
+
 library(shiny)
 library(plotly)
 library(shinyBS)
@@ -15,6 +19,7 @@ library(dbplyr)
 library(dplyr)
 library(RSQLite)
 library(tuneR)
+library(keras)
 
 ##### Function to read RDATA #####
 # This function, borrowed from http://www.r-bloggers.com/safe-loading-of-rdata-files/, 
@@ -35,6 +40,7 @@ for(file in files) source(file)
   
   # UI ----------------------------------------------------------------------
   ui = fluidPage(
+    shinyjs::useShinyjs(),  # Include shinyjs
     titlePanel("Modeling"),
     tabsetPanel(
       # 1) Panel create train data -------------------------------------------------
@@ -211,8 +217,8 @@ for(file in files) source(file)
                             actionButton("fit_model", "Fit model", style='width:100%'),
                              tags$style(type='text/css', "#fit_model { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                       )
-                   )
-                   
+                   ), #tirar a virgula qd apagar a linha de baixo
+                  tableOutput('metrics')
                    
                    
                    
@@ -341,11 +347,11 @@ for(file in files) source(file)
       file_selected <- parseFilePaths(roots, input$rdata_path)
       env <- LoadToEnvironment(as.character(file_selected$datapath))
       rdata_list <- env[[names(env)[1]]]
+      rm(env)
       return(rdata_list)
       }
     })
     
-
     # Button 2 - Choose model
     observe({ 
       shinyFileChoose(input, 'model_path', roots = roots)
@@ -358,7 +364,7 @@ for(file in files) source(file)
     
     
     model_path <- reactive({ # model_path para usar noutras funcoes
-      file_selected <- parseFilePaths(roots, input$selected_db)
+      file_selected <- parseFilePaths(roots, input$model_path)
       model_path <- as.character(file_selected$datapath)
       model_path
     })
@@ -376,80 +382,64 @@ for(file in files) source(file)
 
     
     #model_fit <- eventReactive(input$fit_model, {
-    observeEvent(input$fit_model, {
-      print("action button fit model working")
-      ######funcao model fit########
-#
-#       # set seed
-#       seed = 1002
-#
-#       # Parametros para o treino
-#       total <- dim(rdata_list()[[1]])[1]
-#       img_rows = rdata_list()[[3]]$img_rows
-#       img_cols = rdata_list()[[3]]$img_cols
-#       input_shape=c(img_rows, img_cols, 1)
-#       num_classes <- length(unique(rdata_list()[[2]]))
-#
-#
-#       rdata_list()[[2]] <- as.factor(rdata_list()[[2]])#converter para factor para facilitar os numeros e aos nomes de classe repectivos
-#       labels_code <- as.integer(rdata_list()[[2]]) - 1
-#       labels_name <- as.character(rdata_list()[[2]])
-#       labels_df <- data.frame(name = levels(rdata_list()[[2]]), code = (1:length(levels(rdata_list()[[2]])))-1)
-#
-#
-#
-#       #  Randomizar a ordem dos casos
-#       set.seed(seed)
-#       data_x <- rdata_list()[[1]]
-#       data_y <- labels_code
-#       randomize <- sample(length(data_y))
-#       data_x <- data_x[randomize,]
-#       data_y <- data_y[randomize]
-#
-#       # preparar data para tensorflow
-#       data_y <- to_categorical(as.numeric(data_y), num_classes = num_classes)
-#       data_x <- array(data_x, dim = c(total, img_rows, img_cols, 1))
-#
-#       # load net structure
-#       source(model_path())
-#       summary(model)
-#
-#       # fit
-#       model %>%
-#         compile(
-#           optimizer = optimizer_sgd(lr=0.01, momentum=0.9, nesterov=T), # mesmo leraning rate do base model
-#           loss = 'categorical_crossentropy',
-#           metrics = c('accuracy')
-#         )
-#
-#       history<-model %>% fit(data_x, data_y,
-#                              batch_size = 64,
-#                              epochs = 20,
-#                              callbacks = list(callback_early_stopping(patience = 1, monitor = 'val_accuracy'),
-#                                               callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
-#                                                                         monitor = "val_accuracy")),
-#                              shuffle = TRUE,
-#                              validation_split = 0.3,
-#                              verbose = 1)
-#
-#       save(history, file="./history_model.RDATA")
-#       
-#       # ###### so para confirmar que as imagens estão a entrar correctamebnte
-#       # gen_images <- image_data_generator()
-#       # 
-#       # #Fit image data generator internal statistics to some sample data
-#       # gen_images %>% fit_image_data_generator(data_x)
-#       # 
-#       # #Generates batches of augmented/normalized data from image data and #labels to visually see the input images to the Model
-#       # model %>% fit_generator( #fit_generator em versoes antigas
-#       #   flow_images_from_data(data_x, data_y,
-#       #                         gen_images,
-#       #                         batch_size=1,
-#       #                         save_to_dir=".//extra_files//"),
-#       #   steps_per_epoch=1,
-#       #   epochs = 1 )
-#       #####fim fucao model fit######
-#       
+   
+     observeEvent(input$fit_model, {
+
+      rdata_list <- rdata_list() 
+       
+      # set seed
+      seed <- 1002
+
+      # Parametros para o treino
+      total <- dim(rdata_list[[1]])[1]
+      img_rows <- rdata_list[[3]]$img_rows
+      img_cols <- rdata_list[[3]]$img_cols
+      input_shape <- c(img_rows, img_cols, 1)
+      num_classes <- length(unique(rdata_list[[2]]))
+      
+
+      rdata_list[[2]] <- factor(rdata_list[[2]])#converter para factor para facilitar os numeros e aos nomes de classe repectivos
+      labels_code <- as.integer(rdata_list[[2]]) - 1
+      labels_name <- as.character(rdata_list[[2]])
+      labels_df <- data.frame(name = levels(rdata_list[[2]]), code = (1:length(levels(rdata_list[[2]])))-1)
+
+      #  Randomizar a ordem dos casos
+      set.seed(seed)
+      data_x <- rdata_list[[1]]
+      data_y <- labels_code
+      randomize <- sample(length(data_y))
+      data_x <- data_x[randomize,]
+      data_y <- data_y[randomize]
+      
+      # preparar data para tensorflow
+      data_y <- keras::to_categorical(as.numeric(data_y), num_classes = num_classes)
+      data_x <- array(data_x, dim = c(total, img_rows, img_cols, 1))
+
+      # load net structure
+      source(model_path(), local=TRUE)
+
+      # fit
+      model %>%
+        compile(
+          optimizer = optimizer_sgd(lr=0.01, momentum=0.9, nesterov=T), 
+          loss = 'categorical_crossentropy',
+          metrics = c('accuracy')
+        )
+
+      history<-model %>% fit(data_x, data_y,
+                             batch_size = 64,
+                             epochs = 20,
+                             callbacks = list(callback_early_stopping(patience = 10, monitor = 'val_accuracy'),
+                                              callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
+                                                                        monitor = "val_accuracy"),
+                                              callback_csv_logger("./fit_log.csv")), #monitorar em tempo real alteracoes neste ficheiro e ir plotando
+                             shuffle = TRUE,
+                             validation_split = 0.3,
+                             verbose = 1)
+
+      save(history, file="./history_model.RDATA")
+      
+
      })
     
     #so para testar a importacao do rdata_list

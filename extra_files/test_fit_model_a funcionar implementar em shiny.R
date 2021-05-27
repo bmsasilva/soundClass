@@ -39,7 +39,7 @@ data_y <- to_categorical(as.numeric(data_y), num_classes = num_classes)
 data_x <- array(data_x, dim = c(total, img_rows, img_cols, 1))
 
 # load net structure
-source("./inst/model_architectures/model_vgg_sequential.R")
+source("//home/bruno/packages_test_data/recordings/model_vgg_sequential.R")
 summary(model)
 
 # fit
