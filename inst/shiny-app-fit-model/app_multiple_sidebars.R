@@ -36,6 +36,11 @@ if (system == "Linux") files <- list.files("/mnt/5F9DC8AD3B9B9A40/Bruno/r_packag
 
 for(file in files) source(file)
 
+#eliminate previous fit_log.csv file
+if (file.exists("./fit_log.csv")) 
+  file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
+
+
 #shinyApp(
   
   # UI ----------------------------------------------------------------------
@@ -218,8 +223,12 @@ for(file in files) source(file)
                              tags$style(type='text/css', "#fit_model { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                       )
                    ), #tirar a virgula qd apagar a linha de baixo
-                  tableOutput('metrics')
-                   
+                  br(),
+                  br(),
+                  tableOutput('fit_log'),
+                  br(),
+                  br(),
+                  tableOutput('end_fit')
                    
                    
                    
@@ -227,41 +236,41 @@ for(file in files) source(file)
                    
                  )#mainPanel
                )#sidebarLayout
-      ),#tabPanel plot
+      )#tabPanel plot
       
       # 3) Panel re-fit model ---------------------------------------------------------
-      tabPanel("Re-fit model", fluid = FALSE,
-               sidebarLayout(
-                 sidebarPanel(sliderInput("year", "Year:", min = 1968, max = 2009, value = 2009, sep='')),
-                 mainPanel(
-                   
-                   actionButton("teste", "Fit teste")
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                 )#mainPanel
-               )#sidebarLayout
-      ),#tabPanel plot
+      # tabPanel("Re-fit model", fluid = FALSE,
+      #          sidebarLayout(
+      #            sidebarPanel(sliderInput("year", "Year:", min = 1968, max = 2009, value = 2009, sep='')),
+                 # mainPanel(
+                 #   
+                 #   actionButton("teste", "Fit teste")
+                 #   
+                 #   
+                 #   
+                 #   
+                 #   
+                 #   
+                 #   
+                 #   
+                 #   
+                 #   
+                 # )#mainPanel
+      #          )#sidebarLayout
+      # ),#tabPanel plot
       
       
       # 4) Panel run model  -----------------------------------------------------
-      tabPanel("Run model",
-               sidebarLayout(fluid = FALSE,
-                             sidebarPanel(sliderInput("year", "Year:", min = 1968, max = 2009, value = 2009, sep='')),
-                             mainPanel(fluidRow(
-                               column(7,  plotlyOutput("")),
-                               column(5, plotlyOutput(""))
-                             )#fluidRow
-                             )#mainPanel
-               )#sidebarLayout
-      )#tabPanel plot
+      # tabPanel("Run model",
+               # sidebarLayout(fluid = FALSE,
+               #               sidebarPanel(sliderInput("year", "Year:", min = 1968, max = 2009, value = 2009, sep='')),
+               #               mainPanel(fluidRow(
+               #                 column(7,  plotlyOutput("")),
+               #                 column(5, plotlyOutput(""))
+               #               )#fluidRow
+               #               )#mainPanel
+               # )#sidebarLayout
+      # )#tabPanel plot
     ) # tabsetPanel
   ) # fluidPage
   
@@ -369,6 +378,14 @@ for(file in files) source(file)
       model_path
     })
     
+    # text output do treio do mofelo
+    # end_fit <- reactiveFileReader(intervalMillis = 1000, NULL, filePath =
+    #                                "fit_log.csv", readFunc = read.csv) #duranteofit nao funciona.so daoresultado no final
+
+    # output$end_fit <- renderTable({
+    #   end_fit()
+    # })
+    # 
     ### O action button nao funciona se nao tiver 
     ### um output para o eventReactive. A alternativa é usar observeEvent
 
@@ -379,12 +396,24 @@ for(file in files) source(file)
     # Action Button - Fit model (se nao usar model_fit() tem de se usar
     # observeEvent em vez de eventReative)
     
-
+    
+    #Apagar a tabela dos resultados no caso de 2 volta de fit 
+    observeEvent(input$fit_model, {
+    output$end_fit <- renderTable({
+      
+    })
+      })
+    
     
     #model_fit <- eventReactive(input$fit_model, {
    
      observeEvent(input$fit_model, {
-
+       #eliminate previous fit_log.csv file
+       # if (file.exists("./fit_log.csv")) 
+       #   file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
+       
+     
+       
       rdata_list <- rdata_list() 
        
       # set seed
@@ -430,15 +459,36 @@ for(file in files) source(file)
                              batch_size = 64,
                              epochs = 20,
                              callbacks = list(callback_early_stopping(patience = 10, monitor = 'val_accuracy'),
-                                              callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
-                                                                        monitor = "val_accuracy"),
-                                              callback_csv_logger("./fit_log.csv")), #monitorar em tempo real alteracoes neste ficheiro e ir plotando
+                                              callback_model_checkpoint("./fitted_model.hdf5",
+                                                                        monitor = "val_accuracy", save_best_only = T),
+                                      #        callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
+                                       #                                 monitor = "val_accuracy"),
+                                      callback_lambda(on_train_begin = function(logs) {
+                                        shinyjs::html("fit_log", paste("Initiating epoch 1"))}),
+                                      
+                                      callback_lambda(on_epoch_end = function(epoch, logs) {
+                                        shinyjs::html("fit_log", paste("Validation accuracy %: ", logs$val_accuracy))}),
+                                      
+                                     
+                                      callback_lambda(on_train_end = function(logs) {
+                                        shinyjs::html("fit_log", paste("Model fitted"))}),
+                                      
+                                              callback_csv_logger("./fit_log.csv")), 
+                             
                              shuffle = TRUE,
                              validation_split = 0.3,
                              verbose = 1)
 
       save(history, file="./history_model.RDATA")
+
       
+      output$end_fit <- renderTable({
+        read.csv("fit_log.csv")
+
+        
+      })
+      
+     # file.remove("./fit_log.csv")
 
      })
     
