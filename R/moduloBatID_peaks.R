@@ -12,6 +12,8 @@
 #' @author Bruno Silva
 #' @export
 peaks <- function(bat_recording, win_size = 40, plot = F){
+  #esta funcao com tempoexpandido nao da os chuncks todos
+  
   if(!is.btr(bat_recording)){
   stop("Input object must be of class bat_recording. Use
       import_audio() as constructor." , call. =  FALSE)

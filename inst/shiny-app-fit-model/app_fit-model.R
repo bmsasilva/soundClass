@@ -78,12 +78,11 @@ ui = fluidPage(
                                                      label = "Moving window (ms)",
                                                      value = '1'),
                                         # Input 3
-                                        selectInput(inputId = "time_step_size",
+                                        selectInput(inputId = "overlap",
                                                     label = "Overlap",
-                                                    choices = c('25%' = '0.75',
-                                                                '50%' = '0.50',
-                                                                '75%' = '0.25'),
-                                                    selected = '0.25'),
+                                                    choices = c('50%' = '0.50',
+                                                                '75%' = '0.75'),
+                                                    selected = '0.75'),
                                         # Input 4
                                         selectInput(inputId  = "frequency_resolution", 
                                                     label = "Resolution",
@@ -327,7 +326,7 @@ server = function(input, output) {
                                    spec_size = as.numeric(input$spec_size),
                                    window_length = as.numeric(input$window_length),
                                    frequency_resolution = as.numeric(input$frequency_resolution),
-                                   time_step_size = as.numeric(input$time_step_size) * as.numeric(input$window_length),
+                                   time_step_size = (1 - as.numeric(input$overlap)) * as.numeric(input$window_length),
                                    dynamic_range = as.numeric(input$dynamic_range),
                                    freq_range = c(as.numeric(input$low), as.numeric(input$high))
     )
@@ -456,7 +455,7 @@ server = function(input, output) {
                                             callback_csv_logger("./fitted_model_log.csv")), 
                            
                            shuffle = TRUE,
-                           validation_split = 0.3,
+                           validation_split = 1 - input$train_per,
                            verbose = 1)
     
     # save(history, file="./fitted_model_history.RDATA")
