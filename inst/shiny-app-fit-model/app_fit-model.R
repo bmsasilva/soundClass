@@ -36,9 +36,9 @@ if (system == "Linux") files <- list.files("/mnt/5F9DC8AD3B9B9A40/Bruno/r_packag
 
 for(file in files) source(file)
 
-#eliminate previous fit_log.csv file
-if (file.exists("./fit_log.csv")) 
-  file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
+#eliminate previous fitted_model_log.csv file
+if (file.exists("./fitted_model_log.csv")) 
+  file.remove("./fitted_model_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
 
 
 #shinyApp(
@@ -225,7 +225,7 @@ ui = fluidPage(
                              ), #tirar a virgula qd apagar a linha de baixo
                              br(),
                              br(),
-                             tableOutput('fit_log'),
+                             tableOutput('fitted_model_log'),
                              br(),
                              br(),
                              tableOutput('end_fit')
@@ -387,9 +387,9 @@ server = function(input, output) {
   })
   
   observeEvent(input$fit_model, {
-    #eliminate previous fit_log.csv file
-    # if (file.exists("./fit_log.csv")) 
-    #   file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
+    #eliminate previous fitted_model_log.csv file
+    # if (file.exists("./fitted_model_log.csv")) 
+    #   file.remove("./fitted_model_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
     
     
     
@@ -434,7 +434,7 @@ server = function(input, output) {
         metrics = c('accuracy')
       )
     
-    history<-model %>% fit(data_x, data_y,
+    model %>% fit(data_x, data_y,
                            batch_size = input$batch,
                            epochs = input$epochs,
                            callbacks = list(callback_early_stopping(patience = input$stop, monitor = 'val_accuracy'),
@@ -443,28 +443,30 @@ server = function(input, output) {
                                             #        callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
                                             #                                 monitor = "val_accuracy"),
                                             callback_lambda(on_train_begin = function(logs) {
-                                              shinyjs::html("fit_log", paste("Initiating epoch 1"))}),
+                                              shinyjs::html("fitted_model_log", paste("Initiating epoch 1"))}),
                                             
                                             callback_lambda(on_epoch_end = function(epoch, logs) {
-                                              shinyjs::html("fit_log", 
+                                              shinyjs::html("fitted_model_log", 
                                                             paste("Epoch = ", epoch + 1, " | Validation accuracy = ", round(logs$val_accuracy,3)*100, "%"))}),
                                             
                                             
                                             callback_lambda(on_train_end = function(logs) {
-                                              shinyjs::html("fit_log", paste("Model fitted"))}),
+                                              shinyjs::html("fitted_model_log", paste("Model fitted"))}),
                                             
-                                            callback_csv_logger("./fit_log.csv")), 
+                                            callback_csv_logger("./fitted_model_log.csv")), 
                            
                            shuffle = TRUE,
                            validation_split = 0.3,
                            verbose = 1)
     
-    save(history, file="./history_model.RDATA")
-    
-    ####SALVAR UM FICHEIROS OCM OS DADOs necesarios para a app de id
+    # save(history, file="./fitted_model_history.RDATA")
+metadata <- list(parameters =  rdata_list[[3]], classes = labels_df)
+    save(metadata,
+         file="fitted_model_metadata.RDATA")
+
     
     output$end_fit <- renderTable({
-      read.csv("fit_log.csv")
+      read.csv("fitted_model_log.csv")
     })
   })
   

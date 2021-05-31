@@ -1,5 +1,5 @@
 
-auto_id_biobox <- function(model_path, file_path, csv_file, out_dir = "./", save_spec = T,
+auto_id <- function(model_path, file_path, csv_file, out_dir = "./", save_spec = T,
                            save_png = T, class_labels, win_size = 50, version = "v1", 
                            plot2console = F, low = 10, high = 120, recursive = FALSE){
   
