@@ -53,9 +53,9 @@ save_output <- function(output, bat_recording, csv_file = NA, png_file = NA,
       aux <- cbind(file_name, get_mode(output$spe), round(mean(output$prob), 2),
                    round(mean(output$fmaxe), 2), length(output$peaks))
     } else {
-      aux <- cbind(file_name, "Noise")
+      aux <- cbind(file_name, "Noise", NA, NA, NA)
     }
-    write.table(aux, file = csv_file, append = T, col.names = F, row.names = F) #introduzir sep =","
+    write.table(aux, file = csv_file, append = T, col.names = F, row.names = F, sep = ",", dec = ".")
   }
 
   if (plot2console == T){
