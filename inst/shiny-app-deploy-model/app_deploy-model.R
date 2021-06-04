@@ -37,8 +37,8 @@ if (system == "Linux") files <- list.files("/mnt/5F9DC8AD3B9B9A40/Bruno/r_packag
 for(file in files) source(file)
 
 #eliminate previous fit_log.csv file
-if (file.exists("./fit_log.csv")) 
-  file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
+# if (file.exists("./fit_log.csv")) 
+#   file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
 
 
 #shinyApp(
@@ -48,73 +48,49 @@ if (file.exists("./fit_log.csv"))
     shinyjs::useShinyjs(),  # Include shinyjs
     titlePanel("Deploy model"),
     tabsetPanel(
-      # 1) Panel create train data -------------------------------------------------
+      # 1) Panel Deploy model -------------------------------------------------
       tabPanel("Run model", 
                sidebarLayout(fluid = FALSE,
                              # 1.1) Sidebar panel ------------------------------------------------
                              sidebarPanel(width = 2,
-                                          # Button 1 - Choose folder
-                                          shinyDirButton(id = 'folder',
+                                          # Button 1 - Choose recordings folder
+                                          shinyDirButton(id = 'selected_folder',
                                                          label = 'Choose folder',
-                                                         title = 'Choose recordings folder', 
+                                                         title = 'Choose folder', 
                                                          style = 'width:100%'),
+  
                                           br(),
-                                          # Button 2 - Choose database
-                                          shinyFilesButton(id = 'selected_db', 
-                                                           label = 'Choose database',
+                                          # Button 2 - Choose model
+                                          shinyFilesButton(id = 'selected_model', 
+                                                           label = 'Choose model',
+                                                           title = 'Choose model file',
+                                                           multiple = FALSE, 
+                                                           style='width:100%'),
+                                          br(),
+                                          # Button 3 - Choose metadata
+                                          shinyFilesButton(id = 'selected_metadata', 
+                                                           label = 'Choose metadata',
                                                            title = 'Choose database file',
                                                            multiple = FALSE, 
                                                            style='width:100%'),
                                           br(),
-                                          hr(), # Introduzir linha divisoria
-                                          h4("Spectrogram parameters", align = "left"),
-                                          hr(), # Introduzir linha divisoria
+                                          br(),
                                           # Input 1
-                                          numericInput(inputId = "spec_size",
-                                                       label = "Size (ms)",
-                                                       value = '20'),
+                                          textInput(inputId = "out_file",
+                                                    label = "Name of output file",
+                                                    value = 'id_results'), 
+                                          br(),
                                           # Input 2
-                                          numericInput(inputId ="window_length",  
-                                                       label = "Moving window (ms)",
-                                                       value = '1'),
+                                          radioButtons("rem_noise", "Non-relevant class?",
+                                                       c("Yes" = TRUE,
+                                                         "No" = FALSE)),
+                                          br(),
                                           # Input 3
-                                          selectInput(inputId = "time_step_size",
-                                                      label = "Overlap",
-                                                      choices = c('25%' = '0.75',
-                                                                  '50%' = '0.50',
-                                                                  '75%' = '0.25'),
-                                                      selected = '0.25'),
-                                          # Input 4
-                                          selectInput(inputId  = "frequency_resolution", 
-                                                      label = "Resolution",
-                                                      choices = c('Low' = '1',
-                                                                  'Medium' = '2',
-                                                                  'High' = '3'),
-                                                      selected = '1'),
-                                          # Input 5
-                                          selectInput(inputId = "dynamic_range",
-                                                      label = "Threshold",
-                                                      choices = c('40 dB' = '40',
-                                                                  '50 dB' = '50',
-                                                                  '60 dB' = '60',
-                                                                  '70 dB' = '70',
-                                                                  '80 dB' = '80',
-                                                                  '90 dB' = '90',
-                                                                  '100 dB' = '100'),
-                                                      selected = '90'),
-                                          # Input 6
-                                          fluidRow(
-                                            column(6, align = "center",
-                                                   textInput("low",
-                                                             "Lower (kHz)",
-                                                             value = '10')
-                                            ),
-                                            column(6, align = "center",
-                                                   textInput("high",
-                                                             "Higher (kHz)",
-                                                             value = '120')
-                                            )
-                                          )
+                                          radioButtons("lab_plots", "Export labeled plots",
+                                                       c("Yes" = TRUE,
+                                                         "No" = FALSE))
+
+
                              ),
                              # 1.2) Main panel ---------------------------------------------------
                              mainPanel(
@@ -127,22 +103,25 @@ if (file.exists("./fit_log.csv"))
                                br(),
                                fluidRow(
                                  column(6,
-                                        textOutput("db_path")
+                                        textOutput("model_path")
+                                 )
+                               ),
+                               br(),
+                               fluidRow(
+                                 column(6,
+                                        textOutput("metadata_path")
                                  )
                                ),
                                hr(),
                                fluidRow(
                                  column(6, align="center", offset = 3,
-                                        # Button 3 - Create train data
-                                        # Should be disabled while spec_calls is running. See how in:
+                                        # Button 4 - Run analysis
+                                        # Should be disabled while analysis is running. See how in:
                                         # https://stackoverflow.com/questions/40621393/disabling-buttons-in-shiny
-                                        actionButton("create_specs", "Create training data from labels", style='width:100%'),
-                                        tags$style(type='text/css', "#create_specs { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
+                                        actionButton("id_recs", "Classify recordings", style='width:100%'),
+                                        tags$style(type='text/css', "#id_recs { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                                  )
                                ),
-                               
-                               
-                               
                                br(),
                                tableOutput("spec")
                              ) #mainPanel
@@ -158,7 +137,7 @@ if (file.exists("./fit_log.csv"))
       
       
       
-      # 2) Panel fit model ---------------------------------------------------------
+      # 2) Panel review results ---------------------------------------------------------
       tabPanel("Review results", 
                sidebarLayout(fluid = FALSE,
 # 2.1) Sidebar panel ------------------------------------------------------
@@ -206,13 +185,13 @@ if (file.exists("./fit_log.csv"))
                    br(),
                    fluidRow(
                      column(6,
-                            textOutput("rdata_path")
+                            #textOutput("rdata_path")
                      )
                    ),
                   br(),
                    fluidRow(
                      column(6,
-                            textOutput("model_path")
+                          #  textOutput("model_path")
                      )
                    ),
                    hr(),
@@ -276,7 +255,7 @@ if (file.exists("./fit_log.csv"))
   
   
   # Server ------------------------------------------------------------------
-  server = function(input, output) {
+  server = function(input, output, session) {
     
     # File and folder chooser paths -------------------------------
     system <- Sys.info()[['sysname']]
@@ -285,98 +264,126 @@ if (file.exists("./fit_log.csv"))
     
     
     
-    # 1) Panel create train data -------------------------------------------------
+    # 1) Panel deploy model -------------------------------------------------
     # Button 1 - Choose folder
     observe({
-      shinyDirChoose(input, 'folder', roots = roots)
-    if(!is.null(input$folder)){
-    folder_selected <- parseDirPath(roots, input$folder)
-    folder_path <- paste("Recordings folder =", as.character(folder_selected))
-    output$folder_path <- renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
-    }
-     })
-    observeEvent(input$folder, {
-      if(length(parseDirPath(roots, input$folder))>0){
-        setwd(parseDirPath(roots, input$folder))
+      shinyDirChoose(input, 'selected_folder', roots = roots)
+      if(!is.null(input$selected_folder)){
+        folder_selected <- parseDirPath(roots, input$selected_folder)
+        folder_path <- paste("Recordings folder =", as.character(folder_selected))
+        output$folder_path <- renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
+      }
+    })
+    observeEvent(input$selected_folder, {
+      if(length(parseDirPath(roots, input$selected_folder))>0){
+        setwd(parseDirPath(roots, input$selected_folder))
       }
     })
     files_path <- reactive({ # files_path para usar noutras funcoes
-      folder_selected <- parseDirPath(roots, input$folder)
+      folder_selected <- parseDirPath(roots, input$selected_folder)
       files_path <- as.character(paste0(folder_selected, "//")) #dupla barra para funcionar em linux e windows
       files_path
     })
     
-    # Button 2 - Choose database
-    observe({ 
-      shinyFileChoose(input, 'selected_db', roots = roots)
-      if(!is.null(input$selected_db)){
-        file_selected <- parseFilePaths(roots, input$selected_db)
-        db_path <- paste("Database file =", as.character(file_selected$datapath))
-        output$db_path <- renderText(as.character(db_path)) #output para mostrar o path da bd escolhida
+    # Button 2 - Choose model
+    observe({
+      shinyFileChoose(input, 'selected_model', roots = roots)
+      if(!is.null(input$selected_model)){
+        file_selected <- parseFilePaths(roots, input$selected_model)
+        model_path <- paste("Model =", as.character(file_selected$datapath))
+        output$model_path <- renderText(as.character(model_path)) #output para mostrar o path da bd escolhida
       }
     })
-    db_path <- reactive({ # db_path para usar noutras funcoes
-      file_selected <- parseFilePaths(roots, input$selected_db)
-      db_path <- as.character(file_selected$datapath)
-      db_path
+    model_path <- reactive({ # db_path para usar noutras funcoes
+      file_selected <- parseFilePaths(roots, input$selected_model)
+      model_path <- as.character(file_selected$datapath)
+      model_path
     })
     
-    # Button 3 - Create train data
-    spectro_calls <- eventReactive(input$create_specs, {
-      sp_data <- spectro_calls_shiny(files_path(), db_path(),
-                                     spec_size = as.numeric(input$spec_size),
-                                     window_length = as.numeric(input$window_length),
-                                     frequency_resolution = as.numeric(input$frequency_resolution),
-                                     time_step_size = as.numeric(input$time_step_size) * as.numeric(input$window_length),
-                                     dynamic_range = as.numeric(input$dynamic_range),
-                                     freq_range = c(as.numeric(input$low), as.numeric(input$high))
-      )
-      save(sp_data, file = "sp_data.RDATA")
-      return(sp_data)
+
+    # Button 3 - Choose metadata
+    observe({ 
+      shinyFileChoose(input, 'selected_metadata', roots = roots)
+      if(!is.null(input$selected_metadata)){
+        file_selected <- parseFilePaths(roots, input$selected_metadata)
+        metadata_path <- paste("Metadata file =", as.character(file_selected$datapath))
+        output$metadata_path <- renderText(as.character(metadata_path)) #output para mostrar o path da bd escolhida
+      }
+    })
+    metadata <- reactive({ # reactive com a lista importada no rdata
+      if(length(input$selected_metadata) > 1){ 
+        file_selected <- parseFilePaths(roots, input$selected_metadata)
+        env <- LoadToEnvironment(as.character(file_selected$datapath))
+        metadata <- env[[names(env)[1]]]
+        rm(env)
+        return(metadata)
+      }
     })
     
-    output$spec <- renderTable({
-      table(spectro_calls()[[2]])
+    # Button 4 - Run analysis
+    observeEvent(input$id_recs, {
+
+      # Criar pasta de output se nao existir ainda
+      if(!dir.exists(paste0(files_path(), "/", "output/"))) dir.create(paste0(files_path(), "/", "output/"))
+     
+      auto_id_shiny(model_path(),
+                    metadata(),
+                    files_path(),
+                    csv_file = paste0(input$out_file,".csv"),
+                    out_dir = paste0(files_path(), "/", "output/"),
+                    save_spec = F, 
+                    save_png = as.logical(input$lab_plots),
+ #                   class_labels = as.character(metadata()$classes$name),
+                    win_size = metadata()$parameters$spec_size * 2,  #minimum distnace between calls and chunck size
+                    remove_noise = as.logical(input$rem_noise),          # if model has non-relevant class, eliminate from output
+                    plot2console = FALSE,
+                    recursive = FALSE)
+      
     })
+    
+
+     # output$spec <- renderTable({ # so funciona depois da auto_id parar de funcionar
+     #   read.csv(paste0(files_path(), "/", "output/", input$out_file,".csv"))
+     # })
     
 
 # 2) Panel fit model ------------------------------------------------------
     # Button 1 - Choose train rdata
-    observe({ 
-      shinyFileChoose(input, 'rdata_path', roots = roots)
-      if(!is.null(input$rdata_path)){
-        file_selected <- parseFilePaths(roots, input$rdata_path)
-        rdata_path <- paste("Train data file =", as.character(file_selected$datapath))
-        output$rdata_path <- renderText(as.character(rdata_path)) #output para mostrar o path da bd escolhida
-      }
-    })
+    # observe({ 
+    #   shinyFileChoose(input, 'rdata_path', roots = roots)
+    #   if(!is.null(input$rdata_path)){
+    #     file_selected <- parseFilePaths(roots, input$rdata_path)
+    #     rdata_path <- paste("Train data file =", as.character(file_selected$datapath))
+    #     output$rdata_path <- renderText(as.character(rdata_path)) #output para mostrar o path da bd escolhida
+    #   }
+    # })
+    # 
+    # rdata_list <- reactive({ # reactive com a lista importada no rdata
+    #   if(length(input$rdata_path) > 1){ 
+    #   file_selected <- parseFilePaths(roots, input$rdata_path)
+    #   env <- LoadToEnvironment(as.character(file_selected$datapath))
+    #   rdata_list <- env[[names(env)[1]]]
+    #   rm(env)
+    #   return(rdata_list)
+    #   }
+    # })
     
-    rdata_list <- reactive({ # reactive com a lista importada no rdata
-      if(length(input$rdata_path) > 1){ 
-      file_selected <- parseFilePaths(roots, input$rdata_path)
-      env <- LoadToEnvironment(as.character(file_selected$datapath))
-      rdata_list <- env[[names(env)[1]]]
-      rm(env)
-      return(rdata_list)
-      }
-    })
-    
-    # Button 2 - Choose model
-    observe({ 
-      shinyFileChoose(input, 'model_path', roots = roots)
-      if(!is.null(input$model_path)){
-        file_selected <- parseFilePaths(roots, input$model_path)
-        model_path <- paste("Model file =", as.character(file_selected$datapath))
-        output$model_path <- renderText(as.character(model_path)) #output para mostrar o path da bd escolhida
-      }
-    })
+    # # Button 2 - Choose model
+    # observe({ 
+    #   shinyFileChoose(input, 'model_path', roots = roots)
+    #   if(!is.null(input$model_path)){
+    #     file_selected <- parseFilePaths(roots, input$model_path)
+    #     model_path <- paste("Model file =", as.character(file_selected$datapath))
+    #     output$model_path <- renderText(as.character(model_path)) #output para mostrar o path da bd escolhida
+    #   }
+    # })
     
     
-    model_path <- reactive({ # model_path para usar noutras funcoes
-      file_selected <- parseFilePaths(roots, input$model_path)
-      model_path <- as.character(file_selected$datapath)
-      model_path
-    })
+    # model_path <- reactive({ # model_path para usar noutras funcoes
+    #   file_selected <- parseFilePaths(roots, input$model_path)
+    #   model_path <- as.character(file_selected$datapath)
+    #   model_path
+    # })
     
     # text output do treio do mofelo
     # end_fit <- reactiveFileReader(intervalMillis = 1000, NULL, filePath =
