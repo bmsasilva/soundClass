@@ -23,7 +23,8 @@
 #' @author Bruno Silva
 #' @export
 
-spectro_calls_shiny <- function(files_path, db_path, spec_size = NA, window_length = NA, # nota: files_path tem de acabar em /
+spectro_calls_shiny <- function(files_path, updateProgress,
+                                db_path, spec_size = NA, window_length = NA, # nota: files_path tem de acabar em /
                                 frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
                                 freq_range = NA) { 
   # parameters tem de ser uma lista para aceitar os varios valores
@@ -69,6 +70,16 @@ spectro_calls_shiny <- function(files_path, db_path, spec_size = NA, window_leng
       label <- c(label, pull(db_table[db_table$recording == audio_files[i], "label_class"], 1))
       print(i)
       print(audio_files[i])
+      
+      #####
+      # If we were passed a progress update function, call it
+      if (is.function(updateProgress)) {
+        text <- paste0( i, " of ", length(audio_files))
+        updateProgress(detail = text)
+      }
+      #####
+      
+      
     })#final try
   }
   spec_image <- spec_image[-1,] # para eliminar a linha de NA por causa do rbind

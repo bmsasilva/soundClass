@@ -334,7 +334,7 @@ for(file in files) source(file)
       # Create a Progress object
       total <- length( list.files(files_path(), recursive = F, pattern="wav|WAV"))
       progress <- shiny::Progress$new(max=total)
-      progress$set(message = "Computing data", value = 0)
+      progress$set(message = "Processing recordings", value = 0)
       # Close the progress when this reactive exits (even if there's an error)
       on.exit(progress$close())
       
