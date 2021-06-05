@@ -1,6 +1,6 @@
 ### Falta introduzir a progress bar aqui dentro da funcao ou em alternativa desmontar a função no shiny e colocar como se fosse um script
 #https://shiny.rstudio.com/articles/progress.html
-auto_id_shiny <- function(model_path, 
+auto_id_shiny <- function(model_path, updateProgress,
                           metadata,
                           file_path, 
                           csv_file, 
@@ -39,6 +39,19 @@ auto_id_shiny <- function(model_path,
   
   for(i in seq(fileName)){
     try({
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       morc <- import_audio(path = paste0(file_path, fileName[i]),
                            low = freq_range[1], high = freq_range[2])
       
@@ -79,6 +92,13 @@ auto_id_shiny <- function(model_path,
       
       
     })
+    #####
+    # If we were passed a progress update function, call it
+    if (is.function(updateProgress)) {
+      text <- paste0( i, " of ", length(fileName))
+      updateProgress(detail = text)
+    }
+    #####
     if (i %% 10 == 0) print(paste0(i," of ", size))
   }
 }
