@@ -31,7 +31,7 @@ save_output <- function(output, bat_recording, csv_file = NA, png_file = NA,
     png(filename = png_file)
     spec2 <- Spectrogram(Audio = as.numeric(sound_samples),
                          norm = 150,
-                         col = gray.colors(255, start = 0.1, end = 0.8, gamma = 0.1),
+                         col = batsound, #gray.colors(255, start = 0.1, end = 0.8, gamma = 0.1),
                          SamplingFrequency = fs * tx,
                          WindowLength = 3, # em milisegundos
                          FrequencyResolution = 3, # valor normal e 2
@@ -41,7 +41,7 @@ save_output <- function(output, bat_recording, csv_file = NA, png_file = NA,
                          plot = T,
                          PlotFast = T)
     if(length(output[,1]) > 0){
-      abline(v= ms2samples(output$peaks, fs = fs, tx = tx,  inv = TRUE), col ='blue')
+      abline(v= ms2samples(output$peaks, fs = fs, tx = tx,  inv = TRUE), col =alpha(rgb(0,0,0), 0.2))
       text(x=ms2samples(output$peaks, fs = fs, tx = tx,  inv = TRUE),
            y=5, labels = output$spe, col="red", srt = 45, cex = 0.8)
     }

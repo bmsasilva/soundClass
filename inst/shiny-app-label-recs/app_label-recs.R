@@ -387,6 +387,10 @@ Spectrogram visualization:
   # Guardar as posicoes do rato quando clickado, em ficheiro externo
   observeEvent(input$specClick$x, {
     
+    # print(getwd())
+    
+    
+    
     write.table(input$specClick$x,
                 file = "temp_file.csv",
                 append = TRUE,
@@ -414,7 +418,7 @@ Spectrogram visualization:
                 plot = TRUE,             
                 PlotFast = TRUE,         
                 add = FALSE,             
-                col = NULL,              
+                col = batsound,              
                 xlim = ranges$x,             
                 ylim = ranges$y,             
                 main = sound()$file_name,               
@@ -475,30 +479,32 @@ Spectrogram visualization:
       labs <- ms2samples(labs, fs = isolate(sound()$fs), tx = isolate(sound()$tx))
       np <- length(labs)/2
       file.remove("temp_file.csv")
-      if(!is_even(length(labs))) {
-        showNotification("Please choose calls again", type = "error", closeButton = T, duration = 3)
-        remove(labs)
-        file.remove("temp_file.csv")
-      } else{
-        #pulsos <- matrix(aux, byrow=TRUE, ncol = 2)
+      # if(!is_even(length(labs))) {
+      #   showNotification("Please choose calls again", type = "error", closeButton = T, duration = 3)
+      #   remove(labs)
+      #   file.remove("temp_file.csv")
+       # } else{
+        maxpos$x<- labs
         
         ## Obtém o local de fmaxe de cada pulso seleccionado anteriormente
-        j <- 1
-        maxpos$x <- NULL #para eliminar outros pulsos ja escolhidos nesta rec
-        for (i in 1:np) {
-          maxpos$x[i]<-(which.max(abs(isolate(sound()$sound_samples[labs[j]:labs[j+1]]))) + labs[j]) 
-          j <- j+2
-        }
+        # j <- 1
+        #  print( <- NULL #para eliminar outros pulsos ja escolhidos nesta rec
+        # for (i in 1:np) {
+        #   maxpos$x[i]<-(which.max(abs(isolate(sound()$sound_samples[labs[j]:labs[j+1]]))) + labs[j]) 
+        #   j <- j+2
+        # }
+        
+
         output <- data.frame("recording" = isolate(sound()$file_name),
                              "label_position" = maxpos$x,
                              "label_class" = isolate(input$Lb),
                              "observations" = isolate(input$Obs))
         
-        add_record(path = isolate(db_path()), df = output)
+         add_record(path = isolate(db_path()), df = output)
         
         
         
-      } # final do else
+      # } # final do else
     }
   })
 
