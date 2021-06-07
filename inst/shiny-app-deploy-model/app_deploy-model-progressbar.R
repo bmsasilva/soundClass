@@ -354,7 +354,7 @@ for(file in files) source(file)
       auto_id_shiny(model_path(), updateProgress,
                     metadata(),
                     files_path(),
-                    db_file = paste0(input$out_file,".sqlite3"),
+                    out_file = input$out_file,
                     out_dir = paste0(files_path(), "/", "output/"),
                     save_spec = F,
                     save_png = as.logical(input$lab_plots),

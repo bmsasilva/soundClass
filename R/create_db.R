@@ -34,8 +34,8 @@ create_db <- function(path, db_name, table_name = "labels", type = "reference") 
       table <- data.frame(recording = character(),
                           label_position = numeric(),
                           label_class = character(),
-                          fmaxe = numeric(),
-                          n_calls = numeric())
+                          probability = numeric(),
+                          fmaxe = numeric())
       dplyr::copy_to(my_db, table, table_name, temporary = FALSE)
       DBI::dbDisconnect(my_db$con)
     }

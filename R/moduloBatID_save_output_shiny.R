@@ -21,12 +21,19 @@ save_output_shiny <- function(output, bat_recording, out_file = NA, png_file = N
                         plot2console = F, recursive = FALSE){
   
   # Criar bd de output se nao existir ainda
-  if(!file.exists(paste0(files_path(), "/", "output/", paste0(input$out_file,".sqlite3")))) 
-    create_db(paste0(files_path(), "/", "output/"), paste0(input$out_file), type = "id")
+  if(!file.exists(paste0(out_file,".sqlite3"))) 
+    create_db(out_file,"", type = "id")
   
   # Criar csv de output se nao existir ainda
-  if(!file.exists(paste0(files_path(), "/", "output/", paste0(input$out_file,".csv")))) 
-    # create file se nao existir com os nomes das colunas
+  if(!file.exists(paste0(out_file,".csv")))
+    write.table(data.frame(recording = character(),
+                           label_position = numeric(),
+                           label_class = character(),
+                           probability = numeric(),
+                           fmaxe = numeric(),
+                           n_calls = numeric()),
+                col.names = T, 
+                file=paste0(out_file,".csv"))
 
   fs <- bat_recording$fs
   sound_samples <- bat_recording$sound_samples
@@ -70,16 +77,21 @@ save_output_shiny <- function(output, bat_recording, out_file = NA, png_file = N
       aux_db <- data.frame("recording" = file_name,
                            "label_position" = output$peaks,
                            "label_class" = get_mode(output$spe),
-                           "fmaxe" = ,
-                        "n_calls" = )
+                           "probability" = round(output$prob, 2),
+                           "fmaxe" = round(output$fmaxe, 2))
+      
+      add_record(path = paste0(out_file,".sqlite3"),
+                 df = aux_db)
     } else {
-      aux <- cbind(file_name, output$peaks, "Noise", NA, NA, NA)
+      aux_csv <- cbind(file_name, NA, "Noise", NA, NA, NA)
+      
     }
     
-    #substituir por uma entrada em base de dados
-    write.table(aux, file = csv_file, append = T, col.names = F, row.names = F, sep = ",", dec = ".")
+    
+    write.table(aux_csv, file = paste0(out_file,".csv"),
+                append = T, col.names = T, row.names = F, sep = ",", dec = ".")
    
-    add_record(path = out_file, df = aux_db)
+
 
   }
 
