@@ -27,13 +27,12 @@ save_output_shiny <- function(output, bat_recording, out_file = NA, png_file = N
   # Criar csv de output se nao existir ainda
   if(!file.exists(paste0(out_file,".csv")))
     write.table(data.frame(recording = character(),
-                           label_position = numeric(),
                            label_class = character(),
                            probability = numeric(),
                            fmaxe = numeric(),
                            n_calls = numeric()),
                 col.names = T, 
-                file=paste0(out_file,".csv"))
+                file=paste0(out_file,".csv"), sep = ",", dec =".")
 
   fs <- bat_recording$fs
   sound_samples <- bat_recording$sound_samples
@@ -69,8 +68,8 @@ save_output_shiny <- function(output, bat_recording, out_file = NA, png_file = N
 
   if (!is.na(out_file)){
     if(length(output[,1]) > 0) {
-      aux_csv <- cbind(file_name, output$peaks, get_mode(output$spe), round(mean(output$prob), 2),
-                   round(mean(output$fmaxe), 2), length(output$peaks))
+      aux_csv <- cbind(file_name, get_mode(output$spe), round(mean(output$prob), 2),
+                   round(mean(output$fmaxe)/1000, 2), length(output$peaks))
       
       
       
@@ -83,13 +82,13 @@ save_output_shiny <- function(output, bat_recording, out_file = NA, png_file = N
       add_record(path = paste0(out_file,".sqlite3"),
                  df = aux_db)
     } else {
-      aux_csv <- cbind(file_name, NA, "Noise", NA, NA, NA)
+      aux_csv <- cbind(file_name, "Noise", NA, NA, NA)
       
     }
     
     
     write.table(aux_csv, file = paste0(out_file,".csv"),
-                append = T, col.names = T, row.names = F, sep = ",", dec = ".")
+                append = T, col.names = F, row.names = F, sep = ",", dec = ".")
    
 
 
