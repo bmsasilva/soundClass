@@ -3,9 +3,9 @@
 auto_id_shiny <- function(model_path, updateProgress,
                           metadata,
                           file_path, 
-                          csv_file, 
+                          out_file, 
                           out_dir, 
-                          save_spec = T,
+                          save_spec = F,
                           save_png = T, 
  #                         class_labels, 
                           win_size = 50, 
@@ -13,7 +13,9 @@ auto_id_shiny <- function(model_path, updateProgress,
                           remove_noise = T, # if model has non-relevant class, eliminate from output 
                           recursive = FALSE){
   
-
+#####
+  print("auto_id_arranca")
+  print(metadata)
   
   #Parameteros dos metadados do modelo e dos spectrogramas de treino
   spec_size <- metadata$parameters$spec_size
@@ -28,14 +30,23 @@ auto_id_shiny <- function(model_path, updateProgress,
   time_step_size <- (1 - as.numeric(metadata$parameters$overlap)) * as.numeric(metadata$parameters$window_length)
   class_labels <- as.character(metadata$classes$name)
   
+  ##### 
+  print("parametros ok")
   
   
   fileName <- list.files(file_path, recursive = recursive, pattern="wav|WAV")
   if(recursive == TRUE) fileName <- paste0("/", fileName)
   
+  #####
+  print("rec files ready")
+  
   size <- length(fileName)
   
   model <- load_model_hdf5(model_path)
+  
+  #####
+  print("rec files and model ready")
+  
   
   for(i in seq(fileName)){
     try({
@@ -77,8 +88,10 @@ auto_id_shiny <- function(model_path, updateProgress,
       png_file <- ifelse(save_png == T,  paste0(out_dir, morc$file_name, ".png"),
                          NA)
       
-      out_peaks <- save_output(output = out_tidy, bat_recording = morc,
-                               csv_file = paste0(out_dir, csv_file),
+      
+      
+      out_peaks <- save_output_shiny(output = out_tidy, bat_recording = morc,
+                               out_file = paste0(out_dir, out_file),#### ajustar os nomes dos out_files para ter um .csv e outro .sqlite3
                                png_file = png_file,
                                plot2console = plot2console,
                                recursive = recursive)

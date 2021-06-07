@@ -325,13 +325,17 @@ for(file in files) source(file)
 
       # Criar pasta de output se nao existir ainda
       if(!dir.exists(paste0(files_path(), "/", "output/"))) dir.create(paste0(files_path(), "/", "output/"))
+      
+      # Criar bd de output se nao existir ainda
+      if(!file.exists(paste0(files_path(), "/", "output/", paste0(input$out_file,".sqlite3")))) 
+        create_db(paste0(files_path(), "/", "output/"), paste0(input$out_file), type = "id")
      
-      auto_id_shiny(model_path(),
+      auto_id_shiny(model_path(), updateProgress,
                     metadata(),
                     files_path(),
-                    csv_file = paste0(input$out_file,".csv"),
+                    db_file = paste0(input$out_file,".sqlite3"),
                     out_dir = paste0(files_path(), "/", "output/"),
-                    save_spec = F, 
+                    save_spec = F,
                     save_png = as.logical(input$lab_plots),
  #                   class_labels = as.character(metadata()$classes$name),
                     win_size = metadata()$parameters$spec_size * 2,  #minimum distnace between calls and chunck size

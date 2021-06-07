@@ -325,11 +325,8 @@ for(file in files) source(file)
 
       # Criar pasta de output se nao existir ainda
       if(!dir.exists(paste0(files_path(), "/", "output/"))) dir.create(paste0(files_path(), "/", "output/"))
-
-      # Criar csv com nomes nas colunas se nao existir ainda...em desenvolvimento
-      if(!file.exists(paste0(files_path(), "/", "output/",paste0(input$out_file,".csv")))) 
-        file.create(paste0(files_path(), "/", "output/",paste0(input$out_file,".csv")))
       
+
        #####    
       # Create a Progress object
       total <- length( list.files(files_path(), recursive = F, pattern="wav|WAV"))
@@ -352,16 +349,16 @@ for(file in files) source(file)
       #####      
       
       
+      print(model_path())
       
-      
-      auto_id_shiny(model_path(),updateProgress,
+      auto_id_shiny(model_path(), updateProgress,
                     metadata(),
                     files_path(),
-                    csv_file = paste0(input$out_file,".csv"),
+                    db_file = paste0(input$out_file,".sqlite3"),
                     out_dir = paste0(files_path(), "/", "output/"),
-                    save_spec = F, 
+                    save_spec = F,
                     save_png = as.logical(input$lab_plots),
- #                   class_labels = as.character(metadata()$classes$name),
+                    #                   class_labels = as.character(metadata()$classes$name),
                     win_size = metadata()$parameters$spec_size * 2,  #minimum distnace between calls and chunck size
                     remove_noise = as.logical(input$rem_noise),          # if model has non-relevant class, eliminate from output
                     plot2console = FALSE,
