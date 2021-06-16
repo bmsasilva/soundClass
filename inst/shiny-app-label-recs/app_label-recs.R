@@ -136,7 +136,15 @@ ui =   fluidPage(
                              hr(),
                              
                              
-                             actionButton("analisar", "Set labels", width="100%")
+                             actionButton("analisar", "Set labels", width="100%"),
+                             
+                             hr(),
+
+                             shinyDirButton('noise_folder',
+                                            'Choose noise folder',
+                                            'Choose noise folder', style='width:100%')
+                             
+
                              
                              
                              
@@ -254,7 +262,8 @@ server = function(input, output, session) {
   # File and folder chooser paths -------------------------------
   system <- Sys.info()[['sysname']]
   if (system == "Windows") roots <- c(home = 'C://')
-  if (system == "Linux") roots <- getVolumes() # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
+  if (system == "Linux") roots <- c(Computer = "/") #getVolumes()#funciona no HP mas nao no myotis # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil   
+  
   
   # Ask user for db name -------------------------------
   observeEvent(input$conf, {
@@ -507,6 +516,46 @@ Spectrogram visualization:
       # } # final do else
     }
   })
+  
+  # Ask user for noise folder name -------------------------------
+  observe({
+    shinyDirChoose(input, 'noise_folder', roots = roots)
+    if(!is.null(input$noise_folder)){
+      folder_selected <- parseDirPath(roots, input$noise_folder)
+      folder_path <- as.character(folder_selected)
+      
+      
+      noise_files <- list.files(folder_path, pattern = "wav|WAV")
+      
+      for(i in seq(noise_files)){
+        ## incluir progress bar neste bloco
+
+       sound <- import_audio(paste0(folder_path,"/",noise_files[i]), low=as.numeric(input$low), high=as.numeric(input$high))
+
+       
+       
+        peak <- find_noise(sound, nmax = 1, plot = F) 
+
+        
+        output <- data.frame("recording" = sound$file_name,
+                             "label_position" = peak,
+                             "label_class" = "0",
+                             "observations" = NA)
+
+        
+        add_record(path = db_path(), df = output)
+      }
+      
+      
+      
+
+
+          }
+  })
+  
+
+
+
 
 
   
