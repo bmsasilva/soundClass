@@ -59,32 +59,32 @@ for(file in files) source(file)
                                                          title = 'Choose folder', 
                                                          style = 'width:100%'),
   
-                                          br(),
+                                          htmltools::br(),
                                           # Button 2 - Choose model
                                           shinyFilesButton(id = 'selected_model', 
                                                            label = 'Choose model',
                                                            title = 'Choose model file',
                                                            multiple = FALSE, 
                                                            style='width:100%'),
-                                          br(),
+                                          htmltools::br(),
                                           # Button 3 - Choose metadata
                                           shinyFilesButton(id = 'selected_metadata', 
                                                            label = 'Choose metadata',
                                                            title = 'Choose database file',
                                                            multiple = FALSE, 
                                                            style='width:100%'),
-                                          br(),
-                                          br(),
+                                          htmltools::br(),
+                                          htmltools::br(),
                                           # Input 1
                                           textInput(inputId = "out_file",
                                                     label = "Name of output file",
                                                     value = 'id_results'), 
-                                          br(),
+                                          htmltools::br(),
                                           # Input 2
                                           radioButtons("rem_noise", "Non-relevant class?",
                                                        c("Yes" = TRUE,
                                                          "No" = FALSE)),
-                                          br(),
+                                          htmltools::br(),
                                           # Input 3
                                           radioButtons("lab_plots", "Export labeled plots",
                                                        c("Yes" = TRUE,
@@ -94,25 +94,25 @@ for(file in files) source(file)
                              ),
                              # 1.2) Main panel ---------------------------------------------------
                              mainPanel(
-                               br(),
+                               htmltools::br(),
                                fluidRow(
                                  column(6,
                                         textOutput("folder_path")
                                  )
                                ),
-                               br(),
+                               htmltools::br(),
                                fluidRow(
                                  column(6,
                                         textOutput("model_path")
                                  )
                                ),
-                               br(),
+                               htmltools::br(),
                                fluidRow(
                                  column(6,
                                         textOutput("metadata_path")
                                  )
                                ),
-                               hr(),
+                               htmltools::hr(),
                                fluidRow(
                                  column(6, align="center", offset = 3,
                                         # Button 4 - Run analysis
@@ -122,7 +122,7 @@ for(file in files) source(file)
                                         tags$style(type='text/css', "#id_recs { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                                  )
                                ),
-                               br(),
+                               htmltools::br(),
                                tableOutput("spec")
                              ) #mainPanel
                              
@@ -154,9 +154,9 @@ for(file in files) source(file)
                                     title = 'Choose model',
                                     multiple = FALSE, 
                                     style='width:100%'),
-                   hr(), # Introduzir linha divisoria
+                   htmltools::hr(), # Introduzir linha divisoria
                    h4("Model parameters", align = "left"),
-                   hr(), # Introduzir linha divisoria
+                   htmltools::hr(), # Introduzir linha divisoria
                    # Input 1
                    numericInput(inputId ="train_per",  
                                 label = "Train %",
@@ -182,19 +182,19 @@ for(file in files) source(file)
 
 # 2.2) Main panel ---------------------------------------------------------
                  mainPanel(
-                   br(),
+                   htmltools::br(),
                    fluidRow(
                      column(6,
                             #textOutput("rdata_path")
                      )
                    ),
-                  br(),
+                  htmltools::br(),
                    fluidRow(
                      column(6,
                           #  textOutput("model_path")
                      )
                    ),
-                   hr(),
+                   htmltools::hr(),
                    fluidRow(
                       column(6, align="center", offset = 3,
                             # Action button - Fit model (nao esta a funcionar este butao)
@@ -202,11 +202,11 @@ for(file in files) source(file)
                              tags$style(type='text/css', "#fit_model { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                       )
                    ), #tirar a virgula qd apagar a linha de baixo
-                  br(),
-                  br(),
+                  htmltools::br(),
+                  htmltools::br(),
                   tableOutput('fit_log'),
-                  br(),
-                  br(),
+                  htmltools::br(),
+                  htmltools::br(),
                   tableOutput('end_fit')
                    
                    

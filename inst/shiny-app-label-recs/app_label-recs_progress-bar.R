@@ -74,8 +74,8 @@ ui =   fluidPage(
                                             'Choose folder',
                                             'Choose recordings folder', style='width:100%'),
                              
-                             br(), # introduzir espacamento
-                             br(), # introduzir espacamento
+                             htmltools::br(), # introduzir espacamento
+                             htmltools::br(), # introduzir espacamento
                              
                              # Button "create db" and respective modal box
                              actionButton("create_db", "Create database", style='width:100%'),
@@ -86,8 +86,8 @@ ui =   fluidPage(
                                               actionButton("conf", "Confirm")),
                              
                              
-                             br(), # introduzir espacamento
-                             br(), # introduzir espacamento
+                             htmltools::br(), # introduzir espacamento
+                             htmltools::br(), # introduzir espacamento
                              
                              # Button 1
                              # ver solucao aqui: https://stackoverflow.com/questions/42945833/getting-file-path-from-shiny-ui-not-just-directory-using-browse-button-without
@@ -95,9 +95,9 @@ ui =   fluidPage(
                                               'Choose database',
                                               'Choose database file', FALSE, style='width:100%'),
                              
-                             br(), # introduzir espacamento
+                             htmltools::br(), # introduzir espacamento
                              
-                             hr(), # Introduzir linha divisoria
+                             htmltools::hr(), # Introduzir linha divisoria
                              
                              # Box
                              selectInput(inputId = "files", label = NULL, choices = NULL, width="100%"),#, ),
@@ -105,7 +105,7 @@ ui =   fluidPage(
                              # Button 3
                              actionButton('Next', "Next recording", width="100%"),
                              
-                             hr(), # Introduzir linha divisoria
+                             htmltools::hr(), # Introduzir linha divisoria
                              h5("Butterworth filter (kHz)", align = "center"),
                              
                              
@@ -131,14 +131,14 @@ ui =   fluidPage(
                              ),
                              
                              
-                             # br(),
-                             # br(),
-                             hr(),
+                             # htmltools::br(),
+                             # htmltools::br(),
+                             htmltools::hr(),
                              
                              
                              actionButton("analisar", "Set labels", width="100%"),
                              
-                             hr(),
+                             htmltools::hr(),
 
                              shinyDirButton('noise_folder',
                                             'Choose noise folder',
@@ -523,10 +523,36 @@ Spectrogram visualization:
     if(!is.null(input$noise_folder)){
       folder_selected <- parseDirPath(roots, input$noise_folder)
       folder_path <- as.character(folder_selected)
-      
-      
+
       noise_files <- list.files(folder_path, pattern = "wav|WAV")
+  
+      #####    
+      # Create a Progress object
+      total <- length(noise_files)
+      progress <- shiny::Progress$new(max=total)
+      progress$set(message = "Processing recordings", value = 0)
+      # Close the progress when this reactive exits (even if there's an error)
+      on.exit(progress$close())
       
+      # Create a callback function to update progress.
+      # Each time this is called:
+      # - If `value` is NULL, it will move the progress bar 1/max of the remaining
+      #   distance. If non-NULL, it will set the progress to that value.
+      # - It also accepts optional detail text.
+      updateProgress <- function(value = NULL, detail = NULL) {
+        if (is.null(value)) {
+          value <- progress$getValue() + 1
+        }
+        progress$set(value = value, detail = detail)
+      }
+      #####
+      
+      
+      
+      
+      
+      
+          
       for(i in seq(noise_files)){
         ## incluir progress bar neste bloco
 
@@ -544,6 +570,17 @@ Spectrogram visualization:
 
         
         add_record(path = db_path(), df = output)
+        
+        #####
+        # If we were passed a progress update function, call it
+        if (is.function(updateProgress)) {
+          text <- paste0( i, " of ", total)
+          updateProgress(detail = text)
+        }
+        #####
+        
+        
+        
       }
       
       

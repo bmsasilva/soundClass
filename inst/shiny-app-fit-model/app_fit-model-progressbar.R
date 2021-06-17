@@ -58,17 +58,17 @@ ui = fluidPage(
                                                        label = 'Choose folder',
                                                        title = 'Choose recordings folder', 
                                                        style = 'width:100%'),
-                                        br(),
+                                        htmltools::br(),
                                         # Button 2 - Choose database
                                         shinyFilesButton(id = 'selected_db', 
                                                          label = 'Choose database',
                                                          title = 'Choose database file',
                                                          multiple = FALSE, 
                                                          style='width:100%'),
-                                        br(),
-                                        hr(), # Introduzir linha divisoria
+                                        htmltools::br(),
+                                        htmltools::hr(), # Introduzir linha divisoria
                                         h4("Spectrogram parameters", align = "left"),
-                                        hr(), # Introduzir linha divisoria
+                                        htmltools::hr(), # Introduzir linha divisoria
                                         # Input 1
                                         numericInput(inputId = "spec_size",
                                                      label = "Size (ms)",
@@ -117,19 +117,19 @@ ui = fluidPage(
                            ),
                            # 1.2) Main panel ---------------------------------------------------
                            mainPanel(
-                             br(),
+                             htmltools::br(),
                              fluidRow(
                                column(6,
                                       textOutput("folder_path")
                                )
                              ),
-                             br(),
+                             htmltools::br(),
                              fluidRow(
                                column(6,
                                       textOutput("db_path")
                                )
                              ),
-                             hr(),
+                             htmltools::hr(),
                              fluidRow(
                                column(6, align="center", offset = 3,
                                       # Button 3 - Create train data
@@ -142,7 +142,7 @@ ui = fluidPage(
                              
                              
                              
-                             br(),
+                             htmltools::br(),
                              tableOutput("spec")
                            ) #mainPanel
                            
@@ -174,9 +174,9 @@ ui = fluidPage(
                                                          title = 'Choose model',
                                                          multiple = FALSE, 
                                                          style='width:100%'),
-                                        hr(), # Introduzir linha divisoria
+                                        htmltools::hr(), # Introduzir linha divisoria
                                         h4("Model parameters", align = "left"),
-                                        hr(), # Introduzir linha divisoria
+                                        htmltools::hr(), # Introduzir linha divisoria
                                         # Input 1
                                         numericInput(inputId ="train_per",  
                                                      label = "Train %",
@@ -202,19 +202,19 @@ ui = fluidPage(
                            
                            # 2.2) Main panel ---------------------------------------------------------
                            mainPanel(
-                             br(),
+                             htmltools::br(),
                              fluidRow(
                                column(6,
                                       textOutput("rdata_path")
                                )
                              ),
-                             br(),
+                             htmltools::br(),
                              fluidRow(
                                column(6,
                                       textOutput("model_path")
                                )
                              ),
-                             hr(),
+                             htmltools::hr(),
                              fluidRow(
                                column(6, align="center", offset = 3,
                                       # Action button - Fit model (nao esta a funcionar este butao)
@@ -222,11 +222,11 @@ ui = fluidPage(
                                       tags$style(type='text/css', "#fit_model { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                                )
                              ), #tirar a virgula qd apagar a linha de baixo
-                             br(),
-                             br(),
+                             htmltools::br(),
+                             htmltools::br(),
                              tableOutput('fitted_model_log'),
-                             br(),
-                             br(),
+                             htmltools::br(),
+                             htmltools::br(),
                              tableOutput('end_fit')
                              
                              
