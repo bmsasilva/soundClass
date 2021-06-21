@@ -2,7 +2,7 @@
 % Please edit documentation in R/moduloBatID_peaks.R
 \name{peaks}
 \alias{peaks}
-\title{Detect peaks}
+\title{Detect energy peaks in recordings}
 \usage{
 peaks(bat_recording, win_size = 40, plot = F)
 }
@@ -18,10 +18,12 @@ equal size chunks of win_size duration and one peak is identified in each chunk.
 Vector with the temporal position of the identified peaks (in samples)
 }
 \description{
-Detect peaks
+Splits the recording in segments using a pre-defined window size
+and detects the temporal position of the peak (event with most energy) in each
+window.
 }
 \details{
-Detect peaks in sound files
+Detect peaks in recordings
 }
 \author{
 Bruno Silva

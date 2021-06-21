@@ -4,10 +4,14 @@
 \alias{create_db}
 \title{Create a sqlite3 database}
 \usage{
-create_db(path, db_name, table_name = "labels")
+create_db(path, db_name, table_name = "labels", type = "reference")
 }
 \arguments{
 \item{path}{Path to the folder where the database will be created}
+
+\item{type}{Type of database to create. Possible options are: "reference" which creates
+a database to be used for training purposes, and "id" which creates a database
+to output the results of the automatic identification}
 
 \item{name}{Name of the database to be created}
 }
@@ -23,7 +27,7 @@ A sqlite3 database with the specified name with a predefined table
 is created inside the folder
 }
 \examples{
-create_db(".//", db_name = "test")
+create_db(".//", db_name = "test", type = "reference")
 }
 \author{
 Bruno Silva

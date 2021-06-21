@@ -5,7 +5,7 @@
 #' @param bat_recording Object of class "bat_recording"
 #' @param nmax Maximum number of peaks to detect in the recording
 #' @param plot If TRUE plots the sound_samples with the peak(s) identified
-#' @usage add_noise(bat_recording, nmax = 1, plot = F)
+#' @usage find_noise(bat_recording, nmax = 1, plot = F)
 #' @return Vector with the temporal position of the identified peak(s) (in samples)
 #' @author Bruno Silva
 #' @export

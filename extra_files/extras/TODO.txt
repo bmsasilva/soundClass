@@ -1,4 +1,0 @@
-TODO
-
-1) introduzir a funcao butter_filt dentro da import_audio
-2) Melhorar a parte da escolha do local do fmaxe na funcao call_label
