@@ -42,7 +42,7 @@ auto_id_shiny <- function(model_path, updateProgress,
   
   size <- length(fileName)
   
-  model <- load_model_hdf5(model_path)
+  model <- keras::load_model_hdf5(model_path)
   
   #####
   print("rec files and model ready")

@@ -7,11 +7,11 @@
 classify_calls(calls, sound_peaks, model)
 }
 \arguments{
-\item{files_path}{XXXXXXX}
+\item{calls}{XXXXXXX}
 
-\item{db_path}{XXXXXXX}
+\item{sound_peaks}{XXXXXXX}
 
-\item{parameters}{XXXXXXX}
+\item{model}{XXXXXXX}
 }
 \value{
 XXXXXXXX

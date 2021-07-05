@@ -9,11 +9,13 @@ create_db(path, db_name, table_name = "labels", type = "reference")
 \arguments{
 \item{path}{Path to the folder where the database will be created}
 
+\item{db_name}{Name of the database to be created}
+
+\item{table_name}{Name of the table to be created inside the database}
+
 \item{type}{Type of database to create. Possible options are: "reference" which creates
 a database to be used for training purposes, and "id" which creates a database
 to output the results of the automatic identification}
-
-\item{name}{Name of the database to be created}
 }
 \value{
 Nothing

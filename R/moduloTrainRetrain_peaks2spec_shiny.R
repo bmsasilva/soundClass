@@ -3,19 +3,28 @@
 #' @description Convert sound to spectrogram
 #' @param recording Object of class "rc"
 #' @param sound_peaks Peaks detected in recording samples
-#' @param frequency_bin If TRUE filter by frequency mean subtraction
-#' @param time_bin If TRUE filter by time mean subtraction
-#' @param parameters Set of parameters for the analysis.
-#' @usage peaks2spec(recording, sound_peaks, parameters = "v1")
+#' @param spec_size Spectrogram size in ms
+#' @param window_length Moving window length to create the spectrogram in ms
+#' @param frequency_resolution Spectrogram frequency resolution. Integer. A value 
+#' of 1 corresponds to frequency bins of 1kHz, 2 to frequency bins of 0.5 kHz and
+#' so on
+#' @param time_step_size Moving window step in ms
+#' @param dynamic_range Threshold of minimum intensity values to show 
+#' in the spectrogram
+#' @param freq_range Frequency range of the spectrogram. Vector with two values,
+#' refering to the minimum and maximum frequency to show in the spectrogram
+#' @usage peaks2spec_shiny(recording, sound_peaks, spec_size = NA, window_length = NA, 
+#' frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
+#' freq_range = NA)
 #' @return an object of class "calls". This object is a list
 #' with the following components:
 #' \itemize{
-#'   \item spec_calls -- matrix with one spectrogram per row
-#'   \item img_cols -- number of columns in each spectrogram
-#'   \item img_rows -- number of rows in each spectrogram
+#'  \item spec_calls -- matrix with one spectrogram per row
+#'  \item img_cols -- number of columns in each spectrogram
+#'  \item img_rows -- number of rows in each spectrogram
 #' }
 #' @author Bruno Silva
-#' @internal
+#' @keywords internal
  
 # Deveria ser interna esta? como e puxada pela spectro_calls pode não ser necessario exporta-la
 peaks2spec_shiny <- function(recording, sound_peaks, spec_size = NA, window_length = NA, 

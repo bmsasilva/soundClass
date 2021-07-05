@@ -8,7 +8,7 @@
 #' filter. The filter is applied twice to better cleaning of the recording
 #' @param low Minimum frequency in kHz for the butterworth filter
 #' @param high Maximum frequency in kHz for the butterworth filter
-#' @param tx Time expanded. Only used in sound_samplese recorders specifically intended for
+#' @param tx Time expanded. Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
 #' time expanded the numeric value correponding to the time expansion should be indicated or

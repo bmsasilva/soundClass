@@ -2,45 +2,47 @@
 % Please edit documentation in R/import_audio.R
 \name{import_audio}
 \alias{import_audio}
-\title{Imports a recording}
+\title{Import a recording}
 \usage{
 import_audio(path, butt = TRUE, low, high, tx)
 }
 \arguments{
 \item{path}{Full path to the recording}
 
-\item{butt}{If TRUE filters the recording with a 10th order butterworth
-filter}
+\item{butt}{Logical. If TRUE filters the recording with a 12th order butterworth
+filter. The filter is applied twice to better cleaning of the recording}
 
 \item{low}{Minimum frequency in kHz for the butterworth filter}
 
 \item{high}{Maximum frequency in kHz for the butterworth filter}
 
-\item{tx}{Time expanded. Only used in some recorders specifically intended for
+\item{tx}{Time expanded. Only used in recorders specifically intended for
 bat recordings. Can take the values "auto" or any numeric value. If the
-recording is not time expanded tx must be set to 1. If it's time expanded the
-numeric value correponding to the time expansion should be indicated or
+recording is not time expanded tx must be set to 1 (the default). If it's
+time expanded the numeric value correponding to the time expansion should be indicated or
 "auto" should be selected. If tx = "auto" the function assumes that sampling
-rates < 50kHz correponds to tx = 10 an > 50kHz to tx = 1.}
+rates < 50kHz correponds to tx = 10 and > 50kHz to tx = 1.}
 }
 \value{
-an object of class "bat_recorder". This object is a list
+an object of class "rc". This object is a list
 with the following components:
 \itemize{
 \item sound_samples -- sound samples of the recording
 \item file_name -- name of the recording
 \item file_time -- time of modification of the file (indicated for
-Pettersson Elektronic detectors, for other manufactureus creation time should
+Pettersson Elektronic detectors, for other manufactures creation time should
 be preferable but it's not implemented yet)
 \item fs -- sample frequency
 \item tx -- expanded time factor
 }
 }
 \description{
-Import a recording using the function tuneR::readWave()
+Import a "wav" recording using the function tuneR::readWave()
+and create a S3 class object "rc". If the recording is stereo it is converted
+to mono by keeping the channel with overall higher amplitude
 }
 \details{
-Imports a recording and creates an object of class "bat_recording".
+Import a recording
 }
 \author{
 Bruno Silva

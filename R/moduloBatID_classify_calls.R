@@ -1,9 +1,9 @@
 #' XXXXXXX
 #' @title XXXXXXX
 #' @description XXXXXXX
-#' @param files_path XXXXXXX
-#' @param db_path XXXXXXX
-#' @param parameters XXXXXXX
+#' @param calls XXXXXXX
+#' @param sound_peaks XXXXXXX
+#' @param model XXXXXXX
 #' @usage classify_calls(calls, sound_peaks, model)
 #' @return XXXXXXXX
 #' @author Bruno Silva

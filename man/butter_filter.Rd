@@ -7,11 +7,15 @@
 butter_filter(sound_samples, low = NA, high = NA, fs, tx, order = 12)
 }
 \arguments{
-\item{sound_samples}{Vector. Sound samples}
+\item{sound_samples}{Vector. Sound samples to filter}
 
 \item{low}{Minimum frequency in kHz for the butterworth filter}
 
 \item{high}{Maximum frequency in kHz for the butterworth filter}
+
+\item{fs}{Sampling frequency}
+
+\item{tx}{Expanded time factor}
 
 \item{order}{Butterworth filter order}
 }

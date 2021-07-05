@@ -30,6 +30,46 @@ Spectrogram(
 }
 \arguments{
 \item{Audio}{An object of class 'recording', created with the 'import_audio' function}
+
+\item{SamplingFrequency}{cvn}
+
+\item{WindowLength}{cvnvcn}
+
+\item{FrequencyResolution}{cnvnv}
+
+\item{TimeStepSize}{cnvn}
+
+\item{nTimeSteps}{xxxxxxxxxx}
+
+\item{Preemphasis}{cgnv}
+
+\item{DynamicRange}{cvn}
+
+\item{Omit0Frequency}{xxxxxxxxxx}
+
+\item{WindowType}{xxxxxxxxxx}
+
+\item{WindowParameter}{xxxxxxxxxx}
+
+\item{plot}{xxxxxxxxxx}
+
+\item{PlotFast}{xxxxxxxxxx}
+
+\item{add}{xxxxxxxxxx}
+
+\item{col}{xxxxxxxxxx}
+
+\item{xlim}{vxxxxxxxxxx}
+
+\item{ylim}{xxxxxxxxxx}
+
+\item{main}{xxxxxxxxxx}
+
+\item{xlab}{xxxxxxxxxx}
+
+\item{ylab}{xxxxxxxxxx}
+
+\item{norm}{xxxxxxxxxx}
 }
 \value{
 If plot=FALSE, returns a spectrogram matrix, with the parameters used in the analysis as attributes.
@@ -37,6 +77,9 @@ If plot=TRUE a plot of the spectrogram is produced but the matrix is not exporte
 }
 \description{
 Plots a spectrogram or returns a spectrogram matrix
+}
+\details{
+computes spectrogram
 }
 \author{
 Bruno Silva

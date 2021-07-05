@@ -4,18 +4,30 @@
 \alias{peaks2spec_shiny}
 \title{Sound to spectrogram}
 \usage{
-peaks2spec(recording, sound_peaks, parameters = "v1")
+peaks2spec_shiny(recording, sound_peaks, spec_size = NA, window_length = NA, 
+frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
+freq_range = NA)
 }
 \arguments{
-\item{recording}{Object of class "recording"}
+\item{recording}{Object of class "rc"}
 
 \item{sound_peaks}{Peaks detected in recording samples}
 
-\item{frequency_bin}{If TRUE filter by frequency mean subtraction}
+\item{spec_size}{Spectrogram size in ms}
 
-\item{time_bin}{If TRUE filter by time mean subtraction}
+\item{window_length}{Moving window length to create the spectrogram in ms}
 
-\item{parameters}{Set of parameters for the analysis.}
+\item{frequency_resolution}{Spectrogram frequency resolution. Integer. A value
+of 1 corresponds to frequency bins of 1kHz, 2 to frequency bins of 0.5 kHz and
+so on}
+
+\item{time_step_size}{Moving window step in ms}
+
+\item{dynamic_range}{Threshold of minimum intensity values to show
+in the spectrogram}
+
+\item{freq_range}{Frequency range of the spectrogram. Vector with two values,
+refering to the minimum and maximum frequency to show in the spectrogram}
 }
 \value{
 an object of class "calls". This object is a list
@@ -35,3 +47,4 @@ Convert sound to spectrogram
 \author{
 Bruno Silva
 }
+\keyword{internal}

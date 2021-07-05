@@ -1,17 +1,29 @@
 #' @title Spectrogram
 #' @description Plots a spectrogram or returns a spectrogram matrix
 #' @param Audio An object of class 'recording', created with the 'import_audio' function
-#' @param 
-#' @param 
-#' @param 
-#' @param 
-#' @param 
-#' @param 
-#' 
+#' @param SamplingFrequency cvn
+#' @param WindowLength cvnvcn
+#' @param FrequencyResolution cnvnv
+#' @param TimeStepSize cnvn
+#' @param Preemphasis cgnv
+#' @param DynamicRange cvn
+#' @param nTimeSteps xxxxxxxxxx
+#' @param Omit0Frequency xxxxxxxxxx
+#' @param WindowType xxxxxxxxxx
+#' @param WindowParameter xxxxxxxxxx
+#' @param plot xxxxxxxxxx
+#' @param PlotFast xxxxxxxxxx
+#' @param add xxxxxxxxxx
+#' @param col xxxxxxxxxx
+#' @param xlim vxxxxxxxxxx
+#' @param ylim xxxxxxxxxx
+#' @param main xxxxxxxxxx
+#' @param xlab xxxxxxxxxx
+#' @param ylab xxxxxxxxxx
+#' @param norm xxxxxxxxxx
 #' @return If plot=FALSE, returns a spectrogram matrix, with the parameters used in the analysis as attributes.
 #' If plot=TRUE a plot of the spectrogram is produced but the matrix is not exported.
-#' 
-#' @details 
+#' @details computes spectrogram
 #' @export
 #' @author Bruno Silva
 
@@ -419,10 +431,10 @@ Spectrogram = function(
     # If requested, plot the spectrogram
   }else{ # i.f. is plot==TRUE
 
-    if(is.null(col)){ ColorGenerator = colorRampPalette(c("dark blue", "blue", "cyan", "yellow", "orange", "red", "brown")) }else{
-      if(identical(col,"alternate")){ ColorGenerator = colorRampPalette(c("black", "red", "orange", "yellow", "white")) }else{
-        if( identical(col,"greyscale") | identical(col,"grayscale") ){ ColorGenerator = colorRampPalette(c("white", "black")) }else{
-          ColorGenerator = colorRampPalette( col ) # By this point in the code, it is assumed that the user has supplied a vector of colors to create the spectrogram
+    if(is.null(col)){ ColorGenerator =  grDevices::colorRampPalette(c("dark blue", "blue", "cyan", "yellow", "orange", "red", "brown")) }else{
+      if(identical(col,"alternate")){ ColorGenerator =  grDevices::colorRampPalette(c("black", "red", "orange", "yellow", "white")) }else{
+        if( identical(col,"greyscale") | identical(col,"grayscale") ){ ColorGenerator =  grDevices::colorRampPalette(c("white", "black")) }else{
+          ColorGenerator =  grDevices::colorRampPalette( col ) # By this point in the code, it is assumed that the user has supplied a vector of colors to create the spectrogram
         }}} # End 'if/else' for greyscale, alternate, and NULL
 
     AmplitudeRange = range(SpectrogramMatrix, finite = TRUE) # 'finite=TRUE' excludes values of positive/negative infinity
@@ -453,7 +465,7 @@ Spectrogram = function(
 
     if( PlotFast == TRUE){ # i.e. if the user wants to use image(..., useRaster=TRUE)
 
-      image( x=TimeSequence,
+      graphics::image( x=TimeSequence,
              y=FrequencySequence,
              z=SpectrogramMatrix,
              xlim=xlim,
@@ -476,24 +488,24 @@ Spectrogram = function(
 
       # Set up the plot (only if 'add' is FALSE - the default)
       if(add==FALSE){
-        plot.new()
-        plot.window(xlim=xlim, ylim=ylim, xaxs="i", yaxs="i")
+        graphics::plot.new()
+        graphics::plot.window(xlim=xlim, ylim=ylim, xaxs="i", yaxs="i")
       } # End 'if add is FALSE'
 
       # The following version of filled.contour(), with the period at the front, omits the color bar to the right of the normal filled.contour() function
-      .filled.contour(x=TimeSequence, y=FrequencySequence, z=SpectrogramMatrix, levels=ColorLevels, col=ColorPalette)
+      graphics::.filled.contour(x=TimeSequence, y=FrequencySequence, z=SpectrogramMatrix, levels=ColorLevels, col=ColorPalette)
 
       # Add all the other typical dressings to the plot (again, only if 'add' is FALSE - the default)
 
       if(add==FALSE){
-        Axis(TimeSequence, side=1)
-        Axis(FrequencySequence, side=2)
-        title(main=main, xlab=xlab, ylab=ylab)
+        graphics::Axis(TimeSequence, side=1)
+        graphics::Axis(FrequencySequence, side=2)
+        graphics::title(main=main, xlab=xlab, ylab=ylab)
       } # End 'if add is FALSE'
 
     } # End 'if/else PlotFast is TRUE'
 
-    box() # Putting this here makes sure that there always is a box, no matter what (e.g. it doesn't disappear with repeated over-plottings)
+    graphics::box() # Putting this here makes sure that there always is a box, no matter what (e.g. it doesn't disappear with repeated over-plottings)
 
   } # End 'if/else plot==TRUE'
 

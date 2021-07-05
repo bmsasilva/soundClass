@@ -1,10 +1,12 @@
 #' Buttterworth filter
 #' @title Apply a buttterworth filter to a recording
-#' @description  Apply a buttterworth filter, high pass or/and low pass,
+#' @description Apply a buttterworth filter, high pass or/and low pass,
 #' to a sound recording. Based on the function signal::butter()
-#' @param sound_samples Vector. Sound samples
+#' @param sound_samples Vector. Sound samples to filter
 #' @param low Minimum frequency in kHz for the butterworth filter
 #' @param high Maximum frequency in kHz for the butterworth filter
+#' @param fs Sampling frequency
+#' @param tx Expanded time factor
 #' @param order Butterworth filter order
 #' @usage butter_filter(sound_samples, low = NA, high = NA, fs, tx, order = 12)
 #' @return A vector with the filtered sound samples

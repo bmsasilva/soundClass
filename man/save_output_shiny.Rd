@@ -4,7 +4,8 @@
 \alias{save_output_shiny}
 \title{Save output}
 \usage{
-save_output(output, bat_recording)
+save_output_shiny(output, bat_recording, out_file = NA, png_file = NA,
+plot2console = F, recursive = FALSE)
 }
 \arguments{
 \item{output}{Object of class "tidy_output"}
@@ -24,7 +25,7 @@ considerably more time.}
 \item{recursive}{Logical. Is the analysis beeing processed in recursive mode?}
 }
 \value{
-Add row to csv file, plot spectrogram to console and save spectrogram
+Add row to the csv file, plot spectrogram to console and save spectrogram
 in file
 }
 \description{

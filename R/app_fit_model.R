@@ -1,15 +1,15 @@
 #' @title Start app fit model
 #' @description Starts the app to fit the model
 #' @export
-#' @import htmltools shinyBS
+# @import htmltools shinyBS
 
 app_fit_model <- function() {
-
+  
   # eliminate previous fitted_model_log.csv file # Ver onde colocar isto dentyro do server
   if (file.exists("./fitted_model_log.csv")) {
     file.remove("./fitted_model_log.csv")
   } # limpar a tabela de resultados se correr fit moedl 2 vezes
-
+  
   ui <- shiny::fluidPage(
     shinyjs::useShinyjs(),
     shiny::titlePanel("Modeling"),
@@ -232,7 +232,7 @@ app_fit_model <- function() {
           )
         )
       )
-
+      
       # 3) Panel re-fit model ---------------------------------------------------------
       # tabPanel("Re-fit model", fluid = FALSE,
       #          sidebarLayout(
@@ -253,8 +253,8 @@ app_fit_model <- function() {
       # )#mainPanel
       #          )#sidebarLayout
       # ),#tabPanel plot
-
-
+      
+      
       # 4) Panel run model  -----------------------------------------------------
       # tabPanel("Run model",
       # sidebarLayout(fluid = FALSE,
@@ -268,16 +268,16 @@ app_fit_model <- function() {
       # )#tabPanel plot
     ) # tabsetPanel
   ) # fluidPage
-
-
+  
+  
   # Server ------------------------------------------------------------------
   server <- function(input, output) {
-
+    
     # File and folder chooser paths -------------------------------
     system <- Sys.info()[["sysname"]]
     if (system == "Windows") roots <- c(home = "C://")
     if (system == "Linux") roots <- c(Computer = "/") # getVolumes()#funciona no HP mas nao no myotis # c(home = getVolumes()) #funciona no pc de casa mas nao no Portatil
-
+    
     shiny::observe({
       shinyFiles::shinyDirChoose(
         input = input,
@@ -293,10 +293,10 @@ app_fit_model <- function() {
           "Recordings folder =",
           as.character(folder_selected)
         )
-        output$folder_path <- renderText(as.character(folder_path))
+        output$folder_path <- shiny::renderText(as.character(folder_path))
       }
     })
-    observeEvent(input$folder, {
+    shiny::observeEvent(input$folder, {
       if (length(shinyFiles::parseDirPath(roots, input$folder)) > 0) {
         setwd(shinyFiles::parseDirPath(
           roots = roots,
@@ -304,60 +304,60 @@ app_fit_model <- function() {
         ))
       }
     })
-    files_path <- reactive({
+    files_path <- shiny::reactive({
       folder_selected <- shinyFiles::parseDirPath(
         roots = roots,
         selection = input$folder
       )
       files_path <- as.character(paste0(
-          folder_selected,
-          "//"
-        )
+        folder_selected,
+        "//"
+      )
       )
       return(files_path)
     })
-
-    observe({
+    
+    shiny::observe({
       shinyFiles::shinyFileChoose(
         input = input,
         id = "selected_db", 
         roots = roots
-        )
+      )
       if (!is.null(input$selected_db)) {
         file_selected <- shinyFiles::parseFilePaths(
           roots = roots,
           selection = input$selected_db
-          )
+        )
         db_path <- paste(
           "Database file =",
           as.character(file_selected$datapath)
-          )
-        output$db_path <- renderText(as.character(db_path)) 
+        )
+        output$db_path <- shiny::renderText(as.character(db_path)) 
       }
     })
-    db_path <- reactive({
+    db_path <- shiny::reactive({
       file_selected <- shinyFiles::parseFilePaths(
         roots = roots,
         selection = input$selected_db
-        )
+      )
       db_path <- as.character(file_selected$datapath)
       return(db_path)
     })
-
+    
     spectro_calls <- shiny::eventReactive(input$create_specs, {
-
+      
       total <- length(list.files(
         path = files_path(),
-                                 recursive = F,
-                                 pattern = "wav|WAV")
-                      )
+        recursive = F,
+        pattern = "wav|WAV")
+      )
       progress <- shiny::Progress$new(max = total)
       progress$set(
         message = "Processing recordings", 
         value = 0
-        )
+      )
       on.exit(progress$close())
-
+      
       updateProgress <- function(value = NULL, detail = NULL) {
         if (is.null(value)) {
           value <- progress$getValue() + 1
@@ -365,13 +365,13 @@ app_fit_model <- function() {
         progress$set(
           value = value, 
           detail = detail
-          )
+        )
       }
-
-            sp_data <- spectro_calls_shiny(
-              files_path = files_path(), 
-                updateProgress = updateProgress, 
-              db_path = db_path(),
+      
+      sp_data <- spectro_calls(
+        files_path = files_path(), 
+        updateProgress = updateProgress, 
+        db_path = db_path(),
         spec_size = as.numeric(input$spec_size),
         window_length = as.numeric(input$window_length),
         frequency_resolution = as.numeric(input$frequency_resolution),
@@ -382,84 +382,84 @@ app_fit_model <- function() {
       save(
         sp_data,
         file = "train_data.RDATA"
-        )
+      )
       return(sp_data)
     })
-
+    
     output$spec <- shiny::renderTable({
       table(spectro_calls()[[2]])
     })
-
+    
     shiny::observe({
       shinyFiles::shinyFileChoose(
         input = input,
         id = "rdata_path",
         roots = roots
-        )
+      )
       if (!is.null(input$rdata_path)) {
         file_selected <- shinyFiles::parseFilePaths(
           roots = roots, 
           selection = input$rdata_path
-          )
+        )
         rdata_path <- paste(
           "Train data file =",
           as.character(file_selected$datapath)
-          )
-        output$rdata_path <- renderText(as.character(rdata_path)) 
+        )
+        output$rdata_path <- shiny::renderText(as.character(rdata_path)) 
       }
     })
-
+    
     rdata_list <- shiny::reactive({
       if (length(input$rdata_path) > 1) {
         file_selected <- shinyFiles::parseFilePaths(
           roots = roots, 
           selection = input$rdata_path
-          )
+        )
         env <- load2env(as.character(file_selected$datapath))
         rdata_list <- env[[names(env)[1]]]
         rm(env)
         return(rdata_list)
       }
     })
-
+    
     shiny::observe({
       shinyFiles::shinyFileChoose(
         input = input,
         id = "model_path",
         roots = roots
-        )
+      )
       if (!is.null(input$model_path)) {
         file_selected <- shinyFiles::parseFilePaths(
           roots = roots, 
           selection = input$model_path
-          )
+        )
         model_path <- paste(
           "Model file =",
           as.character(file_selected$datapath)
-          )
-        output$model_path <- renderText(as.character(model_path))
+        )
+        output$model_path <- shiny::renderText(as.character(model_path))
       }
     })
-
-    model_path <- reactive({
+    
+    model_path <- shiny::reactive({
       file_selected <- shinyFiles::parseFilePaths(
         roots = roots,
         selection = input$model_path
-        )
+      )
       model_path <- as.character(file_selected$datapath)
       return(model_path)
     })
-
-
+    
+    
     # Apagar a tabela dos resultados no caso de 2 volta de fit
-    observeEvent(input$fit_model, {
-      output$end_fit <- renderTable({
-
+    shiny::observeEvent(input$fit_model, {
+      output$end_fit <- shiny::renderTable({
+        
       })
     })
-
-    observeEvent(input$fit_model, {
-
+    
+    shiny::observeEvent(input$fit_model, {
+      
       rdata_list <- rdata_list() 
       
       ######### Colocar isto dentro de uma funcao #######
@@ -498,36 +498,37 @@ app_fit_model <- function() {
       
       # fit
       model %>%
-        compile(
-          optimizer = optimizer_sgd(lr=input$lr, momentum=0.9, nesterov=T), 
+        generics::compile(
+          optimizer = keras::optimizer_sgd(lr=input$lr, momentum=0.9, nesterov=T), 
           loss = 'categorical_crossentropy',
           metrics = c('accuracy')
         )
       
-      model %>% fit(data_x, data_y,
-                    batch_size = input$batch,
-                    epochs = input$epochs,
-                    callbacks = list(callback_early_stopping(patience = input$stop, monitor = 'val_accuracy'),
-                                     callback_model_checkpoint("./fitted_model.hdf5",
-                                                               monitor = "val_accuracy", save_best_only = T),
-                                     #        callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
-                                     #                                 monitor = "val_accuracy"),
-                                     callback_lambda(on_train_begin = function(logs) {
-                                       shinyjs::html("fitted_model_log", paste("Initiating epoch 1"))}),
-                                     
-                                     callback_lambda(on_epoch_end = function(epoch, logs) {
-                                       shinyjs::html("fitted_model_log", 
-                                                     paste("Epoch = ", epoch + 1, " | Validation accuracy = ", round(logs$val_accuracy,3)*100, "%"))}),
-                                     
-                                     
-                                     callback_lambda(on_train_end = function(logs) {
-                                       shinyjs::html("fitted_model_log", paste("Model fitted"))}),
-                                     
-                                     callback_csv_logger("./fitted_model_log.csv")), 
-                    
-                    shuffle = TRUE,
-                    validation_split = 1 - input$train_per,
-                    verbose = 1)
+      model %>% generics::fit(data_x, data_y,
+                              batch_size = input$batch,
+                              epochs = input$epochs,
+                              callbacks = list(
+                                keras::callback_early_stopping(patience = input$stop, monitor = 'val_accuracy'),
+                                keras::callback_model_checkpoint("./fitted_model.hdf5",
+                                                                 monitor = "val_accuracy", save_best_only = T),
+                                #        callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
+                                #                                 monitor = "val_accuracy"),
+                                keras::callback_lambda(on_train_begin = function(logs) {
+                                  shinyjs::html("fitted_model_log", paste("Initiating epoch 1"))}),
+                                
+                                keras::callback_lambda(on_epoch_end = function(epoch, logs) {
+                                  shinyjs::html("fitted_model_log", 
+                                                paste("Epoch = ", epoch + 1, " | Validation accuracy = ", round(logs$val_accuracy,3)*100, "%"))}),
+                                
+                                
+                                keras::callback_lambda(on_train_end = function(logs) {
+                                  shinyjs::html("fitted_model_log", paste("Model fitted"))}),
+                                
+                                keras::callback_csv_logger("./fitted_model_log.csv")), 
+                              
+                              shuffle = TRUE,
+                              validation_split = 1 - input$train_per,
+                              verbose = 1)
       
       # save(history, file="./fitted_model_history.RDATA")
       metadata <- list(parameters =  rdata_list[[3]], classes = labels_df)
@@ -535,12 +536,12 @@ app_fit_model <- function() {
            file="fitted_model_metadata.RDATA")
       
       
-      output$end_fit <- renderTable({
-        read.csv("fitted_model_log.csv")
+      output$end_fit <- shiny::renderTable({
+        utils::read.csv("fitted_model_log.csv")
       })
     })
   } # server
-
+  
   # Run the application
   shiny::shinyApp(ui = ui, server = server)
 }
