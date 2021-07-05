@@ -367,7 +367,7 @@ Spectrogram = function(
     # Now use this window function to do the core computations of the spectrogram
     WindowedSamples = TrailingZeroesAppended * WindowFunction
     MeanSubtracted = WindowedSamples - mean(WindowedSamples)
-    FFT = fft(MeanSubtracted)[1:(nSamplesInPaddedWindow/2 + 1)]
+    FFT = stats::fft(MeanSubtracted)[1:(nSamplesInPaddedWindow/2 + 1)]
     AbsoluteValueSquared = abs(FFT)^2
     LogScaled = log(AbsoluteValueSquared, 10) * 10
     return(LogScaled)

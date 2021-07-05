@@ -29,7 +29,7 @@
 # ##### Function to read RDATA #####
 # # This function, borrowed from http://www.r-bloggers.com/safe-loading-of-rdata-files/, 
 # # load the Rdata into a new environment to avoid side effects
-# LoadToEnvironment <- function(RData, env=new.env()) { # mudar para a funcao load2env que criei
+# load2env <- function(RData, env=new.env()) { # mudar para a funcao load2env que criei
 #   load(RData, env)
 #   return(env)
 # }
@@ -206,7 +206,7 @@ ui = shiny::fluidPage(
                                       shiny::actionButton("fit_model", "Fit model", style='width:100%'),
                                       htmltools::tags$style(type='text/css', "#fit_model { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                                )
-                             ), #tirar a virgula qd apagar a linha de baixo
+                             ), 
                              htmltools::br(),
                              htmltools::br(),
                              shiny::tableOutput('fit_log'),
@@ -243,7 +243,7 @@ server = function(input, output, session) {
     if(!is.null(input$selected_folder)){
       folder_selected <- shinyFiles::parseDirPath(roots, input$selected_folder)
       folder_path <- paste("Recordings folder =", as.character(folder_selected))
-      output$folder_path <- renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
+      output$folder_path <- shiny::renderText(as.character(folder_path)) #output para mostrar o path da pasta escolhida
     }
   })
   shiny::observeEvent(input$selected_folder, {
@@ -251,22 +251,22 @@ server = function(input, output, session) {
       setwd(shinyFiles::parseDirPath(roots, input$selected_folder))
     }
   })
-  files_path <- reactive({ # files_path para usar noutras funcoes
+  files_path <- shiny::reactive({ # files_path para usar noutras funcoes
     folder_selected <- shinyFiles::parseDirPath(roots, input$selected_folder)
     files_path <- as.character(paste0(folder_selected, "//")) #dupla barra para funcionar em linux e windows
     files_path
   })
   
   # Button 2 - Choose model
-  observe({
+  shiny::observe({
     shinyFiles::shinyFileChoose(input, 'selected_model', roots = roots)
     if(!is.null(input$selected_model)){
       file_selected <- shinyFiles::parseFilePaths(roots, input$selected_model)
       model_path <- paste("Model =", as.character(file_selected$datapath))
-      output$model_path <- renderText(as.character(model_path)) #output para mostrar o path da bd escolhida
+      output$model_path <- shiny::renderText(as.character(model_path)) #output para mostrar o path da bd escolhida
     }
   })
-  model_path <- reactive({ # db_path para usar noutras funcoes
+  model_path <- shiny::reactive({ # db_path para usar noutras funcoes
     file_selected <- shinyFiles::parseFilePaths(roots, input$selected_model)
     model_path <- as.character(file_selected$datapath)
     model_path
@@ -274,18 +274,18 @@ server = function(input, output, session) {
   
   
   # Button 3 - Choose metadata
-  observe({ 
+  shiny::observe({ 
     shinyFiles::shinyFileChoose(input, 'selected_metadata', roots = roots)
     if(!is.null(input$selected_metadata)){
       file_selected <- shinyFiles::parseFilePaths(roots, input$selected_metadata)
       metadata_path <- paste("Metadata file =", as.character(file_selected$datapath))
-      output$metadata_path <- renderText(as.character(metadata_path)) #output para mostrar o path da bd escolhida
+      output$metadata_path <- shiny::renderText(as.character(metadata_path)) #output para mostrar o path da bd escolhida
     }
   })
-  metadata <- reactive({ # reactive com a lista importada no rdata
+  metadata <- shiny::reactive({ # reactive com a lista importada no rdata
     if(length(input$selected_metadata) > 1){ 
       file_selected <- shinyFiles::parseFilePaths(roots, input$selected_metadata)
-      env <- LoadToEnvironment(as.character(file_selected$datapath))
+      env <- load2env(as.character(file_selected$datapath))
       metadata <- env[[names(env)[1]]]
       rm(env)
       return(metadata)
@@ -293,7 +293,7 @@ server = function(input, output, session) {
   })
   
   # Button 4 - Run analysis
-  observeEvent(input$id_recs, {
+  shiny::observeEvent(input$id_recs, {
     
     # Criar pasta de output se nao existir ainda
     if(!dir.exists(paste0(files_path(), "/", "output/"))) dir.create(paste0(files_path(), "/", "output/"))
@@ -358,7 +358,7 @@ server = function(input, output, session) {
   # rdata_list <- reactive({ # reactive com a lista importada no rdata
   #   if(length(input$rdata_path) > 1){ 
   #   file_selected <- parseFilePaths(roots, input$rdata_path)
-  #   env <- LoadToEnvironment(as.character(file_selected$datapath))
+  #   env <- load2env(as.character(file_selected$datapath))
   #   rdata_list <- env[[names(env)[1]]]
   #   rm(env)
   #   return(rdata_list)
@@ -402,104 +402,104 @@ server = function(input, output, session) {
   
   
   #Apagar a tabela dos resultados no caso de 2 volta de fit 
-  observeEvent(input$fit_model, {
-    output$end_fit <- renderTable({
-      
-    })
-  })
+  # observeEvent(input$fit_model, {
+  #   output$end_fit <- renderTable({
+  #     
+  #   })
+  # })
   
   
   #model_fit <- eventReactive(input$fit_model, {
   
-  observeEvent(input$fit_model, {
-    #eliminate previous fit_log.csv file
-    # if (file.exists("./fit_log.csv")) 
-    #   file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
-    
-    
-    
-    rdata_list <- rdata_list() 
-    
-    # set seed
-    seed <- 1002
-    
-    # Parametros para o treino
-    total <- dim(rdata_list[[1]])[1]
-    img_rows <- rdata_list[[3]]$img_rows
-    img_cols <- rdata_list[[3]]$img_cols
-    input_shape <- c(img_rows, img_cols, 1)
-    num_classes <- length(unique(rdata_list[[2]]))
-    
-    
-    rdata_list[[2]] <- factor(rdata_list[[2]])#converter para factor para facilitar os numeros e aos nomes de classe repectivos
-    labels_code <- as.integer(rdata_list[[2]]) - 1
-    labels_name <- as.character(rdata_list[[2]])
-    labels_df <- data.frame(name = levels(rdata_list[[2]]), code = (1:length(levels(rdata_list[[2]])))-1)
-    
-    #  Randomizar a ordem dos casos
-    set.seed(seed)
-    data_x <- rdata_list[[1]]
-    data_y <- labels_code
-    randomize <- sample(length(data_y))
-    data_x <- data_x[randomize,]
-    data_y <- data_y[randomize]
-    
-    # preparar data para tensorflow
-    data_y <- keras::to_categorical(as.numeric(data_y), num_classes = num_classes)
-    data_x <- array(data_x, dim = c(total, img_rows, img_cols, 1))
-    
-    # load net structure
-    source(model_path(), local=TRUE)
-    
-    # fit
-    model %>%
-      compile(
-        optimizer = optimizer_sgd(lr=0.01, momentum=0.9, nesterov=T), 
-        loss = 'categorical_crossentropy',
-        metrics = c('accuracy')
-      )
-    
-    history<-model %>% fit(data_x, data_y,
-                           batch_size = 64,
-                           epochs = 20,
-                           callbacks = list(callback_early_stopping(patience = 10, monitor = 'val_accuracy'),
-                                            callback_model_checkpoint("./fitted_model.hdf5",
-                                                                      monitor = "val_accuracy", save_best_only = T),
-                                            #        callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
-                                            #                                 monitor = "val_accuracy"),
-                                            callback_lambda(on_train_begin = function(logs) {
-                                              shinyjs::html("fit_log", paste("Initiating epoch 1"))}),
-                                            
-                                            callback_lambda(on_epoch_end = function(epoch, logs) {
-                                              shinyjs::html("fit_log", paste("Validation accuracy %: ", logs$val_accuracy))}),
-                                            
-                                            
-                                            callback_lambda(on_train_end = function(logs) {
-                                              shinyjs::html("fit_log", paste("Model fitted"))}),
-                                            
-                                            callback_csv_logger("./fit_log.csv")), 
-                           
-                           shuffle = TRUE,
-                           validation_split = 0.3,
-                           verbose = 1)
-    
-    save(history, file="./history_model.RDATA")
-    
-    
-    output$end_fit <- renderTable({
-      read.csv("fit_log.csv")
-      
-      
-    })
-    
-    # file.remove("./fit_log.csv")
-    
-  })
+  # observeEvent(input$fit_model, {
+  #   #eliminate previous fit_log.csv file
+  #   # if (file.exists("./fit_log.csv")) 
+  #   #   file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
+  #   
+  #   
+  #   
+  #   rdata_list <- rdata_list() 
+  #   
+  #   # set seed
+  #   seed <- 1002
+  #   
+  #   # Parametros para o treino
+  #   total <- dim(rdata_list[[1]])[1]
+  #   img_rows <- rdata_list[[3]]$img_rows
+  #   img_cols <- rdata_list[[3]]$img_cols
+  #   input_shape <- c(img_rows, img_cols, 1)
+  #   num_classes <- length(unique(rdata_list[[2]]))
+  #   
+  #   
+  #   rdata_list[[2]] <- factor(rdata_list[[2]])#converter para factor para facilitar os numeros e aos nomes de classe repectivos
+  #   labels_code <- as.integer(rdata_list[[2]]) - 1
+  #   labels_name <- as.character(rdata_list[[2]])
+  #   labels_df <- data.frame(name = levels(rdata_list[[2]]), code = (1:length(levels(rdata_list[[2]])))-1)
+  #   
+  #   #  Randomizar a ordem dos casos
+  #   set.seed(seed)
+  #   data_x <- rdata_list[[1]]
+  #   data_y <- labels_code
+  #   randomize <- sample(length(data_y))
+  #   data_x <- data_x[randomize,]
+  #   data_y <- data_y[randomize]
+  #   
+  #   # preparar data para tensorflow
+  #   data_y <- keras::to_categorical(as.numeric(data_y), num_classes = num_classes)
+  #   data_x <- array(data_x, dim = c(total, img_rows, img_cols, 1))
+  #   
+  #   # load net structure
+  #   source(model_path(), local=TRUE)
+  #   
+  #   # fit
+  #   model %>%
+  #     compile(
+  #       optimizer = optimizer_sgd(lr=0.01, momentum=0.9, nesterov=T), 
+  #       loss = 'categorical_crossentropy',
+  #       metrics = c('accuracy')
+  #     )
+  #   
+  #   history<-model %>% fit(data_x, data_y,
+  #                          batch_size = 64,
+  #                          epochs = 20,
+  #                          callbacks = list(callback_early_stopping(patience = 10, monitor = 'val_accuracy'),
+  #                                           callback_model_checkpoint("./fitted_model.hdf5",
+  #                                                                     monitor = "val_accuracy", save_best_only = T),
+  #                                           #        callback_model_checkpoint("./epoch{epoch:02d}-val_accuracy-{val_accuracy:.4f}.hdf5",
+  #                                           #                                 monitor = "val_accuracy"),
+  #                                           callback_lambda(on_train_begin = function(logs) {
+  #                                             shinyjs::html("fit_log", paste("Initiating epoch 1"))}),
+  #                                           
+  #                                           callback_lambda(on_epoch_end = function(epoch, logs) {
+  #                                             shinyjs::html("fit_log", paste("Validation accuracy %: ", logs$val_accuracy))}),
+  #                                           
+  #                                           
+  #                                           callback_lambda(on_train_end = function(logs) {
+  #                                             shinyjs::html("fit_log", paste("Model fitted"))}),
+  #                                           
+  #                                           callback_csv_logger("./fit_log.csv")), 
+  #                          
+  #                          shuffle = TRUE,
+  #                          validation_split = 0.3,
+  #                          verbose = 1)
+  #   
+  #   save(history, file="./history_model.RDATA")
+  #   
+  #   
+  #   output$end_fit <- renderTable({
+  #     read.csv("fit_log.csv")
+  #     
+  #     
+  #   })
+  #   
+  #   # file.remove("./fit_log.csv")
+  #   
+  # })
   
   #so para testar a importacao do rdata_list
-  output$selected_rdata <- renderText({
-    as.character(rdata_list()[[3]][1])
-  })
+  # output$selected_rdata <- renderText({
+  #   as.character(rdata_list()[[3]][1])
+  # })
   
 }#server
 #) #shinyApp
