@@ -8,8 +8,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports: 
-seewave,
+Imports: seewave,
     DBI,
     dplyr,
     signal,
@@ -21,6 +20,5 @@ seewave,
     shiny,
     utils,
     graphics
-Depends: 
-shinyBS,
+Depends: shinyBS,
     htmltools

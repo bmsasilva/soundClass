@@ -1,7 +1,7 @@
 #' Convert sound to spectrogram
 #' @title Sound to spectrogram
 #' @description Convert sound to spectrogram
-#' @param recording Object of class "recording"
+#' @param recording Object of class "rc"
 #' @param sound_peaks Peaks detected in recording samples
 #' @param frequency_bin If TRUE filter by frequency mean subtraction
 #' @param time_bin If TRUE filter by time mean subtraction
@@ -15,7 +15,9 @@
 #'   \item img_rows -- number of rows in each spectrogram
 #' }
 #' @author Bruno Silva
-#' @export
+#' @internal
+ 
+# Deveria ser interna esta? como e puxada pela spectro_calls pode não ser necessario exporta-la
 peaks2spec_shiny <- function(recording, sound_peaks, spec_size = NA, window_length = NA, 
                        frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
                        freq_range = NA){

@@ -375,13 +375,13 @@ app_fit_model <- function() {
         spec_size = as.numeric(input$spec_size),
         window_length = as.numeric(input$window_length),
         frequency_resolution = as.numeric(input$frequency_resolution),
-        time_step_size = (1 - as.numeric(input$overlap)) * as.numeric(input$window_length),
+        time_step_size = (1 - as.numeric(input$overlap)) * as.numeric(input$window_length),#mudar isto para dentro da funcao
         dynamic_range = as.numeric(input$dynamic_range),
         freq_range = c(as.numeric(input$low), as.numeric(input$high))
       )
       save(
         sp_data,
-        file = "sp_data.RDATA"
+        file = "train_data.RDATA"
         )
       return(sp_data)
     })
@@ -462,6 +462,7 @@ app_fit_model <- function() {
 
       rdata_list <- rdata_list() 
       
+      ######### Colocar isto dentro de uma funcao #######
       # set seed
       seed <- 1002
       
@@ -492,6 +493,8 @@ app_fit_model <- function() {
       
       # load net structure
       source(model_path(), local=TRUE)
+      
+      ##########
       
       # fit
       model %>%

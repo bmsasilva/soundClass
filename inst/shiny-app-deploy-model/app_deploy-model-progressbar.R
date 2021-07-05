@@ -46,10 +46,10 @@ for(file in files) source(file)
 # UI ----------------------------------------------------------------------
 ui = fluidPage(
   shinyjs::useShinyjs(),  # Include shinyjs
-  titlePanel("Deploy model"),
-  tabsetPanel(
+  shiny::titlePanel("Deploy model"),
+  shiny::tabsetPanel(
     # 1) Panel Deploy model -------------------------------------------------
-    tabPanel("Run model", 
+    shiny::tabPanel("Run model", 
              sidebarLayout(fluid = FALSE,
                            # 1.1) Sidebar panel ------------------------------------------------
                            sidebarPanel(width = 2,
@@ -138,7 +138,7 @@ ui = fluidPage(
     
     
     # 2) Panel review results ---------------------------------------------------------
-    tabPanel("Review results", 
+    shiny::tabPanel("Review results", 
              sidebarLayout(fluid = FALSE,
                            # 2.1) Sidebar panel ------------------------------------------------------
                            sidebarPanel(width = 2,
@@ -215,10 +215,10 @@ ui = fluidPage(
                              
                            )#mainPanel
              )#sidebarLayout
-    )#tabPanel plot
+    )#shiny::tabPanel plot
     
     # 3) Panel re-fit model ---------------------------------------------------------
-    # tabPanel("Re-fit model", fluid = FALSE,
+    # shiny::tabPanel("Re-fit model", fluid = FALSE,
     #          sidebarLayout(
     #            sidebarPanel(sliderInput("year", "Year:", min = 1968, max = 2009, value = 2009, sep='')),
     # mainPanel(
@@ -236,11 +236,11 @@ ui = fluidPage(
     #   
     # )#mainPanel
     #          )#sidebarLayout
-    # ),#tabPanel plot
+    # ),#shiny::tabPanel plot
     
     
     # 4) Panel run model  -----------------------------------------------------
-    # tabPanel("Run model",
+    # shiny::tabPanel("Run model",
     # sidebarLayout(fluid = FALSE,
     #               sidebarPanel(sliderInput("year", "Year:", min = 1968, max = 2009, value = 2009, sep='')),
     #               mainPanel(fluidRow(
@@ -249,8 +249,8 @@ ui = fluidPage(
     #               )#fluidRow
     #               )#mainPanel
     # )#sidebarLayout
-    # )#tabPanel plot
-  ) # tabsetPanel
+    # )#shiny::tabPanel plot
+  ) # shiny::tabsetPanel
 ) # fluidPage
 
 
