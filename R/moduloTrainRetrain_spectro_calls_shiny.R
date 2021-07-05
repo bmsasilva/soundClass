@@ -23,7 +23,7 @@
 #' @author Bruno Silva
 #' @export
 
-spectro_calls_shiny <- function(files_path, updateProgress,
+spectro_calls_shiny <- function(files_path, updateProgress, #mudar o nome do time_step_size para overlap para evitar confusoes futuras
                                 db_path, spec_size = NA, window_length = NA, # nota: files_path tem de acabar em /
                                 frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
                                 freq_range = NA) { 
@@ -60,7 +60,7 @@ spectro_calls_shiny <- function(files_path, updateProgress,
         name <-paste0(files_path, audio_files[i], ".wav")
       }
       
-      morc <- import_audio(name, low = 10, high = 125)
+      morc <- import_audio(name, low = freq_range[1], high = freq_range[2])
       calls <- peaks2spec_shiny(morc, sound_peaks, spec_size, window_length, 
                                 frequency_resolution, time_step_size, dynamic_range,
                                 freq_range)# desta funcao tem de sair um vector com o label que esta na bd
@@ -83,17 +83,18 @@ spectro_calls_shiny <- function(files_path, updateProgress,
     })#final try
   }
   spec_image <- spec_image[-1,] # para eliminar a linha de NA por causa do rbind
-  
+
   # criar data.frame com os parametros dos espectrogramas
   parameters <- data.frame (spec_size = spec_size, 
      window_length = window_length,
      frequency_resolution = frequency_resolution,
-     overlap = 1 - time_step_size,
+     overlap = 1 - time_step_size * window_length,
      dynamic_range = dynamic_range,
      freq_range_low = freq_range[1],
     freq_range_high = freq_range[2],
     img_rows = input_shape[2],
-    img_cols = input_shape[1])
+    img_cols = input_shape[1],
+    num_classes = length(unique(label)))
   
   return(list(spec_image, label, parameters))
 }

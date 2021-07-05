@@ -1,1 +1,1 @@
-is_rc <- function(x) inherits(x, "recording")
+is_rc <- function(x) inherits(x, "rc")
