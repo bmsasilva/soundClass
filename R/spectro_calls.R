@@ -94,7 +94,7 @@ spectro_calls <- function(files_path, updateProgress, #mudar o nome do time_step
   parameters <- data.frame (spec_size = spec_size, 
                             window_length = window_length,
                             frequency_resolution = frequency_resolution,
-                            overlap = 1 - time_step_size * window_length,
+                            overlap = (1 - time_step_size) * window_length,
                             dynamic_range = dynamic_range,
                             freq_range_low = freq_range[1],
                             freq_range_high = freq_range[2],

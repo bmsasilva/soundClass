@@ -29,6 +29,7 @@ Depends:
 Collate:
     'app_fit_model.R'
     'app_label.R'
+    'app_deploy_model.R'
     'butter_filter.R'
     'create_db.R'
     'denoise.R'
