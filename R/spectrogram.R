@@ -67,10 +67,10 @@
 #'              ylim = NULL,
 #'              main = "",
 #'              xlab = "Time (ms)",
-#'              ylab = "Frequency (kHz)")
+#'              ylab = "Frequency (kHz)", 
+#'              norm = 140)
 #' @details Computes a spectrogram which can be ploted or exported as a matrix
 #' @keywords internal
-#' @author Bruno Silva
 
 Spectrogram <- function(Audio,
                         SamplingFrequency = NULL,

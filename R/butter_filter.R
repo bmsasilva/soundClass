@@ -12,8 +12,6 @@
 #' @examples sound <- runif(22000, min = -10000, max = 10000) # 1s sound sample
 #' sound_filt <- butter_filter(sound, low = 4, high = 8,
 #'                             fs = 22000, tx = 1, order = 10) # filter sound
-#' Spectrogram(sound, 22000) # original spectrogram
-#' Spectrogram(sound_filt, 22000) # filtered spectrogram
 #' @return A vector with the filtered sound samples
 #' @author Bruno Silva
 #' @export
