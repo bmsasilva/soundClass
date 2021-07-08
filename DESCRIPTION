@@ -22,35 +22,11 @@ Imports:
     shinyFiles,
     shiny,
     utils,
-    graphics
+    graphics,
+    generics,
+    keras,
+    scales,
+    shinyjs
 Depends:
     shinyBS,
     htmltools
-Collate:
-    'app_fit_model.R'
-    'app_label.R'
-    'app_deploy_model.R'
-    'butter_filter.R'
-    'create_db.R'
-    'denoise.R'
-    'import_audio.R'
-    'internal_add_record.R'
-    'internal_get_mode.R'
-    'internal_is_even.R'
-    'internal_is_rc.R'
-    'internal_r.R'
-    'load2env.R'
-    'moduloBatID_auto_id_shiny.R'
-    'moduloBatID_classify_calls.R'
-    'moduloBatID_internal_is.btr.R'
-    'moduloBatID_peaks.R'
-    'moduloBatID_save_output_shiny.R'
-    'moduloBatID_tidy_output.R'
-    'moduloCallBD_find_noise.R'
-    'moduloCallBD_spectrogram.R'
-    'moduloTrainRetrain_peaks2spec_shiny.R'
-    'ms2samples.R'
-    'r90.R'
-    'train_data_process.R'
-    'utils_pipe.R'
-    'spectro_calls.R'

@@ -1,52 +1,9 @@
-#' @title Start app deploy model
-#' @description Starts the app to deploy the model
+#' @title Start app run model
+#' @description Starts the app to run the model
 #' @export
 #' @import htmltools shinyBS
 
-# ## clean environment including hidden objects
-# #rm(list = ls(all.names = TRUE))
-# #rm(list = ls())  deixa packages e hidden objects
-# 
-# library(shiny)
-# library(plotly)
-# library(shinyBS)
-# library(zoo) # funcao rollmean()
-# #library(Peaks) # Package para explorar com opcoes para escolha dos pulsos
-# #library.dynam('Peaks', 'Peaks', lib.loc=NULL) # Patch para um bug do Peaks nesta versao de R, mas parece que tb nao funciona
-# library(shinyFiles) # Da para escolher ficheiros e pastas mas ainda nao explorei
-# require(tcltk)
-# require(neuralnet)
-# library(rhandsontable)
-# library(shinythemes)
-# library(shinyjs)
-# library(DBI)
-# library(dbplyr)
-# library(dplyr)
-# library(RSQLite)
-# library(tuneR)
-# library(keras)
-# 
-# ##### Function to read RDATA #####
-# # This function, borrowed from http://www.r-bloggers.com/safe-loading-of-rdata-files/, 
-# # load the Rdata into a new environment to avoid side effects
-# load2env <- function(RData, env=new.env()) { # mudar para a funcao load2env que criei
-#   load(RData, env)
-#   return(env)
-# }
-# 
-# ##### Load all #####
-# system <- Sys.info()[['sysname']]
-# if (system == "Windows") files <- list.files("C://Users//silva//Projects//R_packages//soundClass//R", pattern = ".R", full.names = TRUE)
-# if (system == "Linux") files <- list.files("/mnt/5F9DC8AD3B9B9A40/Bruno/r_packages/soundClass/R/", pattern = ".R", full.names = TRUE)
-# 
-# for(file in files) source(file)
-
-#eliminate previous fit_log.csv file
-# if (file.exists("./fit_log.csv")) 
-#   file.remove("./fit_log.csv") #limpar a tabela de resultados se correr fit moedl 2 vezes
-
-
-#shinyApp(
+app_run_model <- function() {
 
 # UI ----------------------------------------------------------------------
 ui = shiny::fluidPage(
@@ -328,7 +285,6 @@ server = function(input, output, session) {
                   files_path(),
                   out_file = input$out_file,
                   out_dir = paste0(files_path(), "/", "output/"),
-                  save_spec = F,
                   save_png = as.logical(input$lab_plots),
                   #                   class_labels = as.character(metadata()$classes$name),
                   win_size = metadata()$parameters$spec_size * 2,  #minimum distnace between calls and chunck size
@@ -504,5 +460,7 @@ server = function(input, output, session) {
 }#server
 #) #shinyApp
 
+
 # Run the application 
 shiny::shinyApp(ui = ui, server = server)
+}

@@ -1,7 +1,7 @@
 #' @title Start app fit model
 #' @description Starts the app to fit the model
 #' @export
-# @import htmltools shinyBS
+#' @import htmltools shinyBS
 
 app_fit_model <- function() {
   

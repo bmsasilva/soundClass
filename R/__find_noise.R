@@ -13,7 +13,7 @@
 
 find_noise <- function(recording, nmax = 1, plot = F) {
   
-  if (!is.btr(recording)) {
+  if (!is_rc(recording)) {
     stop("Recording object must be of class rc. Use
       import_audio() as constructor.", call. = FALSE)
   }

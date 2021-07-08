@@ -515,7 +515,7 @@ Spectrogram visualization:
             )
 
           peak <- find_noise(
-            bat_recording = sound,
+            recording = sound,
             nmax = 1,
             plot = F
           )

@@ -15,30 +15,37 @@
 #' @param multiple_species if FALSE only the calls belonging to the
 #' most represented species are kept in the formated table. If TRUE all
 #' calls classified as bats are returned in the formated table
-#' @usage tidy_output(output, class_labels, min_dist = 40, remove_noise = T, multiple_species = F)
+#' @usage tidy_output(output, class_labels, min_dist = 40, remove_noise = T,
+#'                    multiple_species = F)
 #' @return A formated classification table
 #' @author Bruno Silva
-#' @export
+#' @keywords internal
 tidy_output <- function(output, class_labels, min_dist = 40,
-                        remove_noise=T, multiple_species = F){
- try({
-  if(remove_noise == T) output <- output[output$spe>0,]
- class_n <-  seq(class_labels) - 1
- colnames(output)[1:length(class_n)] <- class_labels
+                        remove_noise = T, multiple_species = F) {
+  try({
+    if (remove_noise == T) {
+      output <- output[output$spe > 0, ]
+    }
 
- output$spe <- as.character(factor(output$spe,
-                              levels = c(class_n),
-                              labels = c(class_labels)))
+    class_n <- seq(class_labels) - 1
+    colnames(output)[1:length(class_n)] <- class_labels
 
- if(multiple_species == F) output <- output[output$spe == get_mode(output$spe),]
+    output$spe <- as.character(factor(output$spe,
+      levels = c(class_n),
+      labels = c(class_labels)
+    ))
 
-intervals <- diff(output$peaks)
-filter <- which(intervals < (ms2samples(min_dist))) + 1
-if(length(filter) > 0) output <- output[-filter,]
+    if (multiple_species == F) {
+      output <- output[output$spe == get_mode(output$spe), ]
+    }
 
+    intervals <- diff(output$peaks)
+    filter <- which(intervals < (ms2samples(min_dist))) + 1
 
+    if (length(filter) > 0) {
+      output <- output[-filter, ]
+    }
 
-
-return(output)
-})
+    return(output)
+  })
 }

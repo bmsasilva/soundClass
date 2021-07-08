@@ -1,19 +1,20 @@
 #' Import a recording
 #' @title Import a recording
-#' @description  Import a "wav" recording using the function tuneR::readWave()
+#' @description  Import a "wav" recording using \link[tuneR]{readWave}
 #' and create a S3 class object "rc". If the recording is stereo it is converted
 #' to mono by keeping the channel with overall higher amplitude
 #' @param path Full path to the recording
-#' @param butt Logical. If TRUE filters the recording with a 12th order butterworth
+#' @param butt Logical. If TRUE filters the recording with a 12th order 
 #' filter. The filter is applied twice to better cleaning of the recording
 #' @param low Minimum frequency in kHz for the butterworth filter
 #' @param high Maximum frequency in kHz for the butterworth filter
 #' @param tx Time expanded. Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
-#' time expanded the numeric value correponding to the time expansion should be indicated or
-#' "auto" should be selected. If tx = "auto" the function assumes that sampling
-#' rates < 50kHz correponds to tx = 10 and > 50kHz to tx = 1.
+#' time expanded the numeric value correponding to the time expansion should 
+#' be indicated or "auto" should be selected. If tx = "auto" the function 
+#' assumes that sampling rates < 50kHz correponds to
+#' tx = 10 and > 50kHz to tx = 1.
 #' @usage import_audio(path, butt = TRUE, low, high, tx)
 #' @return an object of class "rc". This object is a list
 #' with the following components:
@@ -30,15 +31,17 @@
 #' @export
 
 import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
-  if (!is.logical(butt)) stop("Parameter butt must be TRUE or FALSE", call. = FALSE)
-  if (!is.character(path)) stop("Parameter path must be character", call. = FALSE)
-  if (!is.numeric(low)) stop("Parameter low must be character", call. = FALSE)
-  if (!is.numeric(high)) stop("Parameter high must be character", call. = FALSE)
+  if (!is.logical(butt)) stop("Parameter butt must be TRUE or FALSE", 
+                              call. = FALSE)
+  if (!is.character(path)) stop("Parameter path must be character", 
+                                call. = FALSE)
+  if (!is.numeric(low)) stop("Parameter low must be character", 
+                             call. = FALSE)
+  if (!is.numeric(high)) stop("Parameter high must be character", 
+                              call. = FALSE)
 
-  # Import recording
   data <- tuneR::readWave(path)
 
-  # Get file atributes (CONFIRMAR A FUNCIONALIDADE COM OS PATH DE WINDOWS)
   file_name <- strsplit(path, "/|[\\]")[[1]]
   file_name <- file_name[length(file_name)]
   file_name <- strsplit(as.character(file_name), "\\.")[[1]][1]
@@ -52,7 +55,6 @@ import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
     tx <- tx
   }
 
-  # If is mono keep left channel
   if (data@stereo) {
     if (sum(abs(data@left)) >= sum(abs(data@right))) {
       sound_samples <- data@left
@@ -63,7 +65,6 @@ import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
     sound_samples <- data@left
   }
 
-  # Apply butterworth filter
   if (butt) {
     limit_low <- low * 1000 / (fs * tx / 2)
     limit_high <- high * 1000 / (fs * tx / 2)
@@ -72,7 +73,6 @@ import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
     sound_samples <- as.integer(signal::filter(bt_low, sound_samples))
     sound_samples <- as.integer(signal::filter(bt_high, sound_samples))
 
-    # Nova passagem do filtro para limpar melhor
     sound_samples <- as.integer(signal::filter(bt_low, sound_samples))
     sound_samples <- as.integer(signal::filter(bt_high, sound_samples))
   }
