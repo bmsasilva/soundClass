@@ -344,7 +344,7 @@ app_fit_model <- function() {
       return(db_path)
     })
     
-    spectro_calls <- shiny::eventReactive(input$create_specs, {
+    spec_calls <- shiny::eventReactive(input$create_specs, {
       
       total <- length(list.files(
         path = files_path(),
@@ -369,8 +369,8 @@ app_fit_model <- function() {
       }
       
       sp_data <- spectro_calls(
-        files_path = files_path(), 
-        updateProgress = updateProgress, 
+        files_path = files_path(),
+        updateProgress = updateProgress,
         db_path = db_path(),
         spec_size = as.numeric(input$spec_size),
         window_length = as.numeric(input$window_length),
@@ -387,7 +387,7 @@ app_fit_model <- function() {
     })
     
     output$spec <- shiny::renderTable({
-      table(spectro_calls()[[2]])
+      table(spec_calls()[[2]])
     })
     
     shiny::observe({
