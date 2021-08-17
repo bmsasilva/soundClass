@@ -7,7 +7,7 @@
 #' @param db_name Character. Name of the database to be created.
 #' @param table_name Character. Name of the table to be created.
 #' inside the database. It is advisable to use the default table name "labels" 
-#' if the databse is intended to be used in conjunction with other functions of 
+#' if the database is intended to be used in conjunction with other functions of 
 #' this package.
 #' @param type Character indicating the type of database to create. Possible 
 #' options are: "reference" which creates a database to be used to store 
