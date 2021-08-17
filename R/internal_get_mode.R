@@ -5,6 +5,7 @@
 #' @usage get_mode(v)
 #' @return The mode of the vector
 #' @author Bruno Silva
+#' @noRd
 #' @keywords internal
 
 get_mode <- function(v) {

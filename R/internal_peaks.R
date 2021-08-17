@@ -12,6 +12,7 @@
 #' @return Vector with the temporal position of the identified peaks in samples
 #' @author Bruno Silva
 #' @keywords internal
+#' @noRd
 
 peaks <- function(recording, win_size = 40, plot = F) {
   if (!is_rc(recording)) {

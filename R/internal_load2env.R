@@ -5,6 +5,7 @@
 #' @usage load2env(rdata_file, env = new.env())
 #' @return A new environment with loaded objects
 #' @author Bruno Silva
+#' @noRd
 #' @keywords internal
 
 load2env <- function(rdata_file, env=new.env()) {

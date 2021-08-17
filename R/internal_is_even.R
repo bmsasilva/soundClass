@@ -5,6 +5,7 @@
 #' @usage is_even(x)
 #' @return TRUE if number is even, FALSE if number is odd
 #' @author Bruno Silva
+#' @noRd
 #' @keywords internal
 
 is_even <- function(x){

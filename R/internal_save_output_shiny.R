@@ -17,6 +17,7 @@
 #' @return Nothing
 #' @author Bruno Silva
 #' @keywords internal
+#' @noRd
 
 save_output_shiny <- function(output, recording, out_file = NA, png_file = NA,
                               plot2console = F, recursive = FALSE) {

@@ -6,5 +6,6 @@
 #' @return Rotated matrix
 #' @author Bruno Silva
 #' @keywords internal
+#' @noRd
  
 r_cw <- function(mat) t(apply(mat, 2, rev))

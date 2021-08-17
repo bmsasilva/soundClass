@@ -71,6 +71,7 @@
 #'              norm = 140)
 #' @details Computes a spectrogram which can be ploted or exported as a matrix
 #' @keywords internal
+#' @noRd
 
 Spectrogram <- function(Audio,
                         SamplingFrequency = NULL,

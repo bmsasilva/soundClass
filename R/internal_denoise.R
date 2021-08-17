@@ -9,6 +9,7 @@
 #' @return A denoised spectrogram matrix, with standardized energy values
 #' between 0 and 1
 #' @keywords internal
+#' @noRd
 #' @author Bruno Silva
 
 denoise <- function(spec) {

@@ -5,6 +5,7 @@
 #' @usage is_rc(x)
 #' @return TRUE if object is of class "rc", FALSE otherwiese
 #' @author Bruno Silva
+#' @noRd
 #' @keywords internal
 
 is_rc <- function(x) inherits(x, "rc")

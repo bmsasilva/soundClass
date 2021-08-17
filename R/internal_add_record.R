@@ -10,6 +10,7 @@
 #' @return Nothing
 #' @author Bruno Silva
 #' @keywords internal
+#' @noRd
 #' @import dplyr DBI
 
 add_record <- function(path, df) {

@@ -27,6 +27,7 @@
 #' }
 #' @author Bruno Silva
 #' @keywords internal
+#' @noRd
 
 peaks2spec <- function(recording, sound_peaks, spec_size = NA,
                        window_length = NA, frequency_resolution = NA,

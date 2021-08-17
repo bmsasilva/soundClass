@@ -19,6 +19,7 @@
 #' @return A formated classification table
 #' @author Bruno Silva
 #' @keywords internal
+#' @noRd
 tidy_output <- function(output, class_labels, min_dist = 40,
                         remove_noise = T, multiple_species = F) {
   try({

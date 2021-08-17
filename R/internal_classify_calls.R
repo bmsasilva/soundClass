@@ -1,5 +1,6 @@
 #' @author Bruno Silva
 #' @keywords internal
+#' @noRd
 
 classify_calls <- function(calls, sound_peaks, model) {
   spec_calls <- calls$spec_calls
