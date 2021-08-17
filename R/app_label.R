@@ -217,7 +217,7 @@ app_label <- function() {
   )
 
   server <- function(input, output, session) {
-    # File and folder chooser paths -------------------------------
+
     system <- Sys.info()[["sysname"]]
     if (system == "Windows") {
       roots <- c(home = "C://")
@@ -355,6 +355,7 @@ Spectrogram visualization:
         low = as.numeric(input$low),
         high = as.numeric(input$high)
       )
+      print(sound$tx)
       return(sound)
     })
 
@@ -393,7 +394,7 @@ Spectrogram visualization:
       {
         Spectrogram(
           as.numeric(sound()$sound_samples),
-          SamplingFrequency = sound()$fs,
+          SamplingFrequency = sound()$fs * sound()$tx,
           WindowLength = as.numeric(input$windowLength),
           FrequencyResolution = as.numeric(input$freqResolution),
           TimeStepSize = as.numeric(input$timeStep) * as.numeric(input$windowLength),

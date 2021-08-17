@@ -2,22 +2,32 @@
 #' @title Apply a buttterworth filter to sound samples
 #' @description Apply a buttterworth filter, high pass or/and low pass,
 #' to sound samples. Based on the function \link[signal]{butter}
-#' @param sound_samples Vector. Sound samples to filter
-#' @param low Minimum frequency in kHz for the butterworth filter
-#' @param high Maximum frequency in kHz for the butterworth filter
-#' @param fs Sampling frequency
-#' @param tx Expanded time factor
-#' @param order Filter order
+#' @param sound_samples Numeric vector with the sound samples to filter
+#' @param low Numeric. Minimum frequency in kHz for the butterworth filter
+#' @param high Numeric. Maximum frequency in kHz for the butterworth filter
+#' @param fs Integer with the sampling frequency of the recording
+#' @param tx Integer indicating the expanded time factor of the recording
+#' @param order Integer indicating the filter order to apply to the recording
 #' @usage butter_filter(sound_samples, low = NA, high = NA, fs, tx, order = 12)
 #' @examples sound <- runif(22000, min = -10000, max = 10000) # 1s sound sample
-#' sound_filt <- butter_filter(sound, low = 4, high = 8,
-#'                             fs = 22000, tx = 1, order = 10) # filter sound
+#' sound_filt <- butter_filter(sound,
+#'   low = 4, high = 8,
+#'   fs = 22000, tx = 1, order = 10
+#' ) # filter sound
 #' @return A vector with the filtered sound samples
 #' @author Bruno Silva
 #' @export
 
 butter_filter <- function(sound_samples, low = NA, high = NA,
                           fs, tx, order = 12) {
+  
+  if (!is.numeric(sound_samples)) stop("Sound samples must be numeric",
+                                       call. = FALSE)
+  if (!is.numeric(fs)) stop("Fs (sampling frequency) must be numeric",
+                                       call. = FALSE)
+  if (!is.numeric(tx)) stop("Tx (expanded time factor) must be numeric",
+                            call. = FALSE)
+  
   if (!is.na(low)) {
     if (!is.numeric(low)) stop("Parameter low must be numeric", call. = FALSE)
     limit_low <- low * 1000 / (fs * tx / 2)

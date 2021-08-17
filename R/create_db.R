@@ -1,17 +1,21 @@
 #' @title Create a sqlite3 database
-#' @description Create a sqlite3 database with a predefined table in a
-#' specific folder,
-#' if a database with the specified name doesn't exist already
-#' @param path Path to the folder where the database will be created
-#' @param db_name Name of the database to be created
-#' @param table_name Name of the table to be created inside the database
-#' @param type Type of database to create. Possible options are: "reference"
-#' which creates a database to be used for training purposes, and "id" which
-#' creates a database to output the results of the automatic classification
+#' @description Create a sqlite3 database with a predefined table (if a 
+#' database with the specified name doesn't exist already). Two type of database
+#' are possible, one to store recordings annotations and another to store
+#' the output of the classification.
+#' @param path Character. Path to the folder where the database will be created.
+#' @param db_name Character. Name of the database to be created.
+#' @param table_name Character. Name of the table to be created.
+#' inside the database. It is advisable to use the default table name "labels" 
+#' if the databse is intended to be used in conjunction with other functions of 
+#' this package.
+#' @param type Character indicating the type of database to create. Possible 
+#' options are: "reference" which creates a database to be used to store 
+#' recordings annotations for training purposes, and "id" which
+#' creates a database to output the results of the automatic classification.
+#' @examples create_db(".//", db_name = "test", table_name = "labels", 
+#' type = "reference")
 #' @return  Nothing
-#' @examples create_db(".//", db_name = "test", type = "reference")
-#' @details A sqlite3 database with the specified name with a predefined table,
-#' depending on "type" chosen, is created inside the folder
 #' @export
 #' @author Bruno Silva
 #' @import dplyr DBI

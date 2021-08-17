@@ -1,13 +1,14 @@
 #' Detect energy peaks in non-relevant recordings
 #' @title Detect energy peaks in non-relevant recordings
-#' @description Detects the temporal position of the number of peaks, events
-#' with most energy, defined in the parameter nmax
+#' @description Detects the temporal position of the desired energy peaks in 
+#' a recording of non-relevant events.
 #' @param recording Object of class "rc"
-#' @param nmax Maximum number of peaks to detect in the recording
-#' @param plot If TRUE plots the sound_samples with the peak(s) identified
+#' @param nmax Integer indicating the maximum number of peaks to detect in 
+#' the recording.
+#' @param plot Logical. If TRUE a plot showing the peak(s) is returned.
 #' @usage find_noise(recording, nmax = 1, plot = F)
-#' @return Vector, in samples, with the temporal position of the
-#' identified peak(s)
+#' @return A vector with the temporal position of the
+#' identified peak(s), in samples.
 #' @author Bruno Silva
 #' @export
 
