@@ -13,8 +13,11 @@
 #' options are: "reference" which creates a database to be used to store 
 #' recordings annotations for training purposes, and "id" which
 #' creates a database to output the results of the automatic classification.
-#' @examples create_db(".//", db_name = "test", table_name = "labels", 
+#' @examples
+#' \dontrun{
+#' create_db(".//", db_name = "test", table_name = "labels", 
 #' type = "reference")
+#' }
 #' @return  Nothing
 #' @export
 #' @author Bruno Silva
