@@ -1,5 +1,5 @@
 #' Generate spectrograms from labels
-#' @title Generates spectrograms from recording labels.
+#' @title Generate spectrograms from recording labels.
 #' @description Generates spectrograms from recording's labels for
 #' classification purposes. The spectrogram parameters are user defined
 #' and should be selected depending on the type of sound event to classify.
@@ -56,10 +56,18 @@ spectro_calls <- function(files_path, updateProgress,
         name <- paste0(files_path, audio_files[i], ".wav")
       }
       
-      morc <- import_audio(name, low = freq_range[1], high = freq_range[2])
+      morc <- import_audio(
+        name, 
+        low = freq_range[1], 
+        high = freq_range[2])
+      
       calls <- peaks2spec(
-        morc, sound_peaks, spec_size, window_length,
-        frequency_resolution, time_step_size,
+        morc, 
+        sound_peaks, 
+        spec_size, 
+        window_length,
+        frequency_resolution, 
+        time_step_size,
         dynamic_range,
         freq_range
       )

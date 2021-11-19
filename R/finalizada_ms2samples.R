@@ -10,7 +10,7 @@
 #' @usage ms2samples(value, fs = 300000, tx = 1, inv = FALSE)
 #' @examples ms2samples(150000, fs = 300000, tx = 1, inv = FALSE)
 #' ms2samples(100, fs = 300000, tx = 1, inv = TRUE)
-#' @return if TRUE returns number of samples, if FALSE
+#' @return if inv = TRUE returns number of samples, if unv = FALSE
 #' returns time in ms
 #' @author Bruno Silva
 #' @export

@@ -1,21 +1,31 @@
 #' Import a recording
 #' @title Import a recording
 #' @description  Import a "wav" recording using \link[tuneR]{readWave}
-#' and create a S3 class object "rc". If the recording is stereo it is converted
-#' to mono by keeping the channel with overall higher amplitude
+#' and create a S3 object of class "rc". If the recording is stereo it is
+#' #' converted to mono by keeping the channel with overall higher amplitude
 #' @param path Full path to the recording
-#' @param butt Logical. If TRUE filters the recording with a 12th order 
+#' @param butt Logical. If TRUE filters the recording with a 12th order
 #' filter. The filter is applied twice to better cleaning of the recording
 #' @param low Minimum frequency in kHz for the butterworth filter
 #' @param high Maximum frequency in kHz for the butterworth filter
 #' @param tx Time expanded. Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
-#' time expanded the numeric value correponding to the time expansion should 
-#' be indicated or "auto" should be selected. If tx = "auto" the function 
+#' time expanded the numeric value correponding to the time expansion should
+#' be indicated or "auto" should be selected. If tx = "auto" the function
 #' assumes that sampling rates < 50kHz correponds to
 #' tx = 10 and > 50kHz to tx = 1.
-#' @usage import_audio(path, butt = TRUE, low, high, tx)
+#' @usage import_audio(path, butt = TRUE, low, high, tx = 1)
+#' @examples
+#' # Create a sample wav file in a temporary directory
+#' recording <- tuneR::sine(440)
+#' temp_dir <- tempdir()
+#' rec_path <- file.path(temp_dir, "recording.wav")
+#' tuneR::writeWave(recording, filename = rec_path)
+#' # Import the sample wav file
+#' new_rec <- import_audio(rec_path, low = 1, high = 50, tx = 1)
+#' new_rec
+#' file.remove(rec_path)
 #' @return an object of class "rc". This object is a list
 #' with the following components:
 #' \itemize{
@@ -30,15 +40,17 @@
 #' @author Bruno Silva
 #' @export
 
-import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
-  if (!is.logical(butt)) stop("Parameter butt must be TRUE or FALSE", 
+import_audio <- function(path, butt = TRUE, low, high, tx = 1) {
+  if (!is.logical(butt)) stop("Parameter butt must be TRUE or FALSE",
                               call. = FALSE)
-  if (!is.character(path)) stop("Parameter path must be character", 
+  if (!is.character(path)) stop("Parameter path must be character",
                                 call. = FALSE)
-  if (!is.numeric(low)) stop("Parameter low must be character", 
+  if (isTRUE(butt)){
+  if (!is.numeric(low)) stop("Parameter low must be numeric",
                              call. = FALSE)
-  if (!is.numeric(high)) stop("Parameter high must be character", 
+  if (!is.numeric(high)) stop("Parameter high must be numeric",
                               call. = FALSE)
+  }
 
   data <- tuneR::readWave(path)
 
@@ -65,7 +77,7 @@ import_audio <- function(path, butt = TRUE, low, high, tx = "auto") {
     sound_samples <- data@left
   }
 
-  if (butt) {
+  if (isTRUE(butt)) {
     limit_low <- low * 1000 / (fs * tx / 2)
     limit_high <- high * 1000 / (fs * tx / 2)
     bt_low <- signal::butter(10, limit_low, type = "high")

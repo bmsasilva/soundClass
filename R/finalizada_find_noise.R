@@ -7,6 +7,16 @@
 #' the recording.
 #' @param plot Logical. If TRUE a plot showing the peak(s) is returned.
 #' @usage find_noise(recording, nmax = 1, plot = F)
+#' @examples 
+#' # Create a sample wav file in a temporary directory
+#' recording <- tuneR::noise(duration = 44100)
+#' temp_dir <- tempdir()
+#' rec_path <- file.path(temp_dir, "recording.wav")
+#' tuneR::writeWave(recording, filename = rec_path)
+#' # Import the sample wav file
+#' new_rec <- import_audio(rec_path, butt = FALSE, tx = 1)
+#' find_noise(new_rec, nmax = 1, plot = F)
+#' file.remove(rec_path)
 #' @return A vector with the temporal position of the
 #' identified peak(s), in samples.
 #' @author Bruno Silva
@@ -15,7 +25,7 @@
 find_noise <- function(recording, nmax = 1, plot = F) {
   
   if (!is_rc(recording)) {
-    stop("Recording object must be of class rc. Use
+    stop("Recording object must be of class 'rc'. Use
       import_audio() as constructor.", call. = FALSE)
   }
   

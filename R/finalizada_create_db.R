@@ -14,10 +14,10 @@
 #' recordings annotations for training purposes, and "id" which
 #' creates a database to output the results of the automatic classification.
 #' @examples
-#' \dontrun{
-#' create_db(".//", db_name = "test", table_name = "labels", 
+#' dir_path <- tempdir()
+#' create_db(dir_path, db_name = "test", table_name = "labels", 
 #' type = "reference")
-#' }
+#' file.remove(file.path(dir_path, "test.sqlite3"))
 #' @return  Nothing
 #' @export
 #' @author Bruno Silva
@@ -25,7 +25,7 @@
 
 create_db <- function(path, db_name, table_name = "labels",
                       type = "reference") {
-  db <- paste0(path, db_name, ".sqlite3")
+  db <- paste0(path, "//", db_name, ".sqlite3")
 
   if (file.exists(db)) message("Database already exists")
 

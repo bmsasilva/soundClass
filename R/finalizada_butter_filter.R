@@ -20,14 +20,14 @@
 
 butter_filter <- function(sound_samples, low = NA, high = NA,
                           fs, tx, order = 12) {
-  
+
   if (!is.numeric(sound_samples)) stop("Sound samples must be numeric",
                                        call. = FALSE)
   if (!is.numeric(fs)) stop("Fs (sampling frequency) must be numeric",
                                        call. = FALSE)
   if (!is.numeric(tx)) stop("Tx (expanded time factor) must be numeric",
                             call. = FALSE)
-  
+
   if (!is.na(low)) {
     if (!is.numeric(low)) stop("Parameter low must be numeric", call. = FALSE)
     limit_low <- low * 1000 / (fs * tx / 2)

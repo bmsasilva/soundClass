@@ -13,3 +13,6 @@ As indicated in the example path, make sure to check what version of Sox you hav
 
 Procurar ficheiro localizado num package instalado
 system.file("extdata", "mydata.csv", package = "ggplot2")
+
+## Usar github token em Linux ##
+https://gist.github.com/Z3tt/3dab3535007acf108391649766409421
