@@ -45,7 +45,7 @@ import_audio <- function(path, butt = TRUE, low, high, tx = 1) {
                               call. = FALSE)
   if (!is.character(path)) stop("Parameter path must be character",
                                 call. = FALSE)
-  if (isTRUE(butt)){
+  if (isTRUE(butt)) {
   if (!is.numeric(low)) stop("Parameter low must be numeric",
                              call. = FALSE)
   if (!is.numeric(high)) stop("Parameter high must be numeric",
