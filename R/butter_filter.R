@@ -19,7 +19,7 @@
 #' @export
 
 butter_filter <- function(sound_samples, low = NA, high = NA,
-                          fs, tx, order = 12) {
+                          fs, tx, order = 10) {
 
   if (!is.numeric(sound_samples)) stop("Sound samples must be numeric",
                                        call. = FALSE)
