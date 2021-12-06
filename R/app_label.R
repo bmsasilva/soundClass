@@ -390,8 +390,7 @@ Spectrogram visualization:
       )
     })
 
-    output$spec <- shiny::renderPlot(
-      {
+    output$spec <- shiny::renderPlot({
         Spectrogram(
           as.numeric(sound()$sound_samples),
           SamplingFrequency = sound()$fs * sound()$tx,
