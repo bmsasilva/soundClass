@@ -2,10 +2,10 @@
 #' @title Import a recording
 #' @description  Import a "wav" recording using \link[tuneR]{readWave}
 #' and create a S3 object of class "rc". If the recording is stereo it is
-#' #' converted to mono by keeping the channel with overall higher amplitude
+#' converted to mono by keeping the channel with overall higher amplitude
 #' @param path Full path to the recording
-#' @param butt Logical. If TRUE filters the recording with a 12th order
-#' filter. The filter is applied twice to better cleaning of the recording
+#' @param butt Logical. If TRUE filters the recording with a 10th order
+#' filter. The filter is applied twice for better cleaning of the recording
 #' @param low Minimum frequency in kHz for the butterworth filter
 #' @param high Maximum frequency in kHz for the butterworth filter
 #' @param tx Time expanded. Only used in recorders specifically intended for
@@ -45,7 +45,7 @@ import_audio <- function(path, butt = TRUE, low, high, tx = 1) {
                               call. = FALSE)
   if (!is.character(path)) stop("Parameter path must be character",
                                 call. = FALSE)
-  if (isTRUE(butt)){
+  if (isTRUE(butt)) {
   if (!is.numeric(low)) stop("Parameter low must be numeric",
                              call. = FALSE)
   if (!is.numeric(high)) stop("Parameter high must be numeric",
