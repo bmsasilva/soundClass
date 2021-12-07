@@ -4,7 +4,10 @@
 #' @import htmltools shinyBS
 
 app_label <- function() {
-  ui <- shiny::fluidPage(
+
+# ui ----------------------------------------------------------------------
+
+    ui <- shiny::fluidPage(
     shiny::titlePanel("Labeler"),
     shiny::sidebarLayout(
       fluid = FALSE,
@@ -79,6 +82,18 @@ app_label <- function() {
             )
           )
         ),
+        shiny::fluidRow(
+          shiny::column(
+          width = 12,
+          align = "center",
+          shiny::numericInput(
+            inputId = "tx",
+            label = "Time expanded",
+            value = "10"
+          )
+          )
+        ),
+        
         htmltools::hr(),
         shiny::actionButton(
           inputId = "analysis",
@@ -88,8 +103,8 @@ app_label <- function() {
         htmltools::hr(),
         shinyFiles::shinyDirButton(
           id = "noise_folder",
-          label = "Choose noise folder",
-          title = "Choose noise folder",
+          label = "Add non-relevant",
+          title = "Add non-relevant",
           style = "width:100%"
         )
       ),
@@ -216,6 +231,9 @@ app_label <- function() {
     )
   )
 
+# server ------------------------------------------------------------------
+
+
   server <- function(input, output, session) {
 
     system <- Sys.info()[["sysname"]]
@@ -328,15 +346,16 @@ app_label <- function() {
     sound <- shiny::reactive({
       shiny::validate(
         shiny::need(
-          input$files != "",
+         input$files != "",
           "Analysis steps:
-1) Select folder with recordings
-2) If needed, create new database to store recording labels
-3) Select pre-existing database to store recording labels
-4) Select events by clicking in the spectrogram before and after the event of interest (bat call, bird song, etc)
-   Important: Be carefull not to drag mouse while clicking as it will erase previously selected positions
-5) Press 'Set labels' button to add labels to database
-6) Repeat step 4 and 5 if more than one indivudual is in the recording
+1) Select buterrworth filter limits
+2) Input the time expanded factor of the recordings or leave '1' for no time expanded
+3) Select folder with recordings
+4) If needed, create new database to store recording labels
+5) Select pre-existing database to store recording labels
+6) Select events by clicking in the spectrogram on the middle of the event of interest (bat call, bird song, etc)
+7) Press 'Set labels' button to add labels to database
+8) Repeat steps 6 and 7 if more than one set of events is present in the recording
 7) Press 'Next' button to advance to next recording or pick another recording from the dropdown list
 
 Spectrogram visualization:
@@ -345,17 +364,20 @@ Spectrogram visualization:
 - Adjust spectrogram settings with:
     THRESHOLD - minimum energy values displayed, higher values best suited for low quality recordings
     WINDOW - window size in ms, smaller windows best suited for short calls
-    OVERLAP - overlap between consecutive windows, higher values give best visualization but lower performance"
-        )
+    OVERLAP - overlap between consecutive windows, higher values give best visualization but lower performance
+    RESOLUTION - frequency resolution of the spectrogram
+    
+    "
+             )
       )
 
       sound <- import_audio(
         path = input$files,
         butt = TRUE,
         low = as.numeric(input$low),
-        high = as.numeric(input$high)
+        high = as.numeric(input$high),
+        tx = as.numeric(input$tx)
       )
-      print(sound$tx)
       return(sound)
     })
 
@@ -366,18 +388,18 @@ Spectrogram visualization:
       if (!is.null(brush)) {
         ranges$x <- c(brush$xmin, brush$xmax)
         ranges$y <- c(brush$ymin, brush$ymax)
-        file.remove("temp_file.csv")
+        if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
       } else {
         ranges$x <- NULL
         ranges$y <- NULL
-        file.remove("temp_file.csv")
+        if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
       }
     })
     shiny::observeEvent(input$files, {
       ranges$x <- NULL
       ranges$y <- NULL
       maxpos$x <- NULL
-      file.remove("temp_file.csv")
+      if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
     })
 
     shiny::observeEvent(input$specClick$x, {
@@ -455,7 +477,7 @@ Spectrogram visualization:
           tx = shiny::isolate(sound()$tx)
         )
         np <- length(labs)
-        file.remove("temp_file.csv")
+        if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
 
         maxpos$x <- labs
 
