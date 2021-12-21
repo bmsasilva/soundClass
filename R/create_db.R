@@ -23,10 +23,14 @@
 #' @author Bruno Silva
 #' @import dplyr DBI
 
-create_db <- function(path, db_name, table_name = "labels",
+create_db <- function(path, db_name = NA, table_name = "labels",
                       type = "reference") {
-  db <- paste0(path, "//", db_name, ".sqlite3")
-
+  if(!is.na(db_name)) {
+    db <- paste0(path, "//", db_name, ".sqlite3") 
+  } else {
+    db <- paste0(path, ".sqlite3")
+    }
+  
   if (file.exists(db)) message("Database already exists")
 
   if (!file.exists(db) & type == "reference") {
