@@ -16,7 +16,7 @@
 #' ) # filter sound
 #' @return A vector with the filtered sound samples
 #' @author Bruno Silva
-#' @export
+#' @keywords internal
 
 butter_filter <- function(sound_samples, low = NA, high = NA,
                           fs, tx, order = 10) {
