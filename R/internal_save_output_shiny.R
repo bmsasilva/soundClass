@@ -22,7 +22,7 @@
 save_output_shiny <- function(output, recording, out_file = NA, png_file = NA,
                               plot2console = F, recursive = FALSE) {
   if (!file.exists(paste0(out_file, ".sqlite3"))) {
-    create_db(out_file, "", type = "id")
+    create_db(out_file, type = "id")
   }
 
 
