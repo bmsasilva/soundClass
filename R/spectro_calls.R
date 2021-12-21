@@ -19,10 +19,11 @@
 #' in the spectrogram
 #' @param freq_range Frequency range of the spectrogram. Vector with two values,
 #' refering to the minimum and maximum frequency to show in the spectrogram
+#' @param seed Integer. Define a custom seed for randomizing data
 #' @usage spectro_calls(files_path, updateProgress,
 #' db_path, spec_size = NA, window_length = NA,
 #' frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
-#' freq_range = NA)
+#' freq_range = NA, tx = 1)
 #' @return A list with the spectrogram and the respective label
 #' @author Bruno Silva
 #' @export
@@ -30,7 +31,8 @@
 spectro_calls <- function(files_path, updateProgress,
                           db_path, spec_size = NA, window_length = NA,
                           frequency_resolution = NA, time_step_size = NA,
-                          dynamic_range = NA, freq_range = NA) {
+                          dynamic_range = NA, freq_range = NA, tx = 1, 
+                          seed = 1002) {
   input_shape <- c(
     spec_size / time_step_size,
     (freq_range[2] - freq_range[1]) * frequency_resolution
@@ -59,7 +61,8 @@ spectro_calls <- function(files_path, updateProgress,
       morc <- import_audio(
         name, 
         low = freq_range[1], 
-        high = freq_range[2])
+        high = freq_range[2],
+        tx = tx)
       
       calls <- peaks2spec(
         morc, 
@@ -99,5 +102,8 @@ spectro_calls <- function(files_path, updateProgress,
     num_classes = length(unique(label))
   )
   
-  return(list(spec_image, label, parameters))
+  return(data_keras(list(spec_image, label, parameters)))
+  
 }
+
+
