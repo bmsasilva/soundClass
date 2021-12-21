@@ -81,6 +81,17 @@ app_model <- function() {
               ),
               selected = "120"
             ),
+            
+            shiny::selectInput(
+              inputId = "tx",
+              label = "Time expanded",
+              choices = c(
+                "1" = 1,
+                "10" = 10,
+                "auto" = "auto"
+              ),
+              selected = "auto"
+            ),
             shiny::fluidRow(
               shiny::column(
                 width = 6,
@@ -437,7 +448,8 @@ shiny::sidebarLayout(fluid = FALSE,
         frequency_resolution = as.numeric(input$frequency_resolution),
         time_step_size = (1 - as.numeric(input$overlap)) * as.numeric(input$window_length),#mudar isto para dentro da funcao
         dynamic_range = as.numeric(input$dynamic_range),
-        freq_range = c(as.numeric(input$low), as.numeric(input$high))
+        freq_range = c(as.numeric(input$low), as.numeric(input$high)),
+                       tx = input$tx 
       )
       save(
         train_data,
@@ -447,7 +459,12 @@ shiny::sidebarLayout(fluid = FALSE,
     })
     
     output$spec <- shiny::renderTable({
-      table(spec_calls()[[2]])
+      spec_calls <- spec_calls()
+      validate(need(spec_calls,""))
+      aux <- as.data.frame(spec_calls$data_y)
+      names(aux)<- spec_calls$classes[,1]
+      w <- which(aux==1, arr.ind = T)
+      table(names(aux)[w[order(w[,1]),2]])
     })
     
     shiny::observe({
@@ -525,36 +542,37 @@ shiny::sidebarLayout(fluid = FALSE,
       ######### Colocar isto dentro de uma funcao #######
       # set seed
       seed <- 1002
-      
+
       # Parametros para o treino
-      total <- dim(rdata_list[[1]])[1]
-      img_rows <- rdata_list[[3]]$img_rows
-      img_cols <- rdata_list[[3]]$img_cols
+      total <- dim(rdata_list$data_x)[1]
+      img_rows <- rdata_list$parameters$img_rows
+      img_cols <- rdata_list$parameters$img_cols
       input_shape <- c(img_rows, img_cols, 1)
-      num_classes <- length(unique(rdata_list[[2]]))
-      
-      
-      rdata_list[[2]] <- factor(rdata_list[[2]])#converter para factor para facilitar os numeros e aos nomes de classe repectivos
-      labels_code <- as.integer(rdata_list[[2]]) - 1
-      labels_name <- as.character(rdata_list[[2]])
-      labels_df <- data.frame(name = levels(rdata_list[[2]]), code = (1:length(levels(rdata_list[[2]])))-1)
-      
-      #  Randomizar a ordem dos casos
-      set.seed(seed)
-      data_x <- rdata_list[[1]]
-      data_y <- labels_code
-      randomize <- sample(length(data_y))
-      data_x <- data_x[randomize,]
-      data_y <- data_y[randomize]
-      
-      # preparar data para tensorflow
-      data_y <- keras::to_categorical(as.numeric(data_y), num_classes = num_classes)
-      data_x <- array(data_x, dim = c(total, img_rows, img_cols, 1))
-      
+      num_classes <- rdata_list$parameters$num_classes
+
+      ## Valores para serem gravados no rdata do fitted model
+      # rdata_list[[2]] <- factor(rdata_list[[2]])#converter para factor para facilitar os numeros e aos nomes de classe repectivos
+      # labels_code <- as.integer(rdata_list[[2]]) - 1
+      # labels_name <- as.character(rdata_list[[2]])
+      # labels_df <- data.frame(name = levels(rdata_list[[2]]), code = (1:length(levels(rdata_list[[2]])))-1)
+      # 
+      # #  Randomizar a ordem dos casos
+      # set.seed(seed)
+      # data_x <- rdata_list[[1]]
+      # data_y <- labels_code
+      # randomize <- sample(length(data_y))
+      # data_x <- data_x[randomize,]
+      # data_y <- data_y[randomize]
+      # 
+      # # preparar data para tensorflow
+      # data_y <- keras::to_categorical(as.numeric(data_y), num_classes = num_classes)
+      # data_x <- array(data_x, dim = c(total, img_rows, img_cols, 1))
+
       # load net structure
-      model <- c()
-      source(model_path(), local=TRUE)
+       model <- c()
+       source(model_path(), local=TRUE)
       
+
       ##########
       
       # fit
@@ -564,8 +582,9 @@ shiny::sidebarLayout(fluid = FALSE,
           loss = 'categorical_crossentropy',
           metrics = c('accuracy')
         )
-      
-      model %>% generics::fit(data_x, data_y,
+
+      model %>% generics::fit(rdata_list$data_x,
+                              rdata_list$data_y,
                               batch_size = input$batch,
                               epochs = input$epochs,
                               callbacks = list(
@@ -592,7 +611,7 @@ shiny::sidebarLayout(fluid = FALSE,
                               verbose = 1)
       
       # save(history, file="./fitted_model_history.RDATA")
-      metadata <- list(parameters =  rdata_list[[3]], classes = labels_df)
+      metadata <- list(parameters =  rdata_list[[3]], classes = rdata_list[[4]])
       save(metadata,
            file="fitted_model_metadata.RDATA")
       
@@ -715,7 +734,8 @@ shiny::sidebarLayout(fluid = FALSE,
                     win_size = fitted_metadata()$parameters$spec_size * 2,  #minimum distnace between calls and chunck size
                     remove_noise = as.logical(input$rem_noise),          # if model has non-relevant class, eliminate from output
                     plot2console = FALSE,
-                    recursive = FALSE)
+                    recursive = FALSE,
+                    tx = input$tx)
       
     })
     
