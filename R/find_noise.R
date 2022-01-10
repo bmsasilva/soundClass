@@ -15,7 +15,7 @@
 #' tuneR::writeWave(recording, filename = rec_path)
 #' # Import the sample wav file
 #' new_rec <- import_audio(rec_path, butt = FALSE, tx = 1)
-#' find_noise(new_rec, nmax = 1, plot = F)
+#' find_noise(new_rec, nmax = 1, plot = FALSE)
 #' file.remove(rec_path)
 #' @return A vector with the temporal position of the
 #' identified peak(s), in samples.

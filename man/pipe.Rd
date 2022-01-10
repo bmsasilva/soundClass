@@ -12,5 +12,5 @@ lhs \%>\% rhs
 \item{rhs}{A function call using the magrittr semantics}
 }
 \description{
-See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.
+See documentation of package magrittr for details.
 }

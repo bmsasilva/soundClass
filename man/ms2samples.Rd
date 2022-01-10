@@ -17,7 +17,7 @@ ms2samples(value, fs = 300000, tx = 1, inv = FALSE)
 number of samples to time.}
 }
 \value{
-if TRUE returns number of samples, if FALSE
+if inv = TRUE returns number of samples, if unv = FALSE
 returns time in ms
 }
 \description{

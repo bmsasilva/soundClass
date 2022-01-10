@@ -19,11 +19,22 @@ A vector with the temporal position of the
 identified peak(s), in samples.
 }
 \description{
-Detects the temporal position of the desired energy peaks in
-a recording of non-relevant events.
+Detects the temporal position of the desired number of
+energy peaks in a recording of non-relevant events.
 }
 \details{
 Detect energy peaks in non-relevant recordings
+}
+\examples{
+# Create a sample wav file in a temporary directory
+recording <- tuneR::noise(duration = 44100)
+temp_dir <- tempdir()
+rec_path <- file.path(temp_dir, "recording.wav")
+tuneR::writeWave(recording, filename = rec_path)
+# Import the sample wav file
+new_rec <- import_audio(rec_path, butt = FALSE, tx = 1)
+find_noise(new_rec, nmax = 1, plot = FALSE)
+file.remove(rec_path)
 }
 \author{
 Bruno Silva

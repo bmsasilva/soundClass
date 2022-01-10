@@ -15,11 +15,12 @@ auto_id_shiny(
   win_size = 50,
   plot2console = F,
   remove_noise = T,
-  recursive = FALSE
+  recursive = FALSE,
+  tx = 1
 )
 }
 \arguments{
-\item{model_path}{An object of class 'recording', created with
+\item{model_path}{An object of class 'rc', created with
 the 'import_audio' function}
 
 \item{updateProgress}{Progress bar only to be used inside shiny}
@@ -45,12 +46,20 @@ recordings with the identified event(s) and respective classification(s)
 be ploted in the console while the analysis is running?
 as png file?}
 
-\item{remove_noise}{= T, Logical. TRUE indicates that the model was fitted
+\item{remove_noise}{Logical. TRUE indicates that the model was fitted
 with a non-relevant class which will be deleted from the final output}
 
 \item{recursive}{Logical. FALSE indicates that the recordings are in
 a single folder and TRUE indicates that there are recordings
 inside subfolders}
+
+\item{tx}{Time expanded. Only used in recorders specifically intended for
+bat recordings. Can take the values "auto" or any numeric value. If the
+recording is not time expanded tx must be set to 1 (the default). If it's
+time expanded the numeric value correponding to the time expansion should
+be indicated or "auto" should be selected. If tx = "auto" the function
+assumes that sampling rates < 50kHz correponds to
+tx = 10 and > 50kHz to tx = 1.}
 }
 \value{
 Nothing

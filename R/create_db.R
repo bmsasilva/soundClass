@@ -15,7 +15,9 @@
 #' creates a database to output the results of the automatic classification.
 #' @examples
 #' dir_path <- tempdir()
-#' create_db(dir_path, db_name = "test", table_name = "labels",
+#' create_db(dir_path, 
+#' db_name = "test", 
+#' table_name = "labels",
 #' type = "reference")
 #' file.remove(file.path(dir_path, "test.sqlite3"))
 #' @return  Nothing

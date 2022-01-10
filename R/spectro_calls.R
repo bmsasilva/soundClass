@@ -19,12 +19,25 @@
 #' in the spectrogram
 #' @param freq_range Frequency range of the spectrogram. Vector with two values,
 #' refering to the minimum and maximum frequency to show in the spectrogram
+#' @param tx Time expanded. Only used in recorders specifically intended for
+#' bat recordings. Can take the values "auto" or any numeric value. If the
+#' recording is not time expanded tx must be set to 1 (the default). If it's
+#' time expanded the numeric value correponding to the time expansion should
+#' be indicated or "auto" should be selected. If tx = "auto" the function
+#' assumes that sampling rates < 50kHz correponds to
+#' tx = 10 and > 50kHz to tx = 1.
 #' @param seed Integer. Define a custom seed for randomizing data
 #' @usage spectro_calls(files_path, updateProgress,
 #' db_path, spec_size = NA, window_length = NA,
-#' frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
-#' freq_range = NA, tx = 1)
-#' @return A list with the spectrogram and the respective label
+#' frequency_resolution = NA, time_step_size = NA, 
+#' dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
+#' @return A list with the following components:
+#' \itemize{
+#'   \item data_x -- an array with the spectrogram matrices
+#'   \item data_y -- the labels for each matrix in one-hot-encoded format
+#'   \item parameters -- the parameters used to create the matrices
+#'   \item labels_df -- the labels with their respective numeric index
+#' }
 #' @author Bruno Silva
 #' @export
 

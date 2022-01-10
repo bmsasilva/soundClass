@@ -2,12 +2,12 @@
 % Please edit documentation in R/spectro_calls.R
 \name{spectro_calls}
 \alias{spectro_calls}
-\title{Generates spectrograms from recording labels.}
+\title{Generate spectrograms from recording labels.}
 \usage{
 spectro_calls(files_path, updateProgress,
 db_path, spec_size = NA, window_length = NA,
-frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
-freq_range = NA)
+frequency_resolution = NA, time_step_size = NA, 
+dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
 }
 \arguments{
 \item{files_path}{Path for the folder containing sound recordings}
@@ -34,9 +34,25 @@ in the spectrogram}
 
 \item{freq_range}{Frequency range of the spectrogram. Vector with two values,
 refering to the minimum and maximum frequency to show in the spectrogram}
+
+\item{tx}{Time expanded. Only used in recorders specifically intended for
+bat recordings. Can take the values "auto" or any numeric value. If the
+recording is not time expanded tx must be set to 1 (the default). If it's
+time expanded the numeric value correponding to the time expansion should
+be indicated or "auto" should be selected. If tx = "auto" the function
+assumes that sampling rates < 50kHz correponds to
+tx = 10 and > 50kHz to tx = 1.}
+
+\item{seed}{Integer. Define a custom seed for randomizing data}
 }
 \value{
-A list with the spectrogram and the respective label
+A list with the following components:
+\itemize{
+\item data_x -- an array with the spectrogram matrices
+\item data_y -- the labels for each matrix in one-hot-encoded format
+\item parameters -- the parameters used to create the matrices
+\item labels_df -- the labels with their respective numeric index
+}
 }
 \description{
 Generates spectrograms from recording's labels for

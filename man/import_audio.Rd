@@ -4,7 +4,7 @@
 \alias{import_audio}
 \title{Import a recording}
 \usage{
-import_audio(path, butt = TRUE, low, high, tx)
+import_audio(path, butt = TRUE, low, high, tx = 1)
 }
 \arguments{
 \item{path}{Full path to the recording}
@@ -39,11 +39,22 @@ be preferable but it's not implemented yet)
 }
 \description{
 Import a "wav" recording using \link[tuneR]{readWave}
-and create a S3 class object "rc". If the recording is stereo it is converted
-to mono by keeping the channel with overall higher amplitude
+and create a S3 object of class "rc". If the recording is stereo it is
+#' converted to mono by keeping the channel with overall higher amplitude
 }
 \details{
 Import a recording
+}
+\examples{
+# Create a sample wav file in a temporary directory
+recording <- tuneR::sine(440)
+temp_dir <- tempdir()
+rec_path <- file.path(temp_dir, "recording.wav")
+tuneR::writeWave(recording, filename = rec_path)
+# Import the sample wav file
+new_rec <- import_audio(rec_path, low = 1, high = 20, tx = 1)
+new_rec
+file.remove(rec_path)
 }
 \author{
 Bruno Silva

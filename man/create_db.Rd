@@ -4,7 +4,7 @@
 \alias{create_db}
 \title{Create a sqlite3 database}
 \usage{
-create_db(path, db_name, table_name = "labels", type = "reference")
+create_db(path, db_name = NA, table_name = "labels", type = "reference")
 }
 \arguments{
 \item{path}{Character. Path to the folder where the database will be created.}
@@ -12,9 +12,9 @@ create_db(path, db_name, table_name = "labels", type = "reference")
 \item{db_name}{Character. Name of the database to be created.}
 
 \item{table_name}{Character. Name of the table to be created.
-inside the database. It is advisable to use the default table name "labels"
-if the database is intended to be used in conjunction with other functions of
-this package.}
+inside the database. It is mandatory to use the default table name "labels"
+if the database is intended to be used in conjunction with other
+functions of this package.}
 
 \item{type}{Character indicating the type of database to create. Possible
 options are: "reference" which creates a database to be used to store
@@ -26,15 +26,17 @@ Nothing
 }
 \description{
 Create a sqlite3 database with a predefined table (if a
-database with the specified name doesn't exist already). Two type of database
-are possible, one to store recordings annotations and another to store
-the output of the classification.
+database with the specified name doesn't exist already). Two type of
+databases are possible, one to store recordings annotations and another
+to store the output of the classification.
 }
 \examples{
-\dontrun{
-create_db(".//", db_name = "test", table_name = "labels", 
+dir_path <- tempdir()
+create_db(dir_path, 
+db_name = "test", 
+table_name = "labels",
 type = "reference")
-}
+file.remove(file.path(dir_path, "test.sqlite3"))
 }
 \author{
 Bruno Silva
