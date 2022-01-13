@@ -15,10 +15,10 @@
 #' as png file?
 #' @param win_size Window size to split recordings in chunks for classification.
 #' One peak per chunk is obtained and classified
-#' @param plot2console Logical. Should a spectrogram of the classified 
-#' recordings with the identified event(s) and respective classification(s) 
+#' @param plot2console Logical. Should a spectrogram of the classified
+#' recordings with the identified event(s) and respective classification(s)
 #' be ploted in the console while the analysis is running?
-#' as png file? 
+#' as png file?
 #' @param remove_noise Logical. TRUE indicates that the model was fitted
 #' with a non-relevant class which will be deleted from the final output
 #' @param recursive Logical. FALSE indicates that the recordings are in

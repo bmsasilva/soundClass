@@ -95,12 +95,12 @@ train_calls <- spectro_calls(
   metadata <- list(parameters =  train_calls$parameters, classes = train_calls$classes)
 
   
-  auto_id_shiny(model_path = '/home/bruno/ms_data/fitted_model.hdf5', 
+  auto_id_shiny(model_path = '/home/bruno/ms_data_with fitted model/fitted_model.hdf5', 
                 updateProgress = NA,
                 metadata = metadata,
-                file_path = "/home/bruno/ms_data/validation_recordings/",
+                file_path = "/home/bruno/ms_data_with fitted model/validation_recordings/",
                 out_file ='id_results',
-                out_dir = "/home/bruno/ms_data/output/",
+                out_dir = "/home/bruno/ms_data_with fitted model/output/",
                 save_png = TRUE,                   
                 win_size = 50,
                 remove_noise = TRUE,

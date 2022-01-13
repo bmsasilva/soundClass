@@ -1,25 +1,27 @@
 #' @title Create a sqlite3 database
 #' @description Create a sqlite3 database with a predefined table (if a
-#' database with the specified name doesn't exist already). Two type of 
-#' databases are possible, one to store recordings annotations and another 
+#' database with the specified name doesn't exist already). Two type of
+#' databases are possible, one to store recordings annotations and another
 #' to store the output of the classification.
 #' @param path Character. Path to the folder where the database will be created.
 #' @param db_name Character. Name of the database to be created.
 #' @param table_name Character. Name of the table to be created.
 #' inside the database. It is mandatory to use the default table name "labels"
-#' if the database is intended to be used in conjunction with other 
+#' if the database is intended to be used in conjunction with other
 #' functions of this package.
 #' @param type Character indicating the type of database to create. Possible
 #' options are: "reference" which creates a database to be used to store
 #' recordings annotations for training purposes, and "id" which
 #' creates a database to output the results of the automatic classification.
 #' @examples
+#' \dontrun{
 #' dir_path <- tempdir()
-#' create_db(dir_path, 
-#' db_name = "test", 
+#' create_db(dir_path,
+#' db_name = "test",
 #' table_name = "labels",
 #' type = "reference")
 #' file.remove(file.path(dir_path, "test.sqlite3"))
+#' }
 #' @return  Nothing
 #' @export
 #' @author Bruno Silva
@@ -27,12 +29,12 @@
 
 create_db <- function(path, db_name = NA, table_name = "labels",
                       type = "reference") {
-  if(!is.na(db_name)) {
-    db <- paste0(path, "//", db_name, ".sqlite3") 
+  if (!is.na(db_name)) {
+    db <- paste0(path, "//", db_name, ".sqlite3")
   } else {
     db <- paste0(path, ".sqlite3")
     }
-  
+
   if (file.exists(db)) message("Database already exists")
 
   if (!file.exists(db) & type == "reference") {

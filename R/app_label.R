@@ -5,8 +5,6 @@
 
 app_label <- function() {
 
-# ui ----------------------------------------------------------------------
-
     ui <- shiny::fluidPage(
     shiny::titlePanel("Labeler"),
     shiny::sidebarLayout(
@@ -93,7 +91,7 @@ app_label <- function() {
           )
           )
         ),
-        
+
         htmltools::hr(),
         shiny::actionButton(
           inputId = "analysis",
@@ -231,9 +229,6 @@ app_label <- function() {
     )
   )
 
-# server ------------------------------------------------------------------
-
-
   server <- function(input, output, session) {
 
     system <- Sys.info()[["sysname"]]
@@ -366,7 +361,6 @@ Spectrogram visualization:
     WINDOW - window size in ms, smaller windows best suited for short calls
     OVERLAP - overlap between consecutive windows, higher values give best visualization but lower performance
     RESOLUTION - frequency resolution of the spectrogram
-    
     "
              )
       )
@@ -388,18 +382,18 @@ Spectrogram visualization:
       if (!is.null(brush)) {
         ranges$x <- c(brush$xmin, brush$xmax)
         ranges$y <- c(brush$ymin, brush$ymax)
-        if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
+        if (file.exists("temp_file.csv")) file.remove("temp_file.csv")
       } else {
         ranges$x <- NULL
         ranges$y <- NULL
-        if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
+        if (file.exists("temp_file.csv")) file.remove("temp_file.csv")
       }
     })
     shiny::observeEvent(input$files, {
       ranges$x <- NULL
       ranges$y <- NULL
       maxpos$x <- NULL
-      if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
+      if (file.exists("temp_file.csv")) file.remove("temp_file.csv")
     })
 
     shiny::observeEvent(input$specClick$x, {
@@ -477,7 +471,7 @@ Spectrogram visualization:
           tx = shiny::isolate(sound()$tx)
         )
         np <- length(labs)
-        if(file.exists("temp_file.csv")) file.remove("temp_file.csv")
+        if (file.exists("temp_file.csv")) file.remove("temp_file.csv")
 
         maxpos$x <- labs
 

@@ -6,7 +6,7 @@
 \usage{
 spectro_calls(files_path, updateProgress,
 db_path, spec_size = NA, window_length = NA,
-frequency_resolution = NA, time_step_size = NA, 
+frequency_resolution = NA, time_step_size = NA,
 dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
 }
 \arguments{

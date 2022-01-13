@@ -30,12 +30,14 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-dir_path <- tempdir()
-create_db(dir_path, 
-db_name = "test", 
-table_name = "labels",
-type = "reference")
-file.remove(file.path(dir_path, "test.sqlite3"))
+## Not run: 
+##D dir_path <- tempdir()
+##D create_db(dir_path, 
+##D db_name = "test", 
+##D table_name = "labels",
+##D type = "reference")
+##D file.remove(file.path(dir_path, "test.sqlite3"))
+## End(Not run)
 
 
 

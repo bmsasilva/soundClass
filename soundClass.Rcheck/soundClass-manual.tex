@@ -19,25 +19,23 @@ Networks}
 \item[Version]\AsIs{0.0.0.9}
 \item[Author]\AsIs{Bruno Silva [aut, cre]}
 \item[Maintainer]\AsIs{Bruno Silva }\email{bmsasilva@gmail.com}\AsIs{}
-\item[Description]\AsIs{All-in-one package for automatic classification
-of sound events using convolutional neural networks: manage and annotate large
-acoustic datasets in order to create and deploy automatic AI classifiers for
-sound events based on convolutional neural networks (CNN). It provides
-functionalities to annotate audio recordings and store information in database
-format, pre-process data for model training purposes and to deploy a full
-trained model to automatically classify sound events in new recordings.
-By using automatic feature selection and a user-friendly GUI for managing data
-and traing/deploying models, this package is intended to be used by a broad
+\item[Description]\AsIs{Provides an all-in-one solution for automatic classification of
+sound events using convolutional neural networks (CNN). By using automatic
+feature selection and a user-friendly GUI for managing data and
+training/deploying models, this package is intended to be used by a broad
 audience as it does not require specific expertise in statistics,
-programming or sound analysis.}
+programming or sound analysis.
+Gibb, R., et al. (2019) <doi.org/10.1111/2041-210X.13101>
+Mac Aodha, O., et al. (2018) <doi.org/10.1371/journal.pcbi.1005995>
+Stowell, D., et al. (2019) <doi.org/10.1111/2041-210X.13103>
+LeCun, Y., et al. (2012) <doi.org/10.1007/978-3-642-35289-8\_3>.}
 \item[License]\AsIs{GPL-3}
 \item[Encoding]\AsIs{UTF-8}
-\item[LazyData]\AsIs{true}
 \item[Roxygen]\AsIs{list(markdown = TRUE)}
 \item[RoxygenNote]\AsIs{7.1.1}
-\item[Imports]\AsIs{seewave, DBI, dplyr, signal, tuneR, zoo, dbplyr, magrittr,
-shinyFiles, shiny, utils, graphics, generics, keras, scales,
-shinyjs}
+\item[Imports]\AsIs{RSQLite, seewave, DBI, dplyr, signal, tuneR, zoo, dbplyr,
+magrittr, shinyFiles, shiny, utils, graphics, generics, keras,
+scales, shinyjs}
 \item[Depends]\AsIs{shinyBS, htmltools}
 \end{description}
 \Rdcontents{\R{} topics documented:}
@@ -195,12 +193,15 @@ Bruno Silva
 %
 \begin{Examples}
 \begin{ExampleCode}
+## Not run: 
 dir_path <- tempdir()
 create_db(dir_path, 
 db_name = "test", 
 table_name = "labels",
 type = "reference")
 file.remove(file.path(dir_path, "test.sqlite3"))
+
+## End(Not run)
 \end{ExampleCode}
 \end{Examples}
 \inputencoding{utf8}

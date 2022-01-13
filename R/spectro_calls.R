@@ -29,7 +29,7 @@
 #' @param seed Integer. Define a custom seed for randomizing data
 #' @usage spectro_calls(files_path, updateProgress,
 #' db_path, spec_size = NA, window_length = NA,
-#' frequency_resolution = NA, time_step_size = NA, 
+#' frequency_resolution = NA, time_step_size = NA,
 #' dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
 #' @return A list with the following components:
 #' \itemize{
@@ -44,18 +44,18 @@
 spectro_calls <- function(files_path, updateProgress,
                           db_path, spec_size = NA, window_length = NA,
                           frequency_resolution = NA, time_step_size = NA,
-                          dynamic_range = NA, freq_range = NA, tx = 1, 
+                          dynamic_range = NA, freq_range = NA, tx = 1,
                           seed = 1002) {
   input_shape <- c(
     spec_size / time_step_size,
     (freq_range[2] - freq_range[1]) * frequency_resolution
   )
-  
+
   conn <- dplyr::src_sqlite(db_path, create = FALSE)
   query <- dplyr::tbl(conn, "labels")
   db_table <- dplyr::collect(query)
   audio_files <- unique(db_table$recording)
-  
+
   spec_image <- matrix(NA, ncol = input_shape[1] * input_shape[2])
   label <- c()
   for (i in seq(audio_files)) {
@@ -64,36 +64,36 @@ spectro_calls <- function(files_path, updateProgress,
         db_table$recording == audio_files[i],
         "label_position"
       ], 1)
-      
+
       if (grepl(".wav", audio_files[i])) {
         name <- paste0(files_path, audio_files[i])
       } else {
         name <- paste0(files_path, audio_files[i], ".wav")
       }
-      
+
       morc <- import_audio(
-        name, 
-        low = freq_range[1], 
+        name,
+        low = freq_range[1],
         high = freq_range[2],
         tx = tx)
-      
+
       calls <- peaks2spec(
-        morc, 
-        sound_peaks, 
-        spec_size, 
+        morc,
+        sound_peaks,
+        spec_size,
         window_length,
-        frequency_resolution, 
+        frequency_resolution,
         time_step_size,
         dynamic_range,
         freq_range
       )
-      
+
       spec_image <- rbind(spec_image, calls$spec_calls)
       label <- c(label, pull(db_table[
         db_table$recording == audio_files[i],
         "label_class"
       ], 1))
-      
+
       if (is.function(updateProgress)) {
         text <- paste0(i, " of ", length(audio_files))
         updateProgress(detail = text)
@@ -101,7 +101,7 @@ spectro_calls <- function(files_path, updateProgress,
     })
   }
   spec_image <- spec_image[-1, ]
-  
+
   parameters <- data.frame(
     spec_size = spec_size,
     window_length = window_length,
@@ -114,9 +114,5 @@ spectro_calls <- function(files_path, updateProgress,
     img_cols = input_shape[1],
     num_classes = length(unique(label))
   )
-  
   return(data_keras(list(spec_image, label, parameters)))
-  
 }
-
-

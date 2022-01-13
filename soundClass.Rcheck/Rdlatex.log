@@ -39,7 +39,7 @@ No file Rd2.toc.
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [3]
-Overfull \hbox (36.78088pt too wide) in paragraph at lines 164--164
+Overfull \hbox (36.78088pt too wide) in paragraph at lines 162--162
  []\T1/pcr/m/n/10 create_db(path, db_name = NA, table_name = "labels", type = "
 reference")[] 
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [4]
@@ -55,7 +55,7 @@ courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr
 are/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (9 pages, 83182 bytes).
+Output written on Rd2.pdf (9 pages, 83403 bytes).
 Transcript written on Rd2.log.
 This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex)
  restricted \write18 enabled.
@@ -89,16 +89,16 @@ Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd)
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1pcr.fd)
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd) (./Rd2.toc [1{/var/li
-b/texmf/fonts/map/pdftex/updmap/pdftex.map}])
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd) (./Rd2.toc)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [1{/var/lib/texmf/fonts
+/map/pdftex/updmap/pdftex.map}]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2] [3]
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (36.78088pt too wide) in paragraph at lines 164--164
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [3]
+Overfull \hbox (36.78088pt too wide) in paragraph at lines 162--162
  []\T1/pcr/m/n/10 create_db(path, db_name = NA, table_name = "labels", type = "
 reference")[] 
-[4] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [4]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [5]
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd) [6]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
@@ -111,8 +111,8 @@ courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr
 are/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (9 pages, 84203 bytes).
+Output written on Rd2.pdf (9 pages, 84519 bytes).
 Transcript written on Rd2.log.
 Saving output to ‘soundClass-manual.pdf’ ...
 Done
-You may want to clean up by 'rm -Rf /tmp/RtmpNTBmro/Rd2pdf6ed779632d6d'
+You may want to clean up by 'rm -Rf /tmp/Rtmp4o7qwD/Rd2pdf3fb08e1bd05'

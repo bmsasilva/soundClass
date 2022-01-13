@@ -31,12 +31,14 @@ databases are possible, one to store recordings annotations and another
 to store the output of the classification.
 }
 \examples{
+\dontrun{
 dir_path <- tempdir()
-create_db(dir_path, 
-db_name = "test", 
+create_db(dir_path,
+db_name = "test",
 table_name = "labels",
 type = "reference")
 file.remove(file.path(dir_path, "test.sqlite3"))
+}
 }
 \author{
 Bruno Silva
