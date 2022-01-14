@@ -1,6 +1,6 @@
-#' Buttterworth filter
-#' @title Apply a buttterworth filter to sound samples
-#' @description Apply a buttterworth filter, high pass or/and low pass,
+#' Butterworth filter
+#' @title Apply a butterworth filter to sound samples
+#' @description Apply a butterworth filter, high pass or/and low pass,
 #' to sound samples. Based on the function \link[signal]{butter}
 #' @param sound_samples Numeric vector with the sound samples to filter
 #' @param low Numeric. Minimum frequency in kHz for the butterworth filter

@@ -1,6 +1,6 @@
 Package: soundClass
 Title: Automatic Sound Classification with Convolutional Neural Networks
-Version: 0.0.0.9
+Version: 0.0.9
 Author: Bruno Silva [aut, cre]
 Maintainer: Bruno Silva <bmsasilva@gmail.com>
 Description:  Provides an all-in-one solution for automatic classification of 

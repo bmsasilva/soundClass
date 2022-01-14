@@ -1,6 +1,6 @@
 #' Process train data for Keras format
 #' @title Process train data for Keras format
-#' @description Processes the train data outputed by function 'spectro_calls' to
+#' @description Processes the train data outputted by function 'spectro_calls' to
 #' Keras format.
 #' @param rdata_list An object created with
 #' the 'spec_calls' function.

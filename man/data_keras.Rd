@@ -17,7 +17,7 @@ A list with two components: data_x, an array with the XX data and
 data_y, the labels one-hot-encoded.
 }
 \description{
-Processes the train data outputed by function 'spectro_calls' to
+Processes the train data outputted by function 'spectro_calls' to
 Keras format.
 }
 \details{

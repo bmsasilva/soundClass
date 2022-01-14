@@ -17,7 +17,7 @@
 #' One peak per chunk is obtained and classified
 #' @param plot2console Logical. Should a spectrogram of the classified
 #' recordings with the identified event(s) and respective classification(s)
-#' be ploted in the console while the analysis is running?
+#' be plotted in the console while the analysis is running?
 #' as png file?
 #' @param remove_noise Logical. TRUE indicates that the model was fitted
 #' with a non-relevant class which will be deleted from the final output
@@ -27,9 +27,9 @@
 #' @param tx Time expanded. Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
-#' time expanded the numeric value correponding to the time expansion should
+#' time expanded the numeric value corresponding to the time expansion should
 #' be indicated or "auto" should be selected. If tx = "auto" the function
-#' assumes that sampling rates < 50kHz correponds to
+#' assumes that sampling rates < 50kHz corresponds to
 #' tx = 10 and > 50kHz to tx = 1.
 #' @return Nothing
 #' @details Runs a classification task on the recordings of a specified folder

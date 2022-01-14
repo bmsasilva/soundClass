@@ -33,14 +33,14 @@ processing time, so adjust with care!}
 in the spectrogram}
 
 \item{freq_range}{Frequency range of the spectrogram. Vector with two values,
-refering to the minimum and maximum frequency to show in the spectrogram}
+referring to the minimum and maximum frequency to show in the spectrogram}
 
 \item{tx}{Time expanded. Only used in recorders specifically intended for
 bat recordings. Can take the values "auto" or any numeric value. If the
 recording is not time expanded tx must be set to 1 (the default). If it's
-time expanded the numeric value correponding to the time expansion should
+time expanded the numeric value corresponding to the time expansion should
 be indicated or "auto" should be selected. If tx = "auto" the function
-assumes that sampling rates < 50kHz correponds to
+assumes that sampling rates < 50kHz corresponds to
 tx = 10 and > 50kHz to tx = 1.}
 
 \item{seed}{Integer. Define a custom seed for randomizing data}

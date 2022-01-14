@@ -2,7 +2,7 @@
 % Please edit documentation in R/butter_filter.R
 \name{butter_filter}
 \alias{butter_filter}
-\title{Apply a buttterworth filter to sound samples}
+\title{Apply a butterworth filter to sound samples}
 \usage{
 butter_filter(sound_samples, low = NA, high = NA, fs, tx, order = 10)
 }
@@ -23,11 +23,11 @@ butter_filter(sound_samples, low = NA, high = NA, fs, tx, order = 10)
 A vector with the filtered sound samples
 }
 \description{
-Apply a buttterworth filter, high pass or/and low pass,
+Apply a butterworth filter, high pass or/and low pass,
 to sound samples. Based on the function \link[signal]{butter}
 }
 \details{
-Buttterworth filter
+Butterworth filter
 }
 \author{
 Bruno Silva
