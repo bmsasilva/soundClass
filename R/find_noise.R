@@ -1,12 +1,11 @@
-#' Detect energy peaks in non-relevant recordings
-#' @title Detect energy peaks in non-relevant recordings
+#' @title Detect energy peaks in recordings with non-relevant events
 #' @description Detects the temporal position of the desired number of
-#' energy peaks in a recording of non-relevant events.
-#' @param recording Object of class "rc"
+#' energy peaks in a recording exclusively with non-relevant events.
+#' @param recording Object of class "rc".
 #' @param nmax Integer indicating the maximum number of peaks to detect in
 #' the recording.
 #' @param plot Logical. If TRUE a plot showing the peak(s) is returned.
-#' @usage find_noise(recording, nmax = 1, plot = F)
+#' @usage find_noise(recording, nmax = 1, plot = FALSE)
 #' @examples
 #' # Create a sample wav file in a temporary directory
 #' recording <- tuneR::noise(duration = 44100)
@@ -22,7 +21,7 @@
 #' @author Bruno Silva
 #' @export
 
-find_noise <- function(recording, nmax = 1, plot = F) {
+find_noise <- function(recording, nmax = 1, plot = FALSE) {
 
   if (!is_rc(recording)) {
     stop("Recording object must be of class 'rc'. Use

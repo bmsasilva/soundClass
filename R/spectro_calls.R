@@ -1,5 +1,4 @@
-#' Generate spectrograms from labels
-#' @title Generate spectrograms from recording labels.
+#' @title Generate spectrograms from labels
 #' @description Generates spectrograms from recording's labels for
 #' classification purposes. The spectrogram parameters are user defined
 #' and should be selected depending on the type of sound event to classify.
