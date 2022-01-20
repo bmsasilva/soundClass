@@ -1,18 +1,19 @@
 #' @title Automatic classification of sound events in recordings
-#' @description Applies automatic classification of sound events on a set of 
+#' @description Applies automatic classification of sound events on a set of
 #' recordings using a fitted model.
-#' @param model_path Path to the fitted model.
+#' @param model_path Character. Path to the fitted model.
 #' @param updateProgress Progress bar only to be used inside shiny.
 #' @param metadata Parameters used to create train data for fitting the model.
-#' @param file_path Path to the folder containing sound recordings.
+#' @param file_path Character. Path to the folder containing sound recordings.
 #' @param out_file Character. Name of the file to output the results.
 #' Will be used to name the csv file and the sqlite database.
-#' @param out_dir Path to the folder where the output results will be stored.
+#' @param out_dir Character. Path to the folder where the output results will
+#' be stored.
 #' @param save_png Logical. Should a spectrogram of the classified recordings
 #' with the identified event(s) and respective classification(s) be saved
 #' as png file?
-#' @param win_size Window size to split recordings in chunks for classification.
-#' One peak per chunk is obtained and classified.
+#' @param win_size Integer. Window size in ms to split recordings in chunks
+#' for classification. One peak per chunk is obtained and classified.
 #' @param plot2console Logical. Should a spectrogram of the classified
 #' recordings with the identified event(s) and respective classification(s)
 #' be plotted in the console while the analysis is running?
@@ -22,7 +23,7 @@
 #' @param recursive Logical. FALSE indicates that the recordings are in
 #' a single folder and TRUE indicates that there are recordings
 #' inside subfolders.
-#' @param tx Time expanded. Only used in recorders specifically intended for
+#' @param tx Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
 #' time expanded the numeric value corresponding to the time expansion should
@@ -35,17 +36,18 @@
 #' @export
 #' @author Bruno Silva
 
-auto_id <- function(model_path, updateProgress,
-                          metadata,
-                          file_path,
-                          out_file,
-                          out_dir,
-                          save_png = TRUE,
-                          win_size = 50,
-                          plot2console = FALSE,
-                          remove_noise = TRUE,
-                          recursive = FALSE,
-                          tx = 1) {
+auto_id <- function(model_path,
+                    updateProgress = NA,
+                    metadata,
+                    file_path,
+                    out_file,
+                    out_dir,
+                    save_png = TRUE,
+                    win_size = 50,
+                    plot2console = FALSE,
+                    remove_noise = TRUE,
+                    recursive = FALSE,
+                    tx = 1) {
   spec_size <- metadata$parameters$spec_size
   window_length <- metadata$parameters$window_length
   dynamic_range <- metadata$parameters$dynamic_range
