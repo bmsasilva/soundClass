@@ -11,6 +11,7 @@
 #' array (XX train data) and the labels one-hot-encoded (YY train data). The
 #' observations are also randomized.
 #' @keywords internal
+#' @noRd
 #' @author Bruno Silva
 
 data_keras <- function(rdata_list, seed = 1002) {

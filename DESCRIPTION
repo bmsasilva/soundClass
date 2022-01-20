@@ -3,7 +3,7 @@ Title: Automatic Sound Classification with Convolutional Neural Networks
 Version: 0.0.9
 Author: Bruno Silva [aut, cre]
 Maintainer: Bruno Silva <bmsasilva@gmail.com>
-Description:  Provides an all-in-one solution for automatic classification of 
+Description: Provides an all-in-one solution for automatic classification of 
     sound events using convolutional neural networks (CNN). The main purpose 
     is to provide a sound event classification pipeline, from 
     annotating sound events in recordings to automating model usage in real-life
@@ -19,23 +19,21 @@ Description:  Provides an all-in-one solution for automatic classification of
     training/deploying models, this package is intended to be used by a broad 
     audience as it does not require specific expertise in statistics, 
     programming or sound analysis.
-    Gibb, R., et al. (2019) <doi.org/10.1111/2041-210X.13101>
-    Mac Aodha, O., et al. (2018) <doi.org/10.1371/journal.pcbi.1005995>
-    Stowell, D., et al. (2019) <doi.org/10.1111/2041-210X.13103>
-    LeCun, Y., et al. (2012) <doi.org/10.1007/978-3-642-35289-8_3>.
+    Gibb, R., et al. (2019) <doi:10.1111/2041-210X.13101>
+    Mac Aodha, O., et al. (2018) <doi:10.1371/journal.pcbi.1005995>
+    Stowell, D., et al. (2019) <doi:10.1111/2041-210X.13103>
+    LeCun, Y., et al. (2012) <doi:10.1007/978-3-642-35289-8_3>.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports:
-    RSQLite,
     seewave,
     DBI,
     dplyr,
     signal,
     tuneR,
     zoo,
-    dbplyr,
     magrittr,
     shinyFiles,
     shiny,
@@ -43,8 +41,11 @@ Imports:
     graphics,
     generics,
     keras,
-    scales,
     shinyjs
 Depends:
     shinyBS,
     htmltools
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

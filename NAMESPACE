@@ -3,7 +3,7 @@
 export("%>%")
 export(app_label)
 export(app_model)
-export(auto_id_shiny)
+export(auto_id)
 export(create_db)
 export(find_noise)
 export(import_audio)

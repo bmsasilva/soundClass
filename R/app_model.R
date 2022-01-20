@@ -630,7 +630,7 @@ app_model <- function() {
         progress$set(value = value, detail = detail)
       }
 
-      auto_id_shiny(fitted_model_path(), updateProgress,
+      auto_id(fitted_model_path(), updateProgress,
                     fitted_metadata(),
                     fitted_files_path(),
                     out_file = input$out_file,

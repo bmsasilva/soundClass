@@ -1,29 +1,27 @@
-#' Automatic classification on a set of recordings
-#' @title Automatic classification on a set of recordings
-#' @description Applies automatic classification on a set of recordings
-#' using a fitted model
-#' @param model_path An object of class 'rc', created with
-#' the 'import_audio' function
-#' @param updateProgress Progress bar only to be used inside shiny
-#' @param metadata Parameters used to create train data for fitting the model
-#' @param file_path Path to the folder containing sound recordings
+#' @title Automatic classification of sound events in recordings
+#' @description Applies automatic classification of sound events on a set of 
+#' recordings using a fitted model.
+#' @param model_path Path to the fitted model.
+#' @param updateProgress Progress bar only to be used inside shiny.
+#' @param metadata Parameters used to create train data for fitting the model.
+#' @param file_path Path to the folder containing sound recordings.
 #' @param out_file Character. Name of the file to output the results.
-#' Will be used to name the csv file and the sqlite database
-#' @param out_dir Path to the folder where the output results will be stored
+#' Will be used to name the csv file and the sqlite database.
+#' @param out_dir Path to the folder where the output results will be stored.
 #' @param save_png Logical. Should a spectrogram of the classified recordings
 #' with the identified event(s) and respective classification(s) be saved
 #' as png file?
 #' @param win_size Window size to split recordings in chunks for classification.
-#' One peak per chunk is obtained and classified
+#' One peak per chunk is obtained and classified.
 #' @param plot2console Logical. Should a spectrogram of the classified
 #' recordings with the identified event(s) and respective classification(s)
 #' be plotted in the console while the analysis is running?
 #' as png file?
 #' @param remove_noise Logical. TRUE indicates that the model was fitted
-#' with a non-relevant class which will be deleted from the final output
+#' with a non-relevant class which will be deleted from the final output.
 #' @param recursive Logical. FALSE indicates that the recordings are in
 #' a single folder and TRUE indicates that there are recordings
-#' inside subfolders
+#' inside subfolders.
 #' @param tx Time expanded. Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
@@ -31,21 +29,21 @@
 #' be indicated or "auto" should be selected. If tx = "auto" the function
 #' assumes that sampling rates < 50kHz corresponds to
 #' tx = 10 and > 50kHz to tx = 1.
-#' @return Nothing
+#' @return Nothing.
 #' @details Runs a classification task on the recordings of a specified folder
-#' and saves the results of the analysis
+#' and saves the results of the analysis.
 #' @export
 #' @author Bruno Silva
 
-auto_id_shiny <- function(model_path, updateProgress,
+auto_id <- function(model_path, updateProgress,
                           metadata,
                           file_path,
                           out_file,
                           out_dir,
-                          save_png = T,
+                          save_png = TRUE,
                           win_size = 50,
-                          plot2console = F,
-                          remove_noise = T,
+                          plot2console = FALSE,
+                          remove_noise = TRUE,
                           recursive = FALSE,
                           tx = 1) {
   spec_size <- metadata$parameters$spec_size
