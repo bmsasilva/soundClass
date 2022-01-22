@@ -1,5 +1,0 @@
-name	user	system	elapsed
-create_db	0.000	0.000	0.001	
-find_noise	0.332	0.012	0.397	
-import_audio	0.184	0.296	1.492	
-ms2samples	0.000	0.000	0.001	
