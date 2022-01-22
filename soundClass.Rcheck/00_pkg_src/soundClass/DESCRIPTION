@@ -24,26 +24,10 @@ License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports:
-    seewave,
-    DBI,
-    dplyr,
-    signal,
-    tuneR,
-    zoo,
-    magrittr,
-    shinyFiles,
-    shiny,
-    utils,
-    graphics,
-    generics,
-    keras,
-    shinyjs
-Depends:
-    shinyBS,
-    htmltools
-Suggests:
-    knitr,
-    rmarkdown
-VignetteBuilder: 
-    knitr
+Imports: seewave, DBI, dplyr, signal, tuneR, zoo, magrittr, shinyFiles,
+        shiny, utils, graphics, generics, keras, shinyjs
+Depends: shinyBS, htmltools
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2022-01-22 13:42:30 UTC; bruno

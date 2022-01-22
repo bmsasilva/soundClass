@@ -1,0 +1,115 @@
+---
+title: "my-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{my-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+Before installing soundClass it is necessary to install keras package, which in turn will install tensorflow. After installing keras, load it and run function install_keras():   
+```{r keras, eval = F, echo = T}
+install.packages("keras")
+library(keras)
+keras::install_keras()
+```
+
+To demonstrate the package functionality we are going to train a simple bat detector and test it on new sampling recordings. We start by installing and loading the soundClass package:
+```{r setup, eval = F, echo = T}
+install.packages("soundClass")
+library(soundClass)
+```
+
+To run the example, external data must be downloaded and uncompressed. We first start by creating a new folder to store the data:
+```{r folder, eval = F, echo = T}
+folder_path <- "~/data_example"
+dir.create(folder_path)
+```
+
+The data should now be manually downloaded to the new folder and unziped:
+https://drive.google.com/file/d/1aOYzCLa-zMAK7ln_H8BnC6faii54useG/view?usp=sharing
+The downloaded data includes an already created annotations database, as well as the necessary recordings for training and validation. The database was created with the GUI (as there is no way of creating it by scripting) and contains the annotations of relevant and non-relevant sound events in the supplied training recordings. 
+After unzip, the data_example folder should have the following structure:
+```
+data_example
+  |     db_bat_calls.sqlite3
+  |
+  └──── training_recordings
+  |
+  └──── validation_recordings
+```
+
+To create the train data, spectrogram images with a pre-defined size and centred at the annotations of the recordings are calculated with the function spectro_calls(). Several parameters regarding the computation of the spectrograms must be set to run this function. Some parameters refer to image resolution and are generalist but the following three are directly related to the type of events being classified: "spec_size", "window_length" and "freq_range". These parameters refer to the total size of the spectrogram, the size of the moving window and the frequencies range in analysis and should be chosen to cover: the maximum event length, the rate of change (quickly changing events should use shorter windows) and the typical frequencies range of the events being classified. 
+As european insectivorous bats (excluding Rhinolophus genus) are the target, we chose appropriate settings based on bibliography:
+```{r train_calls, eval = F, echo = T}
+train_calls <- spectro_calls(
+ files_path = "~/data_example/training_recordings",
+ db_path = "~/data_example/db_bat_calls.sqlite3",
+ spec_size = 20,
+ window_length = 1, 
+ frequency_resolution = 1,
+ time_step_size = 0.5,
+ dynamic_range = 100,
+ freq_range = c(10, 80),
+ tx = "auto",
+ seed = 1002)
+```
+
+Once the data has been prepared, a blank model must be loaded into R and compiled. A pre-defined model is supplied with the package. Two variables must be defined in the global environment before loading the model: the input shape (input_shape) with the format "c(number of rows, number of columns, number of channels)" and the number of classes (num_classes). These values can be found in the third component of the list train_calls. Please note that the number of channels is always 1, as we are working with grayscale images:
+```{r model_load, eval = F, echo = T}
+input_shape <- c(train_calls[[3]]$img_rows, train_calls[[3]]$img_cols, 1)
+num_classes <- train_calls[[3]]$num_classes
+model_path <- system.file("inst/model_architectures", "model_vgg_sequential.R", package="soundClass")
+source(model_path, local=TRUE)
+```
+
+With the training data prepared and the blank model loaded, the parameters for compiling and fitting the model must be set. Please note that as we are using classification models, both parameters "loss" and "metrics" should always be set as they are in this example. The other parameters can be tuned as desired. For further information about the parameters in the optimizer please refer to Keras documentation: https://keras.io/api/.
+```{r model_compile, eval = F, echo = T}
+ model %>%
+  keras::compile(
+   optimizer = optimizer_sgd(
+                lr = 0.01,
+                momentum = 0.9,
+                nesterov = TRUE),
+   loss = 'categorical_crossentropy',
+   metrics = 'accuracy'
+  )
+```
+
+The model is now ready to be fitted. Three callbacks (objects that can perform actions at various stages of training) are defined: 1) early stopping, 2) model checkpoint and 3) CSV logger. These objects permit to, respectively: 1) stop the fitting process if there is no improvement in the validation dataset accuracy for a defined number of epochs, 2) save the partially fitted model to disk after each iteration and keep only the best model after training for further use and 3) save to disk the log of the training process. For further information about the callbacks available and their usage please refer to Keras documentation (https://keras.io/api/). To fit the model the function fit() from package generics is used:
+```{r model_fit, eval = F, echo = T}
+ model %>% keras::fit(train_data$data_x,
+        train_data$data_y,
+        batch_size = 64,
+        epochs = 20,
+        callbacks = list(
+         callback_early_stopping(patience = 2, monitor = 'val_accuracy'),
+         callback_model_checkpoint("./fitted_model.hdf5",
+                      monitor = "val_accuracy", save_best_only = T),
+         callback_csv_logger("./fitted_model_log.csv")),
+        shuffle = TRUE,
+        validation_split = 1 - mod_params$train_per,
+        verbose = 1)
+```
+
+The fitted model and an additional file with fitting and train data parameters are saved to disk in the working folder for further use in the classification of novel recordings. To validate our model, we use recordings not used to calibrate the model. We use recordings with the same species used for training but also new bat species to evaluate the model transferability. The classification is applied to a folder containing the recordings with function auto_id() and the results are saved to a folder created inside the folder containing the recordings, in this cased named "output":
+```{r model_deploy, eval = F, echo = T}
+   auto_id("./fitted_model.hdf5",
+          "./fitted_model_metadata.RDATA",
+          "~/data_example/training_recordings",
+          out_file = "id_results.csv",
+          out_dir = paste0(rec_folder, "/", "output/"),
+          save_png = TRUE,          
+          win_size = 40,
+          remove_noise = TRUE,
+          plot2console = FALSE,
+          recursive = FALSE)
+```
+
+The classification process outputs a database in the sqlite3 format with all the relevant events detected and the respective probability to belong to a given class. Additionally a file in the CSV format is saved to disk, containing summary statistics per recording, i.e. the class with most events detected in each particular recording and the average frequency of maximum energy of the events detected, for reporting and manual review. If desired, one spectrogram per recording with the temporal position of the events detected may also be obtained. 
