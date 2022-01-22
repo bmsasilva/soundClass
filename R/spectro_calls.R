@@ -1,23 +1,24 @@
 #' @title Generate spectrograms from labels
-#' @description Generates spectrograms from recording's labels for
+#' @description Generate spectrograms from recording labels for
 #' classification purposes. The spectrogram parameters are user defined
 #' and should be selected depending on the type of sound event to classify.
-#' @param files_path Path for the folder containing sound recordings
-#' @param updateProgress Progress bar only to be used inside shiny
-#' @param db_path Path for the database of recording labels created with the
-#' shinny app provided in the package
-#' @param spec_size Spectrogram size in ms
-#' @param window_length Moving window length to create the spectrogram in ms
-#' @param frequency_resolution Spectrogram frequency resolution with higher
-#' numbers meaning better resolution. Specifically, for any integer X provided,
-#' 1/X the analysis bandwidth (as determined by the number of samples
+#' @param files_path Character. Path for the folder containing sound recordings.
+#' @param update_progress Progress bar only to be used inside shiny.
+#' @param db_path Character. Path for the database of recording labels created
+#' with the shinny app provided in the package.
+#' @param spec_size Integer. Spectrogram size in ms.
+#' @param window_length Numeric. Moving window length in ms.
+#' @param frequency_resolution Integer. Spectrogram frequency resolution with
+#' higher values meaning better resolution. Specifically, for any integer X
+#' provided, 1/X the analysis bandwidth (as determined by the number of samples
 #' in the analysis window) will be used. Note that this greatly impacts
 #' processing time, so adjust with care!
-#' @param time_step_size Moving window step in ms
+#' @param time_step_size Integer. Moving window step in ms.
 #' @param dynamic_range Threshold of minimum intensity values to show
-#' in the spectrogram
+#' in the spectrogram. A value of 100 will typically be adequate for the
+#' majority of the recorders. If this is set to NULL, no threshold is applied.
 #' @param freq_range Frequency range of the spectrogram. Vector with two values,
-#' referring to the minimum and maximum frequency to show in the spectrogram
+#' referring to the minimum and maximum frequency to show in the spectrogram.
 #' @param tx Time expanded. Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
@@ -25,8 +26,8 @@
 #' be indicated or "auto" should be selected. If tx = "auto" the function
 #' assumes that sampling rates < 50kHz corresponds to
 #' tx = 10 and > 50kHz to tx = 1.
-#' @param seed Integer. Define a custom seed for randomizing data
-#' @usage spectro_calls(files_path, updateProgress,
+#' @param seed Integer. Define a custom seed for randomizing data.
+#' @usage spectro_calls(files_path, update_progress = NA,
 #' db_path, spec_size = NA, window_length = NA,
 #' frequency_resolution = NA, time_step_size = NA,
 #' dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
@@ -40,7 +41,7 @@
 #' @author Bruno Silva
 #' @export
 
-spectro_calls <- function(files_path, updateProgress,
+spectro_calls <- function(files_path, update_progress = NA,
                           db_path, spec_size = NA, window_length = NA,
                           frequency_resolution = NA, time_step_size = NA,
                           dynamic_range = NA, freq_range = NA, tx = 1,
@@ -93,9 +94,9 @@ spectro_calls <- function(files_path, updateProgress,
         "label_class"
       ], 1))
 
-      if (is.function(updateProgress)) {
+      if (is.function(update_progress)) {
         text <- paste0(i, " of ", length(audio_files))
-        updateProgress(detail = text)
+        update_progress(detail = text)
       }
     })
   }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/find_noise.R
 \name{find_noise}
 \alias{find_noise}
-\title{Detect energy peaks in non-relevant recordings}
+\title{Detect energy peaks in recordings with non-relevant events}
 \usage{
-find_noise(recording, nmax = 1, plot = F)
+find_noise(recording, nmax = 1, plot = FALSE)
 }
 \arguments{
-\item{recording}{Object of class "rc"}
+\item{recording}{Object of class "rc".}
 
 \item{nmax}{Integer indicating the maximum number of peaks to detect in
 the recording.}
@@ -20,10 +20,7 @@ identified peak(s), in samples.
 }
 \description{
 Detects the temporal position of the desired number of
-energy peaks in a recording of non-relevant events.
-}
-\details{
-Detect energy peaks in non-relevant recordings
+energy peaks in a recording exclusively with non-relevant events.
 }
 \examples{
 # Create a sample wav file in a temporary directory

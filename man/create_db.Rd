@@ -4,15 +4,16 @@
 \alias{create_db}
 \title{Create a sqlite3 database}
 \usage{
-create_db(path, db_name = NA, table_name = "labels", type = "reference")
+create_db(path, db_name = NA, table_name = "labels",
+type = "reference")
 }
 \arguments{
 \item{path}{Character. Path to the folder where the database will be created.}
 
 \item{db_name}{Character. Name of the database to be created.}
 
-\item{table_name}{Character. Name of the table to be created.
-inside the database. It is mandatory to use the default table name "labels"
+\item{table_name}{Character. Name of the table to be created in the
+database. It is mandatory to use the default table name "labels"
 if the database is intended to be used in conjunction with other
 functions of this package.}
 
@@ -25,8 +26,8 @@ creates a database to output the results of the automatic classification.}
 Nothing
 }
 \description{
-Create a sqlite3 database with a predefined table (if a
-database with the specified name doesn't exist already). Two type of
+Create a sqlite3 database (if a database with the specified
+name doesn't exist already) with predefined tables. Two types of
 databases are possible, one to store recordings annotations and another
 to store the output of the classification.
 }

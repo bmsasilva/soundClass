@@ -4,46 +4,36 @@
 \alias{auto_id}
 \title{Automatic classification of sound events in recordings}
 \usage{
-auto_id(
-  model_path,
-  updateProgress,
-  metadata,
-  file_path,
-  out_file,
-  out_dir,
-  save_png = T,
-  win_size = 50,
-  plot2console = F,
-  remove_noise = T,
-  recursive = FALSE,
-  tx = 1
-)
+auto_id(model_path, update_progress = NA, metadata,
+file_path, out_file, out_dir, save_png = TRUE, win_size = 50,
+plot2console = FALSE, remove_noise = TRUE, recursive = FALSE, tx = 1)
 }
 \arguments{
-\item{model_path}{Path to the fitted model.}
+\item{model_path}{Character. Path to the fitted model.}
 
-\item{updateProgress}{Progress bar only to be used inside shiny.}
+\item{update_progress}{Progress bar only to be used inside shiny.}
 
-\item{metadata}{Parameters used to create train data for fitting the model.}
+\item{metadata}{The object created with the function spectro_calls()
+containing the parameters used to fit the model.}
 
-\item{file_path}{Path to the folder containing sound recordings.}
+\item{file_path}{Character. Path to the folder containing recordings.}
 
-\item{out_file}{Character. Name of the file to output the results.
+\item{out_file}{Character. Name of the output file to save the results.
 Will be used to name the csv file and the sqlite database.}
 
-\item{out_dir}{Path to the folder where the output results will be stored.}
+\item{out_dir}{Character. Path to the folder where the output results will
+be stored.}
 
 \item{save_png}{Logical. Should a spectrogram of the classified recordings
 with the identified event(s) and respective classification(s) be saved
 as png file?}
 
-\item{win_size}{Window size to split recordings in chunks for classification.
-One peak per chunk is obtained and classified.}
+\item{win_size}{Integer. Window size in ms to split recordings in chunks
+for classification. One peak per chunk is obtained and classified.}
 
 \item{plot2console}{Logical. Should a spectrogram of the classified
 recordings with the identified event(s) and respective classification(s)
-be plotted in the console while the analysis is running?
-as png file?}
+be plotted in the console while the analysis is running?}
 
 \item{remove_noise}{Logical. TRUE indicates that the model was fitted
 with a non-relevant class which will be deleted from the final output.}
@@ -52,7 +42,7 @@ with a non-relevant class which will be deleted from the final output.}
 a single folder and TRUE indicates that there are recordings
 inside subfolders.}
 
-\item{tx}{Time expanded. Only used in recorders specifically intended for
+\item{tx}{Only used in recorders specifically intended for
 bat recordings. Can take the values "auto" or any numeric value. If the
 recording is not time expanded tx must be set to 1 (the default). If it's
 time expanded the numeric value corresponding to the time expansion should
@@ -64,12 +54,12 @@ tx = 10 and > 50kHz to tx = 1.}
 Nothing.
 }
 \description{
-Applies automatic classification of sound events on a set of
+Run automatic classification of sound events on a set of
 recordings using a fitted model.
 }
 \details{
 Runs a classification task on the recordings of a specified folder
-and saves the results of the analysis
+and saves the results of the analysis.
 }
 \author{
 Bruno Silva

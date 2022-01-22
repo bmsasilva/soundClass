@@ -7,7 +7,7 @@
 import_audio(path, butt = TRUE, low, high, tx = 1)
 }
 \arguments{
-\item{path}{Full path to the recording}
+\item{path}{Character. Full path to the recording}
 
 \item{butt}{Logical. If TRUE filters the recording with a 12th order
 filter. The filter is applied twice to better cleaning of the recording}
@@ -40,10 +40,7 @@ be preferable but it's not implemented yet)
 \description{
 Import a "wav" recording using \link[tuneR]{readWave}
 and create a S3 object of class "rc". If the recording is stereo it is
-#' converted to mono by keeping the channel with overall higher amplitude
-}
-\details{
-Import a recording
+converted to mono by keeping the channel with overall higher amplitude
 }
 \examples{
 # Create a sample wav file in a temporary directory

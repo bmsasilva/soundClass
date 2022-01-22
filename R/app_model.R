@@ -398,7 +398,7 @@ app_model <- function() {
       )
       on.exit(progress$close())
 
-      updateProgress <- function(value = NULL, detail = NULL) {
+      update_progress <- function(value = NULL, detail = NULL) {
         if (is.null(value)) {
           value <- progress$getValue() + 1
         }
@@ -410,7 +410,7 @@ app_model <- function() {
 
       train_data <- spectro_calls(
         files_path = files_path(),
-        updateProgress = updateProgress,
+        update_progress = update_progress,
         db_path = db_path(),
         spec_size = as.numeric(input$spec_size),
         window_length = as.numeric(input$window_length),
@@ -623,14 +623,14 @@ app_model <- function() {
       progress$set(message = "Processing recordings", value = 0)
       on.exit(progress$close())
 
-      updateProgress <- function(value = NULL, detail = NULL) {
+      update_progress <- function(value = NULL, detail = NULL) {
         if (is.null(value)) {
           value <- progress$getValue() + 1
         }
         progress$set(value = value, detail = detail)
       }
 
-      auto_id(fitted_model_path(), updateProgress,
+      auto_id(fitted_model_path(), update_progress,
                     fitted_metadata(),
                     fitted_files_path(),
                     out_file = input$out_file,
