@@ -62,6 +62,11 @@ train_calls <- spectro_calls(
  seed = 1002)
 ```
 
+To run a a fitted model later, some information regarding the parameters used for creating the training spectrograms will be needed. These data can be obtained from the train_calls object:
+```{r train_metadata, eval = F, echo = T}
+metadata <- train_metadata(train_calls)
+```
+
 Once the data has been prepared, a blank model must be loaded into R and compiled. A pre-defined model is supplied with the package. Two variables must be defined in the global environment before loading the model: the input shape (input_shape) with the format "c(number of rows, number of columns, number of channels)" and the number of classes (num_classes). These values can be found in the third component of the list train_calls. Please note that the number of channels is always 1, as we are working with grayscale images:
 ```{r model_load, eval = F, echo = T}
 input_shape <- c(train_calls[[3]]$img_rows, train_calls[[3]]$img_cols, 1)
@@ -99,13 +104,13 @@ The model is now ready to be fitted. Three callbacks (objects that can perform a
         verbose = 1)
 ```
 
-The fitted model and an additional file with fitting and train data parameters are saved to disk in the working folder for further use in the classification of novel recordings. To validate our model, we use recordings not used to calibrate the model. We use recordings with the same species used for training but also new bat species to evaluate the model transferability. The classification is applied to a folder containing the recordings with function auto_id() and the results are saved to a folder created inside the folder containing the recordings, in this cased named "output":
+The fitted model and an additional log file are saved to disk in the working folder for further use in the classification of novel recordings. To validate our model, we use recordings not used to calibrate the model. We use recordings with the same species used for training but also new bat species to evaluate the model transferability. The classification is applied to the recordings with function auto_id() and the results are saved to a folder created in the same folder where the recordings are, in this cased named "output":
 ```{r model_deploy, eval = F, echo = T}
-   auto_id("./fitted_model.hdf5",
-          "./fitted_model_metadata.RDATA",
-          "~/data_example/training_recordings",
-          out_file = "id_results.csv",
-          out_dir = paste0(rec_folder, "/", "output/"),
+   auto_id(model_path = "./fitted_model.hdf5",
+          metadata = metadata,
+          file_path = "~/data_example/training_recordings",
+          out_file = "id_results",
+          out_dir = "output/",
           save_png = TRUE,          
           win_size = 40,
           remove_noise = TRUE,
