@@ -37,6 +37,11 @@ values can be used for different sound events, as they only change
 the definition of the images created. Please refer to
 \code{\link{spectro_calls}} documentation for further details
 }
+
+After entering the required information press the button "Create training
+data from labels" to generate the training data that will be used for
+fitting a model. This object is saved in the folder containing the
+training recordings with the name "train_data.RDATA".
 }
 
 \subsection{2. Fit model}{

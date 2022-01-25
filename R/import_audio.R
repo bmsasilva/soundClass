@@ -25,7 +25,7 @@
 #' new_rec <- import_audio(rec_path, low = 1, high = 20, tx = 1)
 #' new_rec
 #' file.remove(rec_path)
-#' @return an object of class "rc". This object is a list
+#' @return An object of class "rc". This object is a list
 #' with the following components:
 #' \itemize{
 #'   \item sound_samples -- sound samples of the recording

@@ -25,7 +25,7 @@ assumes that sampling rates < 50kHz corresponds to
 tx = 10 and > 50kHz to tx = 1.}
 }
 \value{
-an object of class "rc". This object is a list
+An object of class "rc". This object is a list
 with the following components:
 \itemize{
 \item sound_samples -- sound samples of the recording
