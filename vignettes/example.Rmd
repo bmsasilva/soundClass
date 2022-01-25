@@ -13,17 +13,18 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-Before installing soundClass it is necessary to install keras package, which in turn will install tensorflow. After installing keras, load it and run function install_keras():   
-```{r keras, eval = F, echo = T}
-install.packages("keras")
-library(keras)
-keras::install_keras()
-```
+NOTE FOR WINDOWS USERS - Please install miniconda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html. 
 
 To demonstrate the package functionality we are going to train a simple bat detector and test it on new sampling recordings. We start by installing and loading the soundClass package:
 ```{r setup, eval = F, echo = T}
 install.packages("soundClass")
 library(soundClass)
+```
+
+Before using soundClass for the first time it is necessary to have tensorflow and keras backend installed. This can be achieved by loading package keras and running the function install_keras():   
+```{r keras, eval = F, echo = T}
+library(keras)
+keras::install_keras()
 ```
 
 To run the example, external data must be downloaded and uncompressed. We first start by creating a new folder to store the data:

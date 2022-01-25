@@ -1,14 +1,62 @@
-#' @title Start app fit model
-#' @description Starts the app to fit  and run the model
+#' @title Shiny app to fit a model or deploy a fitted model
+#' @description Shiny app to fit a model from training recordings or to deploy a 
+#' fitted model to classify new recordings. This app consists of three GUIs, 
+#' i.e. three main panels, accessible by the tabs at the top:
+#'  \enumerate{
+#'   \item Create train data -- create train data from recordings and their
+#'   respective annotations database  
+#'   \item Fit model -- fit a model from training data
+#'   \item Run model -- deploy a fitted model to classify new recordings
+#'   }
+#' 
+#' ## 1. Create train data
+#' The app has a sidebar panel with the following buttons/boxes to input
+#' required user data: 
+#' \itemize{
+#'   \item Choose folder -- choose the folder containing the training recordings
+#'   \item Choose database -- choose the database with the annotations for the
+#'   training recordings
+#'   \item Spectrogram parameters -- different typologies of sound events 
+#'   require different parameters for computing the spectrograms for better 
+#'   performance. The more relevant are: size (in ms), which should be large 
+#'   enough to encompass the duration of the largest sound event in 
+#'   analysis (not only in the training data but also in novel recordings 
+#'   where the classifiers are to be applied) and moving window (in ms), 
+#'   that should be smaller for shorter sound events (to capture the quick 
+#'   changes in time) and larger for longer sound events (to avoid redundant 
+#'   information). The other parameters are more generalist and the same 
+#'   values can be used for different sound events, as they only change 
+#'   the definition of the images created. Please refer to 
+#'   \code{\link{spectro_calls}} documentation for further details
+#'   }
+#'  
+#' After entering the required information press the button "Create training 
+#' data from labels" to generate the training data that will be used for 
+#' fitting a model. This object is saved in the folder containing the
+#' training recordings with the name "train_data.RDATA".
+#'     
+#' ## 2. Fit model 
+#' The app has a sidebar panel with the following buttons/boxes to input
+#' required user data: 
+#' \itemize{
+#' }
+#' 
+#' ## 3. Run model 
+#' The app has a sidebar panel with the following buttons/boxes to input
+#' required user data: 
+#' \itemize{
+#' }
+#' 
+#' @usage app_model()
 #' @export
 #' @import htmltools shinyBS
 
 app_model <- function() {
-
+  
   if (file.exists("./fitted_model_log.csv")) {
     file.remove("./fitted_model_log.csv")
   }
-
+  
   ui <- shiny::fluidPage(
     shinyjs::useShinyjs(),
     shiny::titlePanel("Modeling"),
@@ -34,6 +82,23 @@ app_model <- function() {
               style = "width:100%"
             ),
             htmltools::br(),
+            htmltools::br(),
+            shiny::fluidRow(
+              shiny::column(
+                width = 12,
+                align = "left",
+                shiny::selectInput(
+                  inputId = "tx",
+                  label = "Time expanded",
+                  choices = c(
+                    "1" = "1",
+                    "10" = "10",
+                    "auto" = "auto"
+                  ),
+                  selected = "1"
+                ),
+              )
+            ),
             htmltools::hr(),
             htmltools::h4("Spectrogram parameters", align = "left"),
             htmltools::hr(),
@@ -233,7 +298,7 @@ app_model <- function() {
           )
         )
       ),
-
+      
       shiny::tabPanel("Run model",
                       shiny::sidebarLayout(fluid = FALSE,
                                            shiny::sidebarPanel(
@@ -242,14 +307,14 @@ app_model <- function() {
                                                                         label = "Choose folder",
                                                                         title = "Choose folder",
                                                                         style = "width:100%"),
-
+                                             
                                              shinyFiles::shinyFilesButton(
                                                id = "fitted_selected_model",
                                                label = "Choose model",
                                                title = "Choose model",
                                                multiple = FALSE,
                                                style = "width:100%"),
-
+                                             
                                              htmltools::br(),
                                              shinyFiles::shinyFilesButton(id = "fitted_selected_metadata",
                                                                           label = "Choose metadata",
@@ -258,24 +323,39 @@ app_model <- function() {
                                                                           style = "width:100%"),
                                              htmltools::br(),
                                              htmltools::br(),
-
+                                             shiny::fluidRow(
+                                               shiny::column(
+                                                 width = 12,
+                                                 align = "left",
+                                                 shiny::selectInput(
+                                                   inputId = "tx2",
+                                                   label = "Time expanded",
+                                                   choices = c(
+                                                     "1" = "1",
+                                                     "10" = "10",
+                                                     "auto" = "auto"
+                                                   ),
+                                                   selected = "1"
+                                                 ),
+                                               )
+                                             ),
+                                             htmltools::br(),
                                              shiny::textInput(inputId = "out_file",
                                                               label = "Name of output file",
                                                               value = "id_results"),
                                              htmltools::br(),
-
+                                             
                                              shiny::radioButtons("rem_noise",
                                                                  "Non-relevant class?",
                                                                  c("Yes" = TRUE,
                                                                    "No" = FALSE)),
                                              htmltools::br(),
-
+                                             
                                              shiny::radioButtons("lab_plots",
                                                                  "Export labeled plots",
                                                                  c("Yes" = TRUE,
                                                                    "No" = FALSE))
                                            ),
-
                                            shiny::mainPanel(
                                              htmltools::br(),
                                              shiny::fluidRow(
@@ -310,13 +390,13 @@ app_model <- function() {
       )
     )
   )
-
+  
   server <- function(input, output) {
-
+    
     system <- Sys.info()[["sysname"]]
     if (system == "Windows") roots <- c(home = "C://")
     if (system == "Linux") roots <- c(Computer = "/")
-
+    
     shiny::observe({
       shinyFiles::shinyDirChoose(
         input = input,
@@ -355,7 +435,7 @@ app_model <- function() {
       )
       return(files_path)
     })
-
+    
     shiny::observe({
       shinyFiles::shinyFileChoose(
         input = input,
@@ -374,7 +454,7 @@ app_model <- function() {
         output$db_path <- shiny::renderText(as.character(db_path))
       }
     })
-
+    
     db_path <- shiny::reactive({
       file_selected <- shinyFiles::parseFilePaths(
         roots = roots,
@@ -383,9 +463,9 @@ app_model <- function() {
       db_path <- as.character(file_selected$datapath)
       return(db_path)
     })
-
+    
     spec_calls <- shiny::eventReactive(input$create_specs, {
-
+      
       total <- length(list.files(
         path = files_path(),
         recursive = F,
@@ -397,7 +477,7 @@ app_model <- function() {
         value = 0
       )
       on.exit(progress$close())
-
+      
       update_progress <- function(value = NULL, detail = NULL) {
         if (is.null(value)) {
           value <- progress$getValue() + 1
@@ -407,7 +487,7 @@ app_model <- function() {
           detail = detail
         )
       }
-
+      
       train_data <- spectro_calls(
         files_path = files_path(),
         update_progress = update_progress,
@@ -418,7 +498,7 @@ app_model <- function() {
         time_step_size = (1 - as.numeric(input$overlap)) * as.numeric(input$window_length),
         dynamic_range = as.numeric(input$dynamic_range),
         freq_range = c(as.numeric(input$low), as.numeric(input$high)),
-        tx = input$tx
+        tx = ifelse((input$tx) > 2, input$tx, as.numeric(input$tx))
       )
       save(
         train_data,
@@ -426,11 +506,11 @@ app_model <- function() {
       )
       return(train_data)
     })
-
+    
     output$spec <- shiny::renderTable({
       table(spec_calls()[[2]])
     })
-
+    
     shiny::observe({
       shinyFiles::shinyFileChoose(
         input = input,
@@ -446,10 +526,12 @@ app_model <- function() {
           "Train data file =",
           as.character(file_selected$datapath)
         )
+        if(length(dirname(as.character(file_selected$datapath))) > 0)
+           setwd(dirname(as.character(file_selected$datapath)))
         output$rdata_path <- shiny::renderText(as.character(rdata_path))
       }
     })
-
+    
     rdata_list <- shiny::reactive({
       if (length(input$rdata_path) > 1) {
         file_selected <- shinyFiles::parseFilePaths(
@@ -462,7 +544,7 @@ app_model <- function() {
         return(rdata_list)
       }
     })
-
+    
     shiny::observe({
       shinyFiles::shinyFileChoose(
         input = input,
@@ -481,7 +563,7 @@ app_model <- function() {
         output$model_path <- shiny::renderText(as.character(model_path))
       }
     })
-
+    
     model_path <- shiny::reactive({
       file_selected <- shinyFiles::parseFilePaths(
         roots = roots,
@@ -490,27 +572,31 @@ app_model <- function() {
       model_path <- as.character(file_selected$datapath)
       return(model_path)
     })
-
+    
     shiny::observeEvent(input$fit_model, {
       output$end_fit <- shiny::renderTable({
       })
     })
-
+    
     shiny::observeEvent(input$fit_model, {
-
+      
       rdata_list <- rdata_list()
-
+      
       model <- c()
+      input_shape <- c(rdata_list$parameters$img_rows, 
+                       rdata_list$parameters$img_cols,
+                       1)
+      num_classes <- rdata_list$parameters$num_classes
       source(model_path(), local = TRUE)
-
+      
       model %>%
         generics::compile(
-          optimizer = keras::optimizer_sgd(lr = input$lr,
+          optimizer = keras::optimizer_sgd(learning_rate = input$lr,
                                            momentum = 0.9, nesterov = T),
           loss = "categorical_crossentropy",
           metrics = c("accuracy")
         )
-
+      
       model %>% generics::fit(rdata_list$data_x, rdata_list$data_y,
                               batch_size = input$batch,
                               epochs = input$epochs,
@@ -529,17 +615,17 @@ app_model <- function() {
                               shuffle = TRUE,
                               validation_split = 1 - input$train_per,
                               verbose = 1)
-
+      
       metadata <- list(parameters =  rdata_list$parameters,
-                       classes = rdata_list$labels_df)
+                       classes = rdata_list$classes)
       save(metadata,
            file = "fitted_model_metadata.RDATA")
-
+      
       output$end_fit <- shiny::renderTable({
         utils::read.csv("fitted_model_log.csv")
       })
     })
-
+    
     shiny::observe({
       shinyFiles::shinyDirChoose(input, "fitted_selected_folder", roots = roots)
       if (!is.null(input$fitted_selected_folder)) {
@@ -561,7 +647,7 @@ app_model <- function() {
       files_path <- as.character(paste0(folder_selected, "//"))
       files_path
     })
-
+    
     shiny::observe({
       shinyFiles::shinyFileChoose(
         input = input,
@@ -588,7 +674,7 @@ app_model <- function() {
       fitted_model_path <- as.character(file_selected$datapath)
       return(fitted_model_path)
     })
-
+    
     shiny::observe({
       shinyFiles::shinyFileChoose(input, "fitted_selected_metadata",
                                   roots = roots)
@@ -600,7 +686,7 @@ app_model <- function() {
         output$fitted_metadata_path <- shiny::renderText(as.character(fitted_metadata_path))
       }
     })
-
+    
     fitted_metadata <- shiny::reactive({
       if (length(input$fitted_selected_metadata) > 1) {
         file_selected <- shinyFiles::parseFilePaths(roots,
@@ -611,36 +697,36 @@ app_model <- function() {
         return(metadata)
       }
     })
-
+    
     shiny::observeEvent(input$id_recs, {
-
+      print(input$tx2)
       if (!dir.exists(paste0(fitted_files_path(), "/", "output/")))
         dir.create(paste0(fitted_files_path(), "/", "output/"))
-
+      
       total <- length(list.files(fitted_files_path(),
                                  recursive = F, pattern = "wav|WAV"))
       progress <- shiny::Progress$new(max = total)
       progress$set(message = "Processing recordings", value = 0)
       on.exit(progress$close())
-
+      
       update_progress <- function(value = NULL, detail = NULL) {
         if (is.null(value)) {
           value <- progress$getValue() + 1
         }
         progress$set(value = value, detail = detail)
       }
-
-      auto_id(fitted_model_path(), update_progress,
-                    fitted_metadata(),
-                    fitted_files_path(),
-                    out_file = input$out_file,
-                    out_dir = paste0(fitted_files_path(), "/", "output/"),
-                    save_png = as.logical(input$lab_plots),
-                    win_size = fitted_metadata()$parameters$spec_size * 2,
-                    remove_noise = as.logical(input$rem_noise),
-                    plot2console = FALSE,
-                    recursive = FALSE,
-                    tx = input$tx)
+      auto_id(fitted_model_path(), 
+              update_progress,
+              fitted_metadata(),
+              fitted_files_path(),
+              out_file = input$out_file,
+              out_dir = paste0(fitted_files_path(), "/", "output/"),
+              save_png = as.logical(input$lab_plots),
+              win_size = fitted_metadata()$parameters$spec_size * 2,
+              remove_noise = as.logical(input$rem_noise),
+              plot2console = FALSE,
+              recursive = FALSE,
+              tx = ifelse((input$tx2) > 2, input$tx2, as.numeric(input$tx2)))
     })
   }
   shiny::shinyApp(ui = ui, server = server)

@@ -2,10 +2,56 @@
 % Please edit documentation in R/app_model.R
 \name{app_model}
 \alias{app_model}
-\title{Start app fit model}
+\title{Shiny app to fit a model or deploy a fitted model}
 \usage{
 app_model()
 }
 \description{
-Starts the app to fit  and run the model
+Shiny app to fit a model from training recordings or to deploy a
+fitted model to classify new recordings. This app consists of three GUIs,
+i.e. three main panels, accessible by the tabs at the top:
+\enumerate{
+\item Create train data -- create train data from recordings and their
+respective annotations database
+\item Fit model -- fit a model from training data
+\item Run model -- deploy a fitted model to classify new recordings
+}
+\subsection{1. Create train data}{
+
+The app has a sidebar panel with the following buttons/boxes to input
+required user data:
+\itemize{
+\item Choose folder -- choose the folder containing the training recordings
+\item Choose database -- choose the database with the annotations for the
+training recordings
+\item Spectrogram parameters -- different typologies of sound events
+require different parameters for computing the spectrograms for better
+performance. The more relevant are: size (in ms), which should be large
+enough to encompass the duration of the largest sound event in
+analysis (not only in the training data but also in novel recordings
+where the classifiers are to be applied) and moving window (in ms),
+that should be smaller for shorter sound events (to capture the quick
+changes in time) and larger for longer sound events (to avoid redundant
+information). The other parameters are more generalist and the same
+values can be used for different sound events, as they only change
+the definition of the images created. Please refer to
+\code{\link{spectro_calls}} documentation for further details
+}
+}
+
+\subsection{2. Fit model}{
+
+The app has a sidebar panel with the following buttons/boxes to input
+required user data:
+\itemize{
+}
+}
+
+\subsection{3. Run model}{
+
+The app has a sidebar panel with the following buttons/boxes to input
+required user data:
+\itemize{
+}
+}
 }
