@@ -44,6 +44,7 @@
 #'  \item Resolution -- frequency resolution of the spectrogram
 #' }
 #' @usage app_label()
+#' @author Bruno Silva
 #' @export
 #' @import htmltools shinyBS
 

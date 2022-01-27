@@ -52,3 +52,6 @@ visualization but lower performance
 \item Resolution -- frequency resolution of the spectrogram
 }
 }
+\author{
+Bruno Silva
+}

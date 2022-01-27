@@ -1,8 +1,8 @@
 ---
-title: "my-vignette"
+title: "example"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-NOTE FOR WINDOWS USERS - Please install miniconda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html. 
+NOTE TO NEW USERS - Please install miniconda (or similar) before installing soundClass in R: https://docs.conda.io/en/latest/miniconda.html 
 
 To demonstrate the package functionality we are going to train a simple bat detector and test it on new sampling recordings. We start by installing and loading the soundClass package:
 ```{r setup, eval = F, echo = T}
@@ -88,7 +88,7 @@ With the training data prepared and the blank model loaded, the parameters for c
   )
 ```
 
-The model is now ready to be fitted. Three callbacks (objects that can perform actions at various stages of training) are defined: 1) early stopping, 2) model checkpoint and 3) CSV logger. These objects permit to, respectively: 1) stop the fitting process if there is no improvement in the validation dataset accuracy for a defined number of epochs, 2) save the partially fitted model to disk after each iteration and keep only the best model after training for further use and 3) save to disk the log of the training process. For further information about the callbacks available and their usage please refer to Keras documentation (https://keras.io/api/). To fit the model the function fit() from package generics is used:
+The model is now ready to be fitted. Three callbacks (objects that can perform actions at various stages of training) are defined: 1) early stopping, 2) model checkpoint and 3) CSV logger. These objects permit to, respectively: 1) stop the fitting process if there is no improvement in the validation dataset accuracy for a defined number of epochs, 2) save the partially fitted model to disk after each iteration and keep only the best model after training for further use and 3) save to disk the log of the training process. For further information about the callbacks available and their usage please refer to Keras documentation (https://keras.io/api/). To fit the model the function keras::fit() is used:
 ```{r model_fit, eval = F, echo = T}
  model %>% keras::fit(train_data$data_x,
         train_data$data_y,
@@ -101,7 +101,7 @@ The model is now ready to be fitted. Three callbacks (objects that can perform a
          callback_csv_logger("./fitted_model_log.csv")),
         shuffle = TRUE,
         validation_split = 1 - mod_params$train_per,
-        verbose = 1)
+        verbose = 1)\
 ```
 
 The fitted model and an additional log file are saved to disk in the working folder for further use in the classification of novel recordings. To validate our model, we use recordings not used to calibrate the model. We use recordings with the same species used for training but also new bat species to evaluate the model transferability. The classification is applied to the recordings with function auto_id() and the results are saved to a folder created in the same folder where the recordings are, in this cased named "output":

@@ -2,28 +2,36 @@
 % Please edit documentation in R/app_model.R
 \name{app_model}
 \alias{app_model}
-\title{Shiny app to fit a model or deploy a fitted model}
+\title{Shiny app to fit a model or run a fitted model}
 \usage{
 app_model()
 }
 \description{
-Shiny app to fit a model from training recordings or to deploy a
+Shiny app to fit a model from training recordings or to run a
 fitted model to classify new recordings. This app consists of three GUIs,
 i.e. three main panels, accessible by the tabs at the top:
 \enumerate{
 \item Create train data -- create train data from recordings and their
 respective annotations database
 \item Fit model -- fit a model from training data
-\item Run model -- deploy a fitted model to classify new recordings
+\item Run model -- run a fitted model to classify new recordings
 }
 \subsection{1. Create train data}{
 
-The app has a sidebar panel with the following buttons/boxes to input
-required user data:
+This panel is used to create train data from recordings and their
+respective annotations database. The sidebar panel has the following
+buttons/boxes to input required user data:
 \itemize{
 \item Choose folder -- choose the folder containing the training recordings
 \item Choose database -- choose the database with the annotations for the
 training recordings
+\item Time expanded -- choose the correct time expansion factor, normally
+only used in recorders specifically intended for bat recordings. Can take
+the values "auto", 1 or 10. If the recording is not time expanded the value
+must be 1. If it's time expanded, the value 10 or "auto" can be selected.
+If "auto" is selected it is assumed that sampling rates < 50kHz
+corresponds to a value of 10 and sampling rates > 50kHz to corresponds to a
+value of 1
 \item Spectrogram parameters -- different typologies of sound events
 require different parameters for computing the spectrograms for better
 performance. The more relevant are: size (in ms), which should be large
@@ -46,17 +54,61 @@ training recordings with the name "train_data.RDATA".
 
 \subsection{2. Fit model}{
 
-The app has a sidebar panel with the following buttons/boxes to input
-required user data:
+This panel is used to fit a model from training data. The sidebar panel has
+the following buttons/boxes to input required user data:
 \itemize{
+\item Choose train data --
+\item Choose model -- a blank model to be fitted
+\item Model parameters -- the train percentage indicates the percentage of
+data that is used to fit the model while the remaining are used for
+validation, batch size indicates the number
+of samples per gradient update, the learning rate indicates the degree of the
+gradient update, early stop indicates the maximum number of epochs without
+improvement allowed before training stops and epochs indicate the maximum
+number of epochs to train. Further information can be found in keras
+documentation \url{https://keras.io/api/}
 }
+
+The model is evaluated during fitting using the validation data. After
+completion, by reaching the maximum epochs or the early stopping parameters,
+the fitted model, the fitting log and the model metadata are saved to the
+folder containing the train data with file names: "fitted_model.hdf5",
+"fitted_model_log.csv" and "fitted_model_metadata.RDATA" respectively.
 }
 
 \subsection{3. Run model}{
 
-The app has a sidebar panel with the following buttons/boxes to input
-required user data:
+This panel is used to run a fitted model to classify new recordings. The
+sidebar panel has the following buttons/boxes to input required user data:
 \itemize{
+\item Choose folder -- choose the folder containing the recordings to be
+classified
+\item Choose model -- a fitted model to be used for classification
+\item Choose metadata -- the file containing the fitted model metadata
+\item Time expanded -- choose the correct time expansion factor, normally
+only used in recorders specifically intended for bat recordings. Can take
+the values "auto", 1 or 10. If the recording is not time expanded the value
+must be 1. If it's time expanded, the value 10 or "auto" can be selected.
+If "auto" is selected it is assumed that sampling rates < 50kHz
+corresponds to a value of 10 and sampling rates > 50kHz to corresponds to a
+value of 1
+\item Output file -- the name of the files to store the results of the
+classification
+\item Non-relevant -- does the fitted model includes a non-relevant class?
+\item Export plots -- should a spectrogram of the classified recordings be
+saved to disk?
+}
+
+The classification results are stored in a folder called "output",
+created inside the folder containing the recordings. They are stored in a
+database in sqlite3 format with
+all the relevant events detected and the respective probability of belonging
+to a given class. Additionally a file in the csv format is saved to disk,
+containing summary statistics per recording, i.e. the class with most events
+detected in each particular recording and the average frequency of maximum
+energy of the events detected.
 }
 }
+\author{
+Bruno Silva
 }
