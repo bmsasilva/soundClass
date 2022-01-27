@@ -27,10 +27,11 @@ library(keras)
 keras::install_keras()
 ```
 
-To run the example, external data must be downloaded and uncompressed. We first start by creating a new folder to store the data:
+To run the example, external data must be downloaded and uncompressed. We first start by creating a new folder to store the data. We define that folder as the working directory for convenience:
 ```{r folder, eval = F, echo = T}
 folder_path <- "~/data_example"
 dir.create(folder_path)
+setwd(folder_path)
 ```
 
 The data should now be manually downloaded to the new folder and unziped:
@@ -50,21 +51,27 @@ To create the train data, spectrogram images with a pre-defined size and centred
 As european insectivorous bats (excluding Rhinolophus genus) are the target, we chose appropriate settings based on bibliography:
 ```{r train_calls, eval = F, echo = T}
 train_calls <- spectro_calls(
- files_path = "~/data_example/training_recordings",
+ files_path = "~/data_example/training_recordings/",
  db_path = "~/data_example/db_bat_calls.sqlite3",
  spec_size = 20,
- window_length = 1, 
+ window_length = 0.5, 
  frequency_resolution = 1,
  time_step_size = 0.5,
  dynamic_range = 100,
  freq_range = c(10, 80),
  tx = "auto",
  seed = 1002)
+
+# save the object to disk
+save(train_calls, "train_calls.RDATA")
 ```
 
 To run a a fitted model later, some information regarding the parameters used for creating the training spectrograms will be needed. These data can be obtained from the train_calls object:
 ```{r train_metadata, eval = F, echo = T}
 metadata <- train_metadata(train_calls)
+
+# save the object to disk
+save(metadata, "metadata.RDATA")
 ```
 
 Once the data has been prepared, a blank model must be loaded into R and compiled. A pre-defined model is supplied with the package. Two variables must be defined in the global environment before loading the model: the input shape (input_shape) with the format "c(number of rows, number of columns, number of channels)" and the number of classes (num_classes). These values can be found in the third component of the list train_calls. Please note that the number of channels is always 1, as we are working with grayscale images:
@@ -80,7 +87,7 @@ With the training data prepared and the blank model loaded, the parameters for c
  model %>%
   keras::compile(
    optimizer = optimizer_sgd(
-                lr = 0.01,
+                learning_rate = 0.01,
                 momentum = 0.9,
                 nesterov = TRUE),
    loss = 'categorical_crossentropy',
@@ -88,10 +95,10 @@ With the training data prepared and the blank model loaded, the parameters for c
   )
 ```
 
-The model is now ready to be fitted. Three callbacks (objects that can perform actions at various stages of training) are defined: 1) early stopping, 2) model checkpoint and 3) CSV logger. These objects permit to, respectively: 1) stop the fitting process if there is no improvement in the validation dataset accuracy for a defined number of epochs, 2) save the partially fitted model to disk after each iteration and keep only the best model after training for further use and 3) save to disk the log of the training process. For further information about the callbacks available and their usage please refer to Keras documentation (https://keras.io/api/). To fit the model the function keras::fit() is used:
+The model is now ready to be fitted. Three callbacks (objects that can perform actions at various stages of training) are defined: 1) early stopping, 2) model checkpoint and 3) CSV logger. These objects permit to, respectively: 1) stop the fitting process if there is no improvement in the validation dataset accuracy for a defined number of epochs, 2) save the partially fitted model to disk (the workfolder in this example) after each iteration and keep only the best model after training for further use and 3) save to disk the log (the workfolder in this example) of the training process. For further information about the callbacks available and their usage please refer to Keras documentation (https://keras.io/api/). To fit the model the function keras::fit() is used:
 ```{r model_fit, eval = F, echo = T}
- model %>% keras::fit(train_data$data_x,
-        train_data$data_y,
+ model %>% keras::fit(train_calls$data_x,
+        train_calls$data_y,
         batch_size = 64,
         epochs = 20,
         callbacks = list(
@@ -100,22 +107,23 @@ The model is now ready to be fitted. Three callbacks (objects that can perform a
                       monitor = "val_accuracy", save_best_only = T),
          callback_csv_logger("./fitted_model_log.csv")),
         shuffle = TRUE,
-        validation_split = 1 - mod_params$train_per,
-        verbose = 1)\
+        validation_split = 0.3,
+        verbose = 1)
 ```
 
 The fitted model and an additional log file are saved to disk in the working folder for further use in the classification of novel recordings. To validate our model, we use recordings not used to calibrate the model. We use recordings with the same species used for training but also new bat species to evaluate the model transferability. The classification is applied to the recordings with function auto_id() and the results are saved to a folder created in the same folder where the recordings are, in this cased named "output":
 ```{r model_deploy, eval = F, echo = T}
-   auto_id(model_path = "./fitted_model.hdf5",
-          metadata = metadata,
-          file_path = "~/data_example/training_recordings",
-          out_file = "id_results",
-          out_dir = "output/",
-          save_png = TRUE,          
-          win_size = 40,
-          remove_noise = TRUE,
-          plot2console = FALSE,
-          recursive = FALSE)
+auto_id(model_path = "./fitted_model.hdf5",
+        metadata = metadata,
+        file_path = "~/data_example/validation_recordings/",
+        out_file = "id_results",
+        out_dir = "~/data_example/validation_recordings/output/",
+        save_png = TRUE,          
+        win_size = 40,
+        remove_noise = TRUE,
+        plot2console = FALSE,
+        recursive = FALSE,
+        tx = "auto")
 ```
 
 The classification process outputs a database in the sqlite3 format with all the relevant events detected and the respective probability to belong to a given class. Additionally a file in the CSV format is saved to disk, containing summary statistics per recording, i.e. the class with most events detected in each particular recording and the average frequency of maximum energy of the events detected, for reporting and manual review. If desired, one spectrogram per recording with the temporal position of the events detected may also be obtained. 

@@ -9,7 +9,7 @@
 #' @param out_file Character. Name of the output file to save the results.
 #' Will be used to name the csv file and the sqlite database.
 #' @param out_dir Character. Path to the folder where the output results will
-#' be stored.
+#' be stored. Will be created if it doesn't exist already
 #' @param save_png Logical. Should a spectrogram of the classified recordings
 #' with the identified event(s) and respective classification(s) be saved
 #' as png file?
@@ -51,6 +51,9 @@ auto_id <- function(model_path,
                     remove_noise = TRUE,
                     recursive = FALSE,
                     tx = 1) {
+  
+  if (!dir.exists(out_dir)) dir.create(out_dir)
+  
   spec_size <- metadata$parameters$spec_size
   window_length <- metadata$parameters$window_length
   dynamic_range <- metadata$parameters$dynamic_range

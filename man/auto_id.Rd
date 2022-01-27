@@ -22,7 +22,7 @@ containing the parameters used to fit the model.}
 Will be used to name the csv file and the sqlite database.}
 
 \item{out_dir}{Character. Path to the folder where the output results will
-be stored.}
+be stored. Will be created if it doesn't exist already}
 
 \item{save_png}{Logical. Should a spectrogram of the classified recordings
 with the identified event(s) and respective classification(s) be saved
