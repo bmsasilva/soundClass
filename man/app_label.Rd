@@ -2,10 +2,56 @@
 % Please edit documentation in R/app_label.R
 \name{app_label}
 \alias{app_label}
-\title{Start app label recordings}
+\title{Shiny app to label recordings}
 \usage{
 app_label()
 }
 \description{
-Starts the app to label recordings
+Shiny app to label recordings. Use this app to visualize your
+training recordings, create annotations and store them in a sqlite database.
+The app has a sidebar panel with the following buttons/boxes to input
+required user data:
+\enumerate{
+\item Create database -- if no database exists to store the annotations,
+use this button to create one
+\item Choose database -- choose the database to store the annotations
+\item Butterwoth filter -- indicate low and high frequencies in kHz to
+filter the recordings
+\item Time expanded -- only used in recorders specifically intended for
+bat recordings. Can take any numeric value. If the recording is not time
+expanded the value must be set to 1. If it is time expanded the numeric
+value corresponding to the time expansion should be indicated
+\item Choose folder -- choose the folder containing the training recordings
+}
+
+After the spectrogram is ploted:
+\enumerate{
+\item Select events by clicking in the spectrogram on the middle of the
+event of interest (bat call, bird song, etc)
+\item Insert the correct label in the "Label" box and add any additional
+notes in the "Observations" box
+\item Press 'Set labels' button to add labels to database
+\item Repeat above steps if more than one set of events is present
+in the recording
+\item Press 'Next' button to advance to next recording or pick another
+recording from the dropdown list
+}
+
+The spectrogram can be zoomed by pressing mouse button and dragging to select
+an area and then double click on it. To unzoom simply double clicking on the
+spectrogram without an area selected. To adjust visualization settings,
+in the top right, the tab "Spectrogram options" can be used to:
+\itemize{
+\item Threshold -- minimum intensity values to show
+in the spectrogram. A value of 100 will typically be adequate for the
+majority of the recorders
+\item Window length -- moving window length in ms. Smaller windows best
+suited for short calls
+\item Overlap -- overlap between consecutive windows, higher values give best
+visualization but lower performance
+\item Resolution -- frequency resolution of the spectrogram
+}
+}
+\author{
+Bruno Silva
 }

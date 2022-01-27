@@ -1,19 +1,24 @@
-#' Import a recording
 #' @title Import a recording
 #' @description  Import a "wav" recording using \link[tuneR]{readWave}
 #' and create a S3 object of class "rc". If the recording is stereo it is
 #' converted to mono by keeping the channel with overall higher amplitude
+<<<<<<< HEAD:R/import_audio.R
 #' @param path Full path to the recording
 #' @param butt Logical. If TRUE filters the recording with a 10th order
 #' filter. The filter is applied twice for better cleaning of the recording
+=======
+#' @param path Character. Full path to the recording
+#' @param butt Logical. If TRUE filters the recording with a 12th order
+#' filter. The filter is applied twice to better cleaning of the recording
+>>>>>>> bdc5fa327834a7583cb526d4e50d9029789396f8:R/import_audio.R
 #' @param low Minimum frequency in kHz for the butterworth filter
 #' @param high Maximum frequency in kHz for the butterworth filter
 #' @param tx Time expanded. Only used in recorders specifically intended for
 #' bat recordings. Can take the values "auto" or any numeric value. If the
 #' recording is not time expanded tx must be set to 1 (the default). If it's
-#' time expanded the numeric value correponding to the time expansion should
+#' time expanded the numeric value corresponding to the time expansion should
 #' be indicated or "auto" should be selected. If tx = "auto" the function
-#' assumes that sampling rates < 50kHz correponds to
+#' assumes that sampling rates < 50kHz corresponds to
 #' tx = 10 and > 50kHz to tx = 1.
 #' @usage import_audio(path, butt = TRUE, low, high, tx = 1)
 #' @examples
@@ -23,10 +28,10 @@
 #' rec_path <- file.path(temp_dir, "recording.wav")
 #' tuneR::writeWave(recording, filename = rec_path)
 #' # Import the sample wav file
-#' new_rec <- import_audio(rec_path, low = 1, high = 50, tx = 1)
+#' new_rec <- import_audio(rec_path, low = 1, high = 20, tx = 1)
 #' new_rec
 #' file.remove(rec_path)
-#' @return an object of class "rc". This object is a list
+#' @return An object of class "rc". This object is a list
 #' with the following components:
 #' \itemize{
 #'   \item sound_samples -- sound samples of the recording
