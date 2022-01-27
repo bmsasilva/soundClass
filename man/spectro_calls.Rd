@@ -2,49 +2,63 @@
 % Please edit documentation in R/spectro_calls.R
 \name{spectro_calls}
 \alias{spectro_calls}
-\title{Generates spectrograms from recording labels.}
+\title{Generate spectrograms from labels}
 \usage{
-spectro_calls(files_path, updateProgress,
+spectro_calls(files_path, update_progress = NA,
 db_path, spec_size = NA, window_length = NA,
-frequency_resolution = NA, time_step_size = NA, dynamic_range = NA,
-freq_range = NA)
+frequency_resolution = NA, time_step_size = NA,
+dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
 }
 \arguments{
-\item{files_path}{Path for the folder containing sound recordings}
+\item{files_path}{Character. Path for the folder containing sound recordings.}
 
-\item{updateProgress}{Progress bar only to be used inside shiny}
+\item{update_progress}{Progress bar only to be used inside shiny.}
 
-\item{db_path}{Path for the database of recording labels created with the
-shinny app provided in the package}
+\item{db_path}{Character. Path for the database of recording labels created
+with the shinny app provided in the package.}
 
-\item{spec_size}{Spectrogram size in ms}
+\item{spec_size}{Integer. Spectrogram size in ms.}
 
-\item{window_length}{Moving window length to create the spectrogram in ms}
+\item{window_length}{Numeric. Moving window length in ms.}
 
-\item{frequency_resolution}{Spectrogram frequency resolution with higher
-numbers meaning better resolution. Specifically, for any integer X provided,
-1/X the analysis bandwidth (as determined by the number of samples
+\item{frequency_resolution}{Integer. Spectrogram frequency resolution with
+higher values meaning better resolution. Specifically, for any integer X
+provided, 1/X the analysis bandwidth (as determined by the number of samples
 in the analysis window) will be used. Note that this greatly impacts
 processing time, so adjust with care!}
 
-\item{time_step_size}{Moving window step in ms}
+\item{time_step_size}{Integer. Moving window step in ms.}
 
 \item{dynamic_range}{Threshold of minimum intensity values to show
-in the spectrogram}
+in the spectrogram. A value of 100 will typically be adequate for the
+majority of the recorders. If this is set to NULL, no threshold is applied.}
 
 \item{freq_range}{Frequency range of the spectrogram. Vector with two values,
-refering to the minimum and maximum frequency to show in the spectrogram}
+referring to the minimum and maximum frequency to show in the spectrogram.}
+
+\item{tx}{Time expanded. Only used in recorders specifically intended for
+bat recordings. Can take the values "auto" or any numeric value. If the
+recording is not time expanded tx must be set to 1 (the default). If it's
+time expanded the numeric value corresponding to the time expansion should
+be indicated or "auto" should be selected. If tx = "auto" the function
+assumes that sampling rates < 50kHz corresponds to
+tx = 10 and > 50kHz to tx = 1.}
+
+\item{seed}{Integer. Define a custom seed for randomizing data.}
 }
 \value{
-A list with the spectrogram and the respective label
+A list with the following components:
+\itemize{
+\item data_x -- an array with the spectrogram matrices
+\item data_y -- the labels for each matrix in one-hot-encoded format
+\item parameters -- the parameters used to create the matrices
+\item labels_df -- the labels with their respective numeric index
+}
 }
 \description{
-Generates spectrograms from recording's labels for
+Generate spectrograms from recording labels for
 classification purposes. The spectrogram parameters are user defined
 and should be selected depending on the type of sound event to classify.
-}
-\details{
-Generate spectrograms from labels
 }
 \author{
 Bruno Silva

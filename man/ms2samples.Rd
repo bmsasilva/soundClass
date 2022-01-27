@@ -7,25 +7,23 @@
 ms2samples(value, fs = 300000, tx = 1, inv = FALSE)
 }
 \arguments{
-\item{value}{Numeric representing time in ms or number of samples.}
+\item{value}{Integer. Number of samples or time in ms.}
 
 \item{fs}{Integer. The sampling frequency in samples per second.}
 
-\item{tx}{Integer. Time expansion factor.}
+\item{tx}{Integer. Indicating the time expansion factor. If the
+recording is not time expanded tx must be set to 1 (the default).}
 
 \item{inv}{Logical. If TRUE converts time to number of samples, if FALSE
 number of samples to time.}
 }
 \value{
-if TRUE returns number of samples, if FALSE
-returns time in ms
+Integer. If inv = TRUE returns number of samples, if inv = FALSE
+returns time in ms.
 }
 \description{
-Convert time to number of samples or vice-versa
+Convert time to number of samples or vice versa
 in sound files.
-}
-\details{
-Convert between time and number of samples in sound files
 }
 \examples{
 ms2samples(150000, fs = 300000, tx = 1, inv = FALSE)

@@ -4,10 +4,10 @@
 \alias{import_audio}
 \title{Import a recording}
 \usage{
-import_audio(path, butt = TRUE, low, high, tx)
+import_audio(path, butt = TRUE, low, high, tx = 1)
 }
 \arguments{
-\item{path}{Full path to the recording}
+\item{path}{Character. Full path to the recording}
 
 \item{butt}{Logical. If TRUE filters the recording with a 12th order
 filter. The filter is applied twice to better cleaning of the recording}
@@ -19,13 +19,13 @@ filter. The filter is applied twice to better cleaning of the recording}
 \item{tx}{Time expanded. Only used in recorders specifically intended for
 bat recordings. Can take the values "auto" or any numeric value. If the
 recording is not time expanded tx must be set to 1 (the default). If it's
-time expanded the numeric value correponding to the time expansion should
+time expanded the numeric value corresponding to the time expansion should
 be indicated or "auto" should be selected. If tx = "auto" the function
-assumes that sampling rates < 50kHz correponds to
+assumes that sampling rates < 50kHz corresponds to
 tx = 10 and > 50kHz to tx = 1.}
 }
 \value{
-an object of class "rc". This object is a list
+An object of class "rc". This object is a list
 with the following components:
 \itemize{
 \item sound_samples -- sound samples of the recording
@@ -39,11 +39,19 @@ be preferable but it's not implemented yet)
 }
 \description{
 Import a "wav" recording using \link[tuneR]{readWave}
-and create a S3 class object "rc". If the recording is stereo it is converted
-to mono by keeping the channel with overall higher amplitude
+and create a S3 object of class "rc". If the recording is stereo it is
+converted to mono by keeping the channel with overall higher amplitude
 }
-\details{
-Import a recording
+\examples{
+# Create a sample wav file in a temporary directory
+recording <- tuneR::sine(440)
+temp_dir <- tempdir()
+rec_path <- file.path(temp_dir, "recording.wav")
+tuneR::writeWave(recording, filename = rec_path)
+# Import the sample wav file
+new_rec <- import_audio(rec_path, low = 1, high = 20, tx = 1)
+new_rec
+file.remove(rec_path)
 }
 \author{
 Bruno Silva
