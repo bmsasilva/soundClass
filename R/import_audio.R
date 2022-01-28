@@ -1,16 +1,12 @@
 #' @title Import a recording
-#' @description  Import a "wav" recording using \link[tuneR]{readWave}
-#' and create a S3 object of class "rc". If the recording is stereo it is
+#' @description  Import a "wav" recording. If the recording is stereo it is 
 #' converted to mono by keeping the channel with overall higher amplitude
-<<<<<<< HEAD:R/import_audio.R
 #' @param path Full path to the recording
 #' @param butt Logical. If TRUE filters the recording with a 10th order
 #' filter. The filter is applied twice for better cleaning of the recording
-=======
 #' @param path Character. Full path to the recording
 #' @param butt Logical. If TRUE filters the recording with a 12th order
 #' filter. The filter is applied twice to better cleaning of the recording
->>>>>>> bdc5fa327834a7583cb526d4e50d9029789396f8:R/import_audio.R
 #' @param low Minimum frequency in kHz for the butterworth filter
 #' @param high Maximum frequency in kHz for the butterworth filter
 #' @param tx Time expanded. Only used in recorders specifically intended for

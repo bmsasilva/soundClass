@@ -38,8 +38,7 @@ be preferable but it's not implemented yet)
 }
 }
 \description{
-Import a "wav" recording using \link[tuneR]{readWave}
-and create a S3 object of class "rc". If the recording is stereo it is
+Import a "wav" recording. If the recording is stereo it is
 converted to mono by keeping the channel with overall higher amplitude
 }
 \examples{

@@ -13,30 +13,28 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-NOTE TO NEW USERS - Please install miniconda (or similar) before installing soundClass in R: https://docs.conda.io/en/latest/miniconda.html 
+NOTE TO NEW USERS - Please install miniconda before using soundClass package: https://docs.conda.io/en/latest/miniconda.html 
 
-To demonstrate the package functionality we are going to train a simple bat detector and test it on new sampling recordings. We start by installing and loading the soundClass package:
+To demonstrate the package functionality we are going to train a simple bat detector and test it on new sampling recordings. We start by loading the soundClass package:
 ```{r setup, eval = F, echo = T}
-install.packages("soundClass")
 library(soundClass)
 ```
 
-Before using soundClass for the first time it is necessary to have tensorflow and keras backend installed. This can be achieved by loading package keras and running the function install_keras():   
+Please note that before using soundClass for the first time it is necessary to have tensorflow and keras backend installed. This can be achieved by running the function install_keras():   
 ```{r keras, eval = F, echo = T}
-library(keras)
 keras::install_keras()
 ```
 
 To run the example, external data must be downloaded and uncompressed. We first start by creating a new folder to store the data. We define that folder as the working directory for convenience:
 ```{r folder, eval = F, echo = T}
-folder_path <- "~/data_example"
+folder_path <- "~/data_example/"
 dir.create(folder_path)
 setwd(folder_path)
 ```
 
 The data should now be manually downloaded to the new folder and unziped:
 https://drive.google.com/file/d/1aOYzCLa-zMAK7ln_H8BnC6faii54useG/view?usp=sharing
-The downloaded data includes an already created annotations database, as well as the necessary recordings for training and validation. The database was created with the GUI (as there is no way of creating it by scripting) and contains the annotations of relevant and non-relevant sound events in the supplied training recordings. 
+The downloaded data includes an already created annotations database, as well as the necessary recordings for training and validation. The database was created with the app_label(), as there is no way of creating it by scripting, and contains the annotations of relevant and non-relevant sound events in the supplied training recordings. 
 After unzip, the data_example folder should have the following structure:
 ```
 data_example
@@ -47,9 +45,19 @@ data_example
   └──── validation_recordings
 ```
 
-To create the train data, spectrogram images with a pre-defined size and centred at the annotations of the recordings are calculated with the function spectro_calls(). Several parameters regarding the computation of the spectrograms must be set to run this function. Some parameters refer to image resolution and are generalist but the following three are directly related to the type of events being classified: "spec_size", "window_length" and "freq_range". These parameters refer to the total size of the spectrogram, the size of the moving window and the frequencies range in analysis and should be chosen to cover: the maximum event length, the rate of change (quickly changing events should use shorter windows) and the typical frequencies range of the events being classified. 
+A custom blank model is provided with the package but should be copied to an
+external folder for easy access, specially for using the app_model():
+```{r custom model, eval = F, echo = T}
+model_path <- system.file("inst/model_architectures", "model_vgg_sequential.R", package="soundClass")
+file.copy(model_path, "~/data_example/") # Copy custom blank model to the folder 'data_example'
+```
+
+If an annotations database already exists, there are two ways of using the package to fit or to run a fitted model: 1) by using the app_model() or 2) by scripting as shown in this example. To create the train data, spectrogram images with a pre-defined size and centred at the annotations of the recordings are calculated with the function spectro_calls(). Several parameters regarding the computation of the spectrograms must be set to run this function. Some parameters refer to image resolution and are generalist but the following three are directly related to the type of events being classified: "spec_size", "window_length" and "freq_range". These parameters refer to the total size of the spectrogram, the size of the moving window and the frequencies range in analysis and should be chosen to cover: the maximum event length, the rate of change (quickly changing events should use shorter windows) and the typical frequencies range of the events being classified. 
 As european insectivorous bats (excluding Rhinolophus genus) are the target, we chose appropriate settings based on bibliography:
 ```{r train_calls, eval = F, echo = T}
+# To use the app instead of scripting:
+# app_model()
+
 train_calls <- spectro_calls(
  files_path = "~/data_example/training_recordings/",
  db_path = "~/data_example/db_bat_calls.sqlite3",

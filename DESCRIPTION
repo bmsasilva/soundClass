@@ -10,12 +10,13 @@ Description: Provides an all-in-one solution for automatic classification of
     situations. Using the package requires a pre-compiled collection of 
     recordings with sound events of interest and it can be employed for: 
     1) Annotation: create a database of annotated recordings, 
-    2) Training: prepare train data from annotatedrecordings and fit CNN models 
-    and 3) Classification: automate the use of the fitted model for classifying 
+    2) Training: prepare train data from annotated recordings and fit CNN models, 
+    3) Classification: automate the use of the fitted model for classifying 
     new recordings. By using automatic feature selection and a user-friendly GUI
     for managing data and training/deploying models, this package is intended 
     to be used by a broad audience as it does not require specific expertise in 
-    statistics, programming or sound analysis.
+    statistics, programming or sound analysis. Please refer to the vignette for
+    further information.
     Gibb, R., et al. (2019) <doi:10.1111/2041-210X.13101>
     Mac Aodha, O., et al. (2018) <doi:10.1371/journal.pcbi.1005995>
     Stowell, D., et al. (2019) <doi:10.1111/2041-210X.13103>
