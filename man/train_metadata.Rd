@@ -4,7 +4,7 @@
 \alias{train_metadata}
 \title{Obtain train metadata to run a fitted model}
 \usage{
-train_metadata(train_data, save2disk = NA)
+train_metadata(train_data)
 }
 \arguments{
 \item{train_data}{Output of function \link{spectro_calls}.}
