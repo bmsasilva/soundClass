@@ -21,4 +21,9 @@ programming or sound analysis.
   library(devtools)
   
   devtools::install_github("bmsasilva/soundClass")
+  
+  > Note: If you're getting a "Installation failed: Bad credentials (401)" error, 
+  > you probably have a GITHUB_PAT set in R environment and you should unset it before installing soundClass:
+
+  Sys.unsetenv("GITHUB_PAT")
     
