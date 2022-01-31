@@ -7,7 +7,7 @@
 #'  \item Create database -- if no database exists to store the annotations,
 #'  use this button to create one
 #'  \item Choose database -- choose the database to store the annotations
-#'  \item Butterwoth filter -- indicate low and high frequencies in kHz to 
+#'  \item Butterworth filter -- indicate low and high frequencies in kHz to 
 #'  filter the recordings
 #'  \item Time expanded -- only used in recorders specifically intended for
 #'  bat recordings. Can take any numeric value. If the recording is not time
