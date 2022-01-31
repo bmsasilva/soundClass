@@ -15,8 +15,10 @@ training/deploying models, this package is intended to be used by a broad
 audience as it does not require specific expertise in statistics, 
 programming or sound analysis.
     
-Install package:
-  install.package("devtools")
+## Install package:
+  install.packages("devtools")
+  
   library(devtools)
+  
   devtools::install_github("bmsasilva/soundClass")
     
