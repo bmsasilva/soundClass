@@ -1,6 +1,3 @@
-#https://www.reddit.com/r/MachineLearning/comments/67gonq/d_batch_normalization_before_or_after_relu/
-library(keras)
-
 model<-keras_model_sequential()
 
 model %>%
@@ -32,10 +29,3 @@ model %>%
   layer_dropout(0.25) %>%
   layer_dense(num_classes) %>%
   layer_activation("softmax")
-
-# model %>%
-#   compile(
-#     optimizer = optimizer_sgd(lr=0.01, momentum=0.9, nesterov=T),
-#     loss = 'categorical_crossentropy',
-#     metrics = c('accuracy')
-#   )
