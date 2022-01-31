@@ -13,7 +13,8 @@
 #' provided, 1/X the analysis bandwidth (as determined by the number of samples
 #' in the analysis window) will be used. Note that this greatly impacts
 #' processing time, so adjust with care!
-#' @param time_step_size Integer. Moving window step in ms.
+#' @param overlap Percentage of overlap between moving windows. Accepts values
+#' between 0.5 and 0.75.
 #' @param dynamic_range Threshold of minimum intensity values to show
 #' in the spectrogram. A value of 100 will typically be adequate for the
 #' majority of the recorders. If this is set to NULL, no threshold is applied.
@@ -29,7 +30,7 @@
 #' @param seed Integer. Define a custom seed for randomizing data.
 #' @usage spectro_calls(files_path, update_progress = NA,
 #' db_path, spec_size = NA, window_length = NA,
-#' frequency_resolution = NA, time_step_size = NA,
+#' frequency_resolution = NA, overlap = NA,
 #' dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
 #' @return A list with the following components:
 #' \itemize{
@@ -43,19 +44,24 @@
 
 spectro_calls <- function(files_path, update_progress = NA,
                           db_path, spec_size = NA, window_length = NA,
-                          frequency_resolution = NA, time_step_size = NA,
+                          frequency_resolution = NA, overlap = NA,
                           dynamic_range = NA, freq_range = NA, tx = 1,
                           seed = 1002) {
+  
+  if(overlap <= 0.5 | overlap >= 0.75) 
+    stop("Overlap must be between 0.5 and 0.75")
+  
+  time_step_size <- (1 - as.numeric(overlap)) * as.numeric(window_length)
   input_shape <- c(
     spec_size / time_step_size,
     (freq_range[2] - freq_range[1]) * frequency_resolution
   )
-
+  
   conn <- dplyr::src_sqlite(db_path, create = FALSE)
   query <- dplyr::tbl(conn, "labels")
   db_table <- dplyr::collect(query)
   audio_files <- unique(db_table$recording)
-
+  
   spec_image <- matrix(NA, ncol = input_shape[1] * input_shape[2])
   label <- c()
   for (i in seq(audio_files)) {
@@ -64,19 +70,19 @@ spectro_calls <- function(files_path, update_progress = NA,
         db_table$recording == audio_files[i],
         "label_position"
       ], 1)
-
+      
       if (grepl(".wav", audio_files[i])) {
         name <- paste0(files_path, audio_files[i])
       } else {
         name <- paste0(files_path, audio_files[i], ".wav")
       }
-
+      
       morc <- import_audio(
         name,
         low = freq_range[1],
         high = freq_range[2],
         tx = tx)
-
+      
       calls <- peaks2spec(
         morc,
         sound_peaks,
@@ -87,13 +93,13 @@ spectro_calls <- function(files_path, update_progress = NA,
         dynamic_range,
         freq_range
       )
-
+      
       spec_image <- rbind(spec_image, calls$spec_calls)
       label <- c(label, pull(db_table[
         db_table$recording == audio_files[i],
         "label_class"
       ], 1))
-
+      
       if (is.function(update_progress)) {
         text <- paste0(i, " of ", length(audio_files))
         update_progress(detail = text)
@@ -101,12 +107,12 @@ spectro_calls <- function(files_path, update_progress = NA,
     })
   }
   spec_image <- spec_image[-1, ]
-
+  
   parameters <- data.frame(
     spec_size = spec_size,
     window_length = window_length,
     frequency_resolution = frequency_resolution,
-    overlap = (1 - time_step_size) * window_length,
+    overlap = overlap,
     dynamic_range = dynamic_range,
     freq_range_low = freq_range[1],
     freq_range_high = freq_range[2],

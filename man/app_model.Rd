@@ -33,8 +33,8 @@ If "auto" is selected it is assumed that sampling rates < 50kHz
 corresponds to a value of 10 and sampling rates > 50kHz to corresponds to a
 value of 1
 \item Spectrogram parameters -- different typologies of sound events
-require different parameters for computing the spectrograms for better
-performance. The more relevant are: size (in ms), which should be large
+require different parameters for computing the spectrograms.
+The more relevant are: size (in ms), which should be large
 enough to encompass the duration of the largest sound event in
 analysis (not only in the training data but also in novel recordings
 where the classifiers are to be applied) and moving window (in ms),
@@ -57,8 +57,13 @@ training recordings with the name "train_data.RDATA".
 This panel is used to fit a model from training data. The sidebar panel has
 the following buttons/boxes to input required user data:
 \itemize{
-\item Choose train data --
-\item Choose model -- a blank model to be fitted
+\item Choose train data -- the file "train_data.RDATA" created in
+the previous panel
+\item Choose model -- a blank model to be fitted. A custom model is provided
+but must be copied to an external folder if it is to be used. The model path
+can be obtained by running the following line at the R console:
+system.file("model_architectures", "model_vgg_sequential.R", package="soundClass")
+and should be manually copied to a an external folder
 \item Model parameters -- the train percentage indicates the percentage of
 data that is used to fit the model while the remaining are used for
 validation, batch size indicates the number

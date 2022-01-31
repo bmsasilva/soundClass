@@ -1,11 +1,11 @@
 Package: soundClass
 Title: Sound Classification Using Convolutional Neural Networks
-Version: 0.0.9
+Version: 0.1.0
 Author: Bruno Silva [aut, cre]
 Maintainer: Bruno Silva <bmsasilva@gmail.com>
 Description: Provides an all-in-one solution for automatic classification of 
     sound events using convolutional neural networks (CNN). The main purpose 
-    is to provide a sound classification pipeline, from annotating sound events
+    is to provide a sound classification workflow, from annotating sound events
     in recordings to training and automating model usage in real-life
     situations. Using the package requires a pre-compiled collection of 
     recordings with sound events of interest and it can be employed for: 
@@ -29,6 +29,8 @@ Imports:
     seewave,
     DBI,
     dplyr,
+    dbplyr,
+    RSQLite,
     signal,
     tuneR,
     zoo,

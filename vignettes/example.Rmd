@@ -13,16 +13,15 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-NOTE TO NEW USERS - Please install miniconda before using soundClass package: https://docs.conda.io/en/latest/miniconda.html 
 
 To demonstrate the package functionality we are going to train a simple bat detector and test it on new sampling recordings. We start by loading the soundClass package:
 ```{r setup, eval = F, echo = T}
 library(soundClass)
 ```
 
-Please note that before using soundClass for the first time it is necessary to have tensorflow and keras backend installed. This can be achieved by running the function install_keras():   
+Please note that before using soundClass for the first time it is necessary to have tensorflow and keras backend installed. This can be achieved by running the function install_keras(). If prompted to install 'miniconda' type 'Y' to install it:   
 ```{r keras, eval = F, echo = T}
-keras::install_keras()
+keras::install_keras() # only needed before first use of soundClass
 ```
 
 To run the example, external data must be downloaded and uncompressed. We first start by creating a new folder to store the data. We define that folder as the working directory for convenience:
@@ -33,7 +32,7 @@ setwd(folder_path)
 ```
 
 The data should now be manually downloaded to the new folder and unziped:
-https://drive.google.com/file/d/1aOYzCLa-zMAK7ln_H8BnC6faii54useG/view?usp=sharing
+https://drive.google.com/uc?export=download&id=11GmnMC54-SnHwahAymRIIFJ9evsQ3w6P
 The downloaded data includes an already created annotations database, as well as the necessary recordings for training and validation. The database was created with the app_label(), as there is no way of creating it by scripting, and contains the annotations of relevant and non-relevant sound events in the supplied training recordings. 
 After unzip, the data_example folder should have the following structure:
 ```
@@ -48,7 +47,7 @@ data_example
 A custom blank model is provided with the package but should be copied to an
 external folder for easy access, specially for using the app_model():
 ```{r custom model, eval = F, echo = T}
-model_path <- system.file("inst/model_architectures", "model_vgg_sequential.R", package="soundClass")
+model_path <- system.file("model_architectures", "model_vgg_sequential.R", package="soundClass")
 file.copy(model_path, "~/data_example/") # Copy custom blank model to the folder 'data_example'
 ```
 
@@ -59,19 +58,19 @@ As european insectivorous bats (excluding Rhinolophus genus) are the target, we 
 # app_model()
 
 train_calls <- spectro_calls(
- files_path = "~/data_example/training_recordings/",
- db_path = "~/data_example/db_bat_calls.sqlite3",
- spec_size = 20,
- window_length = 0.5, 
- frequency_resolution = 1,
- time_step_size = 0.5,
- dynamic_range = 100,
- freq_range = c(10, 80),
- tx = "auto",
- seed = 1002)
+  files_path = "~/data_example/training_recordings/",
+  db_path = "~/data_example/db_bat_calls.sqlite3",
+  spec_size = 20,
+  window_length = 0.5, 
+  frequency_resolution = 1,
+  overlap =  0.5,
+  dynamic_range = 120,
+  freq_range = c(10, 80),
+  tx = "auto",
+  seed = 1002)
 
 # save the object to disk
-save(train_calls, "train_calls.RDATA")
+save(train_calls, file = "train_calls.RDATA")
 ```
 
 To run a a fitted model later, some information regarding the parameters used for creating the training spectrograms will be needed. These data can be obtained from the train_calls object:
@@ -79,14 +78,14 @@ To run a a fitted model later, some information regarding the parameters used fo
 metadata <- train_metadata(train_calls)
 
 # save the object to disk
-save(metadata, "metadata.RDATA")
+save(metadata, file = "metadata.RDATA")
 ```
 
-Once the data has been prepared, a blank model must be loaded into R and compiled. A pre-defined model is supplied with the package. Two variables must be defined in the global environment before loading the model: the input shape (input_shape) with the format "c(number of rows, number of columns, number of channels)" and the number of classes (num_classes). These values can be found in the third component of the list train_calls. Please note that the number of channels is always 1, as we are working with grayscale images:
+Once the data has been prepared, a blank model must be loaded into R and compiled. A pre-defined model is supplied with the package. Two variables must be defined in the global environment before loading the model: the input shape (input_shape) with the format "c(number of rows, number of columns, number of channels)" and the number of classes (num_classes). These values can be found in the metadata object created with train_metada(). Please note that the number of channels is always 1, as we are working with grayscale images:
 ```{r model_load, eval = F, echo = T}
-input_shape <- c(train_calls[[3]]$img_rows, train_calls[[3]]$img_cols, 1)
-num_classes <- train_calls[[3]]$num_classes
-model_path <- system.file("inst/model_architectures", "model_vgg_sequential.R", package="soundClass")
+input_shape <- c(metadata$parameters$img_rows, metadata$parameters$img_cols, 1)
+num_classes <- metadata$parameters$num_classes
+model_path <- system.file("model_architectures", "model_vgg_sequential.R", package="soundClass")
 source(model_path, local=TRUE)
 ```
 
@@ -107,10 +106,10 @@ The model is now ready to be fitted. Three callbacks (objects that can perform a
 ```{r model_fit, eval = F, echo = T}
  model %>% keras::fit(train_calls$data_x,
         train_calls$data_y,
-        batch_size = 64,
+        batch_size = 512,
         epochs = 20,
         callbacks = list(
-         callback_early_stopping(patience = 2, monitor = 'val_accuracy'),
+         callback_early_stopping(patience = 4, monitor = 'val_accuracy'),
          callback_model_checkpoint("./fitted_model.hdf5",
                       monitor = "val_accuracy", save_best_only = T),
          callback_csv_logger("./fitted_model_log.csv")),

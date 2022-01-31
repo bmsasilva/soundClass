@@ -84,7 +84,8 @@ auto_id <- function(model_path,
       if (recursive == TRUE) morc$file_name_full_path <- file_name[i]
       sound_peaks <- peaks(morc, win_size = win_size)
 
-      calls <- peaks2spec(morc, sound_peaks,
+      calls <- peaks2spec(recording = morc,
+                          sound_peaks = sound_peaks,
         spec_size = spec_size,
         window_length = window_length,
         frequency_resolution = frequency_resolution,

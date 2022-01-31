@@ -8,9 +8,6 @@ train_metadata(train_data, save2disk = NA)
 }
 \arguments{
 \item{train_data}{Output of function \link{spectro_calls}.}
-
-\item{save2disk}{If a string is provided, the resulting object
-is saved to disk (using the string as file name).}
 }
 \value{
 A list with the following components:
@@ -26,4 +23,3 @@ the output of function \link{spectro_calls}. Needed to run a fitted model
 \author{
 Bruno Silva
 }
-\keyword{export}

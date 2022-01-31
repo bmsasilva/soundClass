@@ -25,8 +25,8 @@
 #'   corresponds to a value of 10 and sampling rates > 50kHz to corresponds to a
 #'   value of 1
 #'   \item Spectrogram parameters -- different typologies of sound events 
-#'   require different parameters for computing the spectrograms for better 
-#'   performance. The more relevant are: size (in ms), which should be large 
+#'   require different parameters for computing the spectrograms.
+#'   The more relevant are: size (in ms), which should be large 
 #'   enough to encompass the duration of the largest sound event in 
 #'   analysis (not only in the training data but also in novel recordings 
 #'   where the classifiers are to be applied) and moving window (in ms), 
@@ -47,8 +47,13 @@
 #' This panel is used to fit a model from training data. The sidebar panel has 
 #' the following buttons/boxes to input required user data: 
 #' \itemize{
-#' \item Choose train data --
-#' \item Choose model -- a blank model to be fitted
+#' \item Choose train data -- the file "train_data.RDATA" created in
+#' the previous panel
+#' \item Choose model -- a blank model to be fitted. A custom model is provided
+#' but must be copied to an external folder if it is to be used. The model path
+#' can be obtained by running the following line at the R console:
+#' system.file("model_architectures", "model_vgg_sequential.R", package="soundClass")
+#' and should be manually copied to a an external folder
 #' \item Model parameters -- the train percentage indicates the percentage of 
 #' data that is used to fit the model while the remaining are used for 
 #' validation, batch size indicates the number
@@ -545,10 +550,10 @@ app_model <- function() {
         spec_size = as.numeric(input$spec_size),
         window_length = as.numeric(input$window_length),
         frequency_resolution = as.numeric(input$frequency_resolution),
-        time_step_size = (1 - as.numeric(input$overlap)) * as.numeric(input$window_length),
+        overlap = input$overlap,
         dynamic_range = as.numeric(input$dynamic_range),
         freq_range = c(as.numeric(input$low), as.numeric(input$high)),
-        tx = ifelse((input$tx) > 2, input$tx, as.numeric(input$tx))
+        tx = ifelse(nchar(input$tx) > 2, input$tx, as.numeric(input$tx))
       )
       save(
         train_data,
@@ -577,7 +582,7 @@ app_model <- function() {
           as.character(file_selected$datapath)
         )
         if(length(dirname(as.character(file_selected$datapath))) > 0)
-           setwd(dirname(as.character(file_selected$datapath)))
+          setwd(dirname(as.character(file_selected$datapath)))
         output$rdata_path <- shiny::renderText(as.character(rdata_path))
       }
     })
@@ -749,7 +754,6 @@ app_model <- function() {
     })
     
     shiny::observeEvent(input$id_recs, {
-      print(input$tx2)
       if (!dir.exists(paste0(fitted_files_path(), "/", "output/")))
         dir.create(paste0(fitted_files_path(), "/", "output/"))
       
@@ -776,7 +780,7 @@ app_model <- function() {
               remove_noise = as.logical(input$rem_noise),
               plot2console = FALSE,
               recursive = FALSE,
-              tx = ifelse((input$tx2) > 2, input$tx2, as.numeric(input$tx2)))
+              tx = ifelse(nchar(input$tx2) > 2, input$tx2, as.numeric(input$tx2)))
     })
   }
   shiny::shinyApp(ui = ui, server = server)
