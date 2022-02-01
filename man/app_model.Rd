@@ -6,6 +6,9 @@
 \usage{
 app_model()
 }
+\value{
+Starts the shiny app, no return value.
+}
 \description{
 Shiny app to fit a model from training recordings or to run a
 fitted model to classify new recordings. This app consists of three GUIs,

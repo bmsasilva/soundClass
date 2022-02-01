@@ -44,6 +44,7 @@
 #'  \item Resolution -- frequency resolution of the spectrogram
 #' }
 #' @usage app_label()
+#' @return Starts the shiny app, no return value.
 #' @author Bruno Silva
 #' @export
 #' @import htmltools shinyBS

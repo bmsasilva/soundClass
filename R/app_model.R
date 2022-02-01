@@ -102,6 +102,7 @@
 #' energy of the events detected. 
 #' 
 #' @usage app_model()
+#' @return Starts the shiny app, no return value.
 #' @author Bruno Silva
 #' @export
 #' @import htmltools shinyBS

@@ -6,6 +6,9 @@
 \usage{
 app_label()
 }
+\value{
+Starts the shiny app, no return value.
+}
 \description{
 Shiny app to label recordings. Use this app to visualize your
 training recordings, create annotations and store them in a sqlite database.
