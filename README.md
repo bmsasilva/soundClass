@@ -15,16 +15,7 @@ training/deploying models, this package is intended to be used by a broad
 audience as it does not require specific expertise in statistics, 
 programming or sound analysis.
     
-## Install package:
-  install.packages("devtools")
-  
-  library(devtools)
-  
-  devtools::install_github("bmsasilva/soundClass")
-  
-  > Note: If you're getting a "Installation failed: Bad credentials (401)" error, 
-  > you probably have a GITHUB_PAT set in R environment and you should unset it before installing soundClass. More information at:
-  > https://github.com/r-lib/devtools/issues/1566
+## The package is now available on CRAN:
+  install.packages("soundClass")
 
-  Sys.unsetenv("GITHUB_PAT")
     
