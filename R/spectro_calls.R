@@ -105,6 +105,7 @@ spectro_calls <- function(files_path, update_progress = NA,
         update_progress(detail = text)
       }
     })
+    print(paste0("recording ",i , " of ", length(audio_files)))
   }
   spec_image <- spec_image[-1, ]
   
