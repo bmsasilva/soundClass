@@ -48,7 +48,7 @@ spectro_calls <- function(files_path, update_progress = NA,
                           dynamic_range = NA, freq_range = NA, tx = 1,
                           seed = 1002) {
   
-  if(overlap <= 0.5 | overlap >= 0.75) 
+  if(overlap < 0.5 | overlap > 0.75) 
     stop("Overlap must be between 0.5 and 0.75")
   
   time_step_size <- (1 - as.numeric(overlap)) * as.numeric(window_length)
