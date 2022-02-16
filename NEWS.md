@@ -6,4 +6,6 @@ First public release.
 
 1) Bug fix in overlap parameter. Parameter overlap in function spectro_calls() now
 accepts values of 0.5 and 0.75
+
+2) Update bundled model code
  
