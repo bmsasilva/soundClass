@@ -32,7 +32,7 @@ setwd(folder_path)
 ```
 
 The data should now be manually downloaded to the new folder and unziped:
-https://drive.google.com/uc?export=download&id=11GmnMC54-SnHwahAymRIIFJ9evsQ3w6P
+https://drive.google.com/file/d/1bXYRRo1YskxWcsYbk4w-whtaf7DKbFLs/view?usp=sharing
 The downloaded data includes an already created annotations database, as well as the necessary recordings for training and validation. The database was created with the app_label(), as there is no way of creating it by scripting, and contains the annotations of relevant and non-relevant sound events in the supplied training recordings. 
 After unzip, the data_example folder should have the following structure:
 ```
