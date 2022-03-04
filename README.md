@@ -19,6 +19,6 @@ programming or sound analysis.
   install.packages("soundClass")
   
 ## Example files can be downloaded at:
-https://drive.google.com/uc?export=download&id=11GmnMC54-SnHwahAymRIIFJ9evsQ3w6P
+https://drive.google.com/file/d/1bXYRRo1YskxWcsYbk4w-whtaf7DKbFLs/view?usp=sharing
 
     
