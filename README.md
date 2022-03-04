@@ -17,5 +17,8 @@ programming or sound analysis.
     
 ## The package is now available on CRAN:
   install.packages("soundClass")
+  
+## Example files can be downloaded at:
+https://drive.google.com/file/d/1bXYRRo1YskxWcsYbk4w-whtaf7DKbFLs/view?usp=sharing
 
     
