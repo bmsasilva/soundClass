@@ -54,7 +54,7 @@ spectro_calls <- function(files_path, update_progress = NA,
   time_step_size <- (1 - as.numeric(overlap)) * as.numeric(window_length)
   input_shape <- c(
     spec_size / time_step_size,
-    (freq_range[2] - freq_range[1]) * frequency_resolution
+    (freq_range[2] - freq_range[1]) * window_length
   )
   
   conn <- dplyr::src_sqlite(db_path, create = FALSE)
@@ -79,6 +79,7 @@ spectro_calls <- function(files_path, update_progress = NA,
       
       morc <- import_audio(
         name,
+        butt = FALSE,
         low = freq_range[1],
         high = freq_range[2],
         tx = tx)

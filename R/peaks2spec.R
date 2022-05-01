@@ -46,7 +46,7 @@ peaks2spec <- function(recording, sound_peaks, spec_size = NA,
   tx <- recording$tx
   input_shape <- c(
     spec_size / time_step_size,
-    (freq_range[2] - freq_range[1]) * frequency_resolution
+    (freq_range[2] - freq_range[1]) * window_length
   )
 
   windows <- matrix(NA,
@@ -94,7 +94,7 @@ peaks2spec <- function(recording, sound_peaks, spec_size = NA,
     spec2_filt <- spec2_filt + dynamic_range
     dim(spec2_filt)
 
-    fmaxe <- dimnames(spec2)[[2]][which(spec2 == max(spec2), arr.ind = TRUE)[2]]
+    fmaxe <- dimnames(spec2_filt)[[2]][which(spec2_filt == max(spec2_filt), arr.ind = TRUE)[2]]
 
     while (dim(spec2_filt)[1] > input_shape[1]) spec2_filt <- spec2_filt[-1, ]
     while (dim(spec2_filt)[2] > input_shape[2]) spec2_filt <- spec2_filt[, -c(length(spec2_filt[1, ]))]
