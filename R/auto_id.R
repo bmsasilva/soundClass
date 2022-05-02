@@ -62,68 +62,70 @@ auto_id <- function(model_path,
     metadata$parameters$freq_range_low,
     metadata$parameters$freq_range_high
   )
-
+  
   time_step_size <- (1 - as.numeric(metadata$parameters$overlap)) * as.numeric(metadata$parameters$window_length)
   class_labels <- as.character(metadata$classes$name)
-
+  
   file_name <- list.files(file_path, recursive = recursive, pattern = "wav|WAV")
   if (recursive == TRUE) file_name <- paste0("/", file_name)
-
+  
   size <- length(file_name)
-
+  
   model <- keras::load_model_hdf5(model_path)
-
+  
   for (i in seq(file_name)) {
     try({
       morc <- import_audio(
         path = paste0(file_path, file_name[i]),
+        butt = FALSE,
         low = freq_range[1], high = freq_range[2],
         tx = tx
       )
-
+      
       if (recursive == TRUE) morc$file_name_full_path <- file_name[i]
       sound_peaks <- peaks(morc, win_size = win_size)
-
+      
       calls <- peaks2spec(recording = morc,
                           sound_peaks = sound_peaks,
-        spec_size = spec_size,
-        window_length = window_length,
-        frequency_resolution = frequency_resolution,
-        time_step_size = time_step_size,
-        dynamic_range = dynamic_range,
-        freq_range = freq_range
+                          spec_size = spec_size,
+                          window_length = window_length,
+                          frequency_resolution = frequency_resolution,
+                          time_step_size = time_step_size,
+                          dynamic_range = dynamic_range,
+                          freq_range = freq_range
       )
-
+      
       out <- classify_calls(calls, sound_peaks, model = model)
-
+      
       out_tidy <- tidy_output(out,
-        class_labels = class_labels,
-        remove_noise = remove_noise, min_dist = win_size
+                              class_labels = class_labels, fs = morc$fs, tx = tx,
+                              remove_noise = remove_noise, min_dist = win_size
       )
 
       png_file <- ifelse(save_png == T,
-        paste0(
-          out_dir,
-          morc$file_name, ".png"
-        ),
-        NA
+                         paste0(
+                           out_dir,
+                           morc$file_name, ".png"
+                         ),
+                         NA
       )
-
+      
       out_peaks <- save_output(
         output = out_tidy,
         recording = morc,
         out_file = paste0(out_dir, out_file),
         png_file = png_file,
         plot2console = plot2console,
-        recursive = recursive
+        recursive = recursive,
+        metadata = metadata
       )
     })
-
+    
     if (is.function(update_progress)) {
       text <- paste0(i, " of ", length(file_name))
       update_progress(detail = text)
     }
-
+    
     print(paste0(i, " of ", size))
   }
 }
