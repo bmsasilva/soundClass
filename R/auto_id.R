@@ -54,6 +54,12 @@ auto_id <- function(model_path,
   
   if (!dir.exists(out_dir)) dir.create(out_dir)
   
+  if (class(metadata) == "character") {
+    env <- load2env(as.character(metadata))
+    metadata <- env[[names(env)[1]]]
+    rm(env)
+  }
+  
   spec_size <- metadata$parameters$spec_size
   window_length <- metadata$parameters$window_length
   dynamic_range <- metadata$parameters$dynamic_range
