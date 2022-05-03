@@ -30,7 +30,7 @@
 #' @param seed Integer. Define a custom seed for randomizing data.
 #' @usage spectro_calls(files_path, update_progress = NA,
 #' db_path, spec_size = NA, window_length = NA,
-#' frequency_resolution = NA, overlap = NA,
+#' frequency_resolution = 1, overlap = NA,
 #' dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
 #' @return A list with the following components:
 #' \itemize{
