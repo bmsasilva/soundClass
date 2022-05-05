@@ -78,8 +78,9 @@ auto_id <- function(model_path,
   size <- length(file_name)
   
   model <- keras::load_model_hdf5(model_path)
-  
+
   for (i in seq(file_name)) {
+
     try({
       morc <- import_audio(
         path = paste0(file_path, file_name[i]),
@@ -87,10 +88,10 @@ auto_id <- function(model_path,
         low = freq_range[1], high = freq_range[2],
         tx = tx
       )
-      
+
       if (recursive == TRUE) morc$file_name_full_path <- file_name[i]
       sound_peaks <- peaks(morc, win_size = win_size)
-      
+
       calls <- peaks2spec(recording = morc,
                           sound_peaks = sound_peaks,
                           spec_size = spec_size,
@@ -100,11 +101,11 @@ auto_id <- function(model_path,
                           dynamic_range = dynamic_range,
                           freq_range = freq_range
       )
-      
+
       out <- classify_calls(calls, sound_peaks, model = model)
-      
+
       out_tidy <- tidy_output(out,
-                              class_labels = class_labels, fs = morc$fs, tx = tx,
+                              class_labels = class_labels, fs = morc$fs, tx = morc$tx,
                               remove_noise = remove_noise, min_dist = win_size
       )
 
