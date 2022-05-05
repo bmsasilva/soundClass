@@ -43,11 +43,13 @@ save_output <- function(output, recording, out_file = NA, png_file = NA,
   fs <- recording$fs
   sound_samples <- recording$sound_samples
   tx <- recording$tx
+
   if (recursive == TRUE) {
     file_name <- recording$file_name_full_path
   } else {
     file_name <- recording$file_name
   }
+
   if (!is.na(png_file)) {
     grDevices::png(filename = png_file, width = 1440, height = 480)
     spec2 <- Spectrogram(
@@ -60,7 +62,7 @@ save_output <- function(output, recording, out_file = NA, png_file = NA,
       SamplingFrequency = fs * tx,
       WindowLength = metadata$parameters$window_length,
       FrequencyResolution = metadata$parameters$frequency_resolution,
-      TimeStepSize =  (1 - as.numeric(metadata$parameters$overlap)) * 
+      TimeStepSize =  (1 - as.numeric(metadata$parameters$overlap)) *
         as.numeric(metadata$parameters$window_length),
       DynamicRange = metadata$parameters$dynamic_range,
       WindowType = "hanning",
@@ -77,8 +79,8 @@ save_output <- function(output, recording, out_file = NA, png_file = NA,
       )
       graphics::text(
         x = ms2samples(output$peaks, fs = fs, tx = tx, inv = TRUE),
-        y = metadata$parameters$freq_range_high - (0.1 * metadata$parameters$freq_range_high), 
-        labels = output$spe, 
+        y = metadata$parameters$freq_range_high - (0.1 * metadata$parameters$freq_range_high),
+        labels = output$spe,
         col = "white", cex = 0.8
       )
     }
