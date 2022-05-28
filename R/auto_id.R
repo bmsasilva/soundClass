@@ -134,6 +134,6 @@ auto_id <- function(model_path,
       update_progress(detail = text)
     }
     
-    print(paste0("recording", i, " of ", size))
+    print(paste0("recording ", i, " of ", size))
   }
 }
