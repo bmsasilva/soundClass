@@ -72,13 +72,13 @@ save_output <- function(output, recording, out_file = NA, png_file = NA,
         v = ms2samples(output$peaks,
           fs = fs, tx = tx, inv = TRUE
         ),
-        col = "white"
+        col = "black"
       )
       graphics::text(
         x = ms2samples(output$peaks, fs = fs, tx = tx, inv = TRUE),
         y = metadata$parameters$freq_range_high - (0.1 * metadata$parameters$freq_range_high),
         labels = output$spe,
-        col = "white", cex = 0.8
+        col = "black", cex = 0.8
       )
     }
     grDevices::dev.off()
