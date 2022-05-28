@@ -62,6 +62,6 @@ create_db <- function(path, db_name = NA, table_name = "labels",
       fmaxe = numeric()
     )
     dplyr::copy_to(my_db, table, table_name, temporary = FALSE)
-    DBI::dbDisconnect(my_db$con)
+    suppressWarnings(DBI::dbDisconnect(my_db$con))
   }
 }
