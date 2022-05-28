@@ -55,10 +55,7 @@ save_output <- function(output, recording, out_file = NA, png_file = NA,
     spec2 <- Spectrogram(
       Audio = as.numeric(sound_samples),
       norm = 150,
-      col = grDevices::gray.colors(255,
-        start = 0.1,
-      end = 0.8, gamma = 0.1
-    ), #batsound,
+      col = batsound,
       SamplingFrequency = fs * tx,
       WindowLength = metadata$parameters$window_length,
       FrequencyResolution = metadata$parameters$frequency_resolution,
