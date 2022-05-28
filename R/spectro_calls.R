@@ -11,8 +11,8 @@
 #' @param frequency_resolution Integer. Spectrogram frequency resolution with
 #' higher values meaning better resolution. Specifically, for any integer X
 #' provided, 1/X the analysis bandwidth (as determined by the number of samples
-#' in the analysis window) will be used. Note that this greatly impacts
-#' processing time, so adjust with care!
+#' in the analysis window) will be used. Not implemented yet, always uses 1 as
+#' input value.
 #' @param overlap Percentage of overlap between moving windows. Accepts values
 #' between 0.5 and 0.75.
 #' @param dynamic_range Threshold of minimum intensity values to show
@@ -30,7 +30,7 @@
 #' @param seed Integer. Define a custom seed for randomizing data.
 #' @usage spectro_calls(files_path, update_progress = NA,
 #' db_path, spec_size = NA, window_length = NA,
-#' frequency_resolution = NA, overlap = NA,
+#' frequency_resolution = 1, overlap = NA,
 #' dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
 #' @return A list with the following components:
 #' \itemize{
@@ -44,17 +44,18 @@
 
 spectro_calls <- function(files_path, update_progress = NA,
                           db_path, spec_size = NA, window_length = NA,
-                          frequency_resolution = NA, overlap = NA,
+                          frequency_resolution = 1, overlap = NA,
                           dynamic_range = NA, freq_range = NA, tx = 1,
                           seed = 1002) {
   
-  if(overlap < 0.5 | overlap > 0.75) 
-    stop("Overlap must be between 0.5 and 0.75")
+   if(overlap < 0.5 | overlap > 0.75) 
+     stop("Overlap must be between 0.5 and 0.75")
   
+  frequency_resolution <- 1
   time_step_size <- (1 - as.numeric(overlap)) * as.numeric(window_length)
   input_shape <- c(
     spec_size / time_step_size,
-    (freq_range[2] - freq_range[1]) * frequency_resolution
+    (freq_range[2] - freq_range[1]) * window_length
   )
   
   conn <- dplyr::src_sqlite(db_path, create = FALSE)
@@ -76,9 +77,10 @@ spectro_calls <- function(files_path, update_progress = NA,
       } else {
         name <- paste0(files_path, audio_files[i], ".wav")
       }
-      
+
       morc <- import_audio(
         name,
+        butt = FALSE,
         low = freq_range[1],
         high = freq_range[2],
         tx = tx)

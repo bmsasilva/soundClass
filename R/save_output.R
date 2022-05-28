@@ -11,16 +11,17 @@
 #' @param plot2console If TRUE plots the spectrogram with the peaks identified
 #' to the console. Please be advised that if TRUE the analysis takes
 #' considerably more time.
-#' @param recursive Logical. Is the analysis beeing processed in recursive mode?
+#' @param recursive Logical. Is the analysis being processed in recursive mode?
 #' @usage save_output(output, recording, out_file = NA, png_file = NA,
-#' plot2console = F, recursive = FALSE)
+#' plot2console = F, recursive = FALSE, metadata)
 #' @return Nothing
 #' @author Bruno Silva
 #' @keywords internal
 #' @noRd
 
 save_output <- function(output, recording, out_file = NA, png_file = NA,
-                              plot2console = F, recursive = FALSE) {
+                        plot2console = F, recursive = FALSE, metadata) {
+  
   if (!file.exists(paste0(out_file, ".sqlite3"))) {
     create_db(out_file, type = "id")
   }
@@ -42,37 +43,45 @@ save_output <- function(output, recording, out_file = NA, png_file = NA,
   fs <- recording$fs
   sound_samples <- recording$sound_samples
   tx <- recording$tx
+
   if (recursive == TRUE) {
     file_name <- recording$file_name_full_path
   } else {
     file_name <- recording$file_name
   }
+
   if (!is.na(png_file)) {
-    grDevices::png(filename = png_file)
+    grDevices::png(filename = png_file, width = 1440, height = 480)
     spec2 <- Spectrogram(
       Audio = as.numeric(sound_samples),
       norm = 150,
-      col = batsound,
+      col = grDevices::gray.colors(255,
+        start = 0.1,
+      end = 0.8, gamma = 0.1
+    ), #batsound,
       SamplingFrequency = fs * tx,
-      WindowLength = 3,
-      FrequencyResolution = 2,
-      TimeStepSize = 0.25,
-      DynamicRange = 120,
+      WindowLength = metadata$parameters$window_length,
+      FrequencyResolution = metadata$parameters$frequency_resolution,
+      TimeStepSize =  (1 - as.numeric(metadata$parameters$overlap)) *
+        as.numeric(metadata$parameters$window_length),
+      DynamicRange = metadata$parameters$dynamic_range,
       WindowType = "hanning",
       plot = T,
       PlotFast = T,
-      ylim = c(0, 80)
+      ylim = c(metadata$parameters$freq_range_low, metadata$parameters$freq_range_high)
     )
     if (length(output[, 1]) > 0) {
       graphics::abline(
         v = ms2samples(output$peaks,
           fs = fs, tx = tx, inv = TRUE
         ),
-        col = grDevices::rgb(0, 0, 0)
+        col = "white"
       )
       graphics::text(
         x = ms2samples(output$peaks, fs = fs, tx = tx, inv = TRUE),
-        y = 5, labels = output$spe, col = "red", srt = 45, cex = 0.8
+        y = metadata$parameters$freq_range_high - (0.1 * metadata$parameters$freq_range_high),
+        labels = output$spe,
+        col = "white", cex = 0.8
       )
     }
     grDevices::dev.off()

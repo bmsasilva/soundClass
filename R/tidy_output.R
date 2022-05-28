@@ -15,13 +15,13 @@
 #' most represented species are kept in the formatted table. If TRUE all
 #' calls classified as bats are returned in the formatted table
 #' @usage tidy_output(output, class_labels, min_dist = 40, remove_noise = T,
-#'                    multiple_species = F)
+#'                    multiple_species = F, fs, tx)
 #' @return A formated classification table
 #' @author Bruno Silva
 #' @keywords internal
 #' @noRd
 tidy_output <- function(output, class_labels, min_dist = 40,
-                        remove_noise = T, multiple_species = F) {
+                        remove_noise = T, multiple_species = F, fs, tx) {
   try({
     if (remove_noise == T) {
       output <- output[output$spe > 0, ]
@@ -40,7 +40,7 @@ tidy_output <- function(output, class_labels, min_dist = 40,
     }
 
     intervals <- diff(output$peaks)
-    filter <- which(intervals < (ms2samples(min_dist))) + 1
+    filter <- which(intervals < (ms2samples(min_dist, fs = fs, tx = tx))) + 1
 
     if (length(filter) > 0) {
       output <- output[-filter, ]

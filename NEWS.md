@@ -13,3 +13,13 @@ accepts values of 0.5 and 0.75
 
 - Update download link of example files
  
+# soundClass 0.0.9.2
+
+- Bug fix in the window size parameter of function spectro_calls(). The
+y-axis values of the spectrograms generated are now correct
+
+- Bug fix in metadata parameter of function auto_id(). The function
+now reads the file path correctly
+
+- Added checkbox input for Butterworth filter in app_label()
+
