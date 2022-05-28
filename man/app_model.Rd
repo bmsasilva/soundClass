@@ -102,7 +102,7 @@ corresponds to a value of 10 and sampling rates > 50kHz to corresponds to a
 value of 1
 \item Output file -- the name of the files to store the results of the
 classification
-\item Non-relevant -- does the fitted model includes a non-relevant class?
+\item Irrelevant -- does the fitted model includes an irrelevant class?
 \item Export plots -- should a spectrogram of the classified recordings be
 saved to disk?
 }

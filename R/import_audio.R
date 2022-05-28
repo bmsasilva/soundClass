@@ -81,13 +81,16 @@ import_audio <- function(path, butt = TRUE, low, high, tx = 1) {
   if (isTRUE(butt)) {
     limit_low <- low * 1000 / (fs * tx / 2)
     limit_high <- high * 1000 / (fs * tx / 2)
+    if(limit_low > 0){
     bt_low <- signal::butter(10, limit_low, type = "high")
+    sound_samples <- as.integer(signal::filter(bt_low, sound_samples))
+    sound_samples <- as.integer(signal::filter(bt_low, sound_samples))
+    }
+    if(limit_high < 1){
     bt_high <- signal::butter(10, limit_high, type = "low")
-    sound_samples <- as.integer(signal::filter(bt_low, sound_samples))
     sound_samples <- as.integer(signal::filter(bt_high, sound_samples))
-
-    sound_samples <- as.integer(signal::filter(bt_low, sound_samples))
     sound_samples <- as.integer(signal::filter(bt_high, sound_samples))
+    }
   }
   structure(list(
     sound_samples = as.numeric(sound_samples),

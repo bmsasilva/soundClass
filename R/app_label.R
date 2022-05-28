@@ -237,7 +237,7 @@ app_label <- function() {
                     "2000 ms" = "2000",
                     "4000 ms" = "4000"
                   ),
-                  selected = "5"
+                  selected = "4"
                 )
               )
             ),
@@ -249,10 +249,11 @@ app_label <- function() {
                   label = "Overlap",
                   choices = c(
                     "50%" = "0.5",
+                    "55%" = "0.45",
                     "60%" = "0.4",
+                    "65%" = "0.35",
                     "70%" = "0.3",
-                    "80%" = "0.2",
-                    "90%" = "0.1"
+                    "75%" = "0.25"
                   ),
                   selected = "0.5"
                 )
@@ -263,9 +264,7 @@ app_label <- function() {
                   inputId = "freqResolution",
                   label = "Resolution",
                   choices = c(
-                    "low resolution" = "1",
-                    "medium resolution" = "4",
-                    "high resolution" = "8"
+                    "low resolution" = "1"
                   ),
                   selected = "1"
                 )
