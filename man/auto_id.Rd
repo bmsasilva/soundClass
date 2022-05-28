@@ -13,8 +13,9 @@ plot2console = FALSE, remove_noise = TRUE, recursive = FALSE, tx = 1)
 
 \item{update_progress}{Progress bar only to be used inside shiny.}
 
-\item{metadata}{The object created with the function spectro_calls()
-containing the parameters used to fit the model.}
+\item{metadata}{The object created with the function train_metadata()
+containing the parameters used to fit the model, or the path to the saved
+RDATA file.}
 
 \item{file_path}{Character. Path to the folder containing recordings.}
 

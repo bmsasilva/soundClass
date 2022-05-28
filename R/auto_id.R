@@ -3,8 +3,9 @@
 #' recordings using a fitted model.
 #' @param model_path Character. Path to the fitted model.
 #' @param update_progress Progress bar only to be used inside shiny.
-#' @param metadata The object created with the function spectro_calls()
-#' containing the parameters used to fit the model.
+#' @param metadata The object created with the function train_metadata()
+#' containing the parameters used to fit the model, or the path to the saved
+#' RDATA file.
 #' @param file_path Character. Path to the folder containing recordings.
 #' @param out_file Character. Name of the output file to save the results.
 #' Will be used to name the csv file and the sqlite database.
