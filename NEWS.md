@@ -15,6 +15,11 @@ accepts values of 0.5 and 0.75
  
 # soundClass 0.0.9.2
 
-- Bug fix in the analysis bandwidth size of the spectrograms created by spectro_calls() 
+- Bug fix in the window size parameter of function spectro_calls(). The
+y-axis values of the spectrograms generated are now correct
 
-- Added plot function for the training spectrograms
+- Bug fix in metadata parameter of function auto_id(). The function
+now reads the file path correctly
+
+- Added checkbox input for Butterworth filter in app_label()
+
