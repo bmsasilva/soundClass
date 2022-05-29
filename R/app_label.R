@@ -128,10 +128,15 @@ app_label <- function() {
           shiny::column(
           width = 12,
           align = "center",
-          shiny::numericInput(
+          shiny::selectInput(
             inputId = "tx",
             label = "Time expanded",
-            value = "1"
+            choices = c(
+              "1" = "1",
+              "10" = "10",
+              "auto" = "auto"
+            ),
+            selected = "1"
           )
           )
         ),
@@ -394,11 +399,11 @@ app_label <- function() {
         shiny::need(
          input$files != "",
           "Analysis steps:
-1) Select buterrworth filter limits
-2) Input the time expanded factor of the recordings or leave '1' for no time expanded
+1) Select buterworth filter limits if desired
+2) Input the time expanded factor of the recordings. Choose '1' for no time expanded, or 'auto' for bat recordings
 3) Select folder with recordings
 4) If needed, create new database to store recording labels
-5) Select pre-existing database to store recording labels
+5) Select database to store recording labels
 6) Select events by clicking in the spectrogram on the middle of the event of interest (bat call, bird song, etc)
 7) Press 'Set labels' button to add labels to database
 8) Repeat steps 6 and 7 if more than one set of events is present in the recording
@@ -416,12 +421,13 @@ Spectrogram visualization:
              )
       )
 
+      tx <- ifelse(input$tx == "auto", "auto", as.numeric(input$tx))
       sound <- import_audio(
         path = input$files,
         butt = input$but_filt,
         low = as.numeric(input$low),
         high = as.numeric(input$high),
-        tx = as.numeric(input$tx)
+        tx = tx
       )
       return(sound)
     })
