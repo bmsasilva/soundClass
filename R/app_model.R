@@ -19,7 +19,7 @@
 #'   training recordings
 #'   \item Time expanded -- choose the correct time expansion factor, normally 
 #'   only used in recorders specifically intended for bat recordings. Can take 
-#'   the values "auto", 1 or 10. If the recording is not time expanded the value
+#'   the values "auto", 1 or 10. If the recording is in real time the value
 #'   must be 1. If it's time expanded, the value 10 or "auto" can be selected. 
 #'   If "auto" is selected it is assumed that sampling rates < 50kHz 
 #'   corresponds to a value of 10 and sampling rates > 50kHz to corresponds to a
@@ -173,17 +173,19 @@ app_model <- function() {
               label = "Overlap",
               choices = c(
                 "50%" = "0.50",
+                "55%" = "0.55",
+                "60%" = "0.60",
+                "65%" = "0.75",
+                "70%" = "0.70",
                 "75%" = "0.75"
               ),
-              selected = "0.75"
+              selected = "0.50"
             ),
             shiny::selectInput(
               inputId = "frequency_resolution",
               label = "Resolution",
               choices = c(
-                "Low" = "1",
-                "Medium" = "2",
-                "High" = "3"
+                "Low" = "1"
               ),
               selected = "1"
             ),
@@ -199,7 +201,7 @@ app_model <- function() {
                 "110 dB" = "110",
                 "120 dB" = "120"
               ),
-              selected = "120"
+              selected = "100"
             ),
             shiny::fluidRow(
               shiny::column(
@@ -294,7 +296,7 @@ app_model <- function() {
             shiny::numericInput(
               inputId = "batch",
               label = "Batch size",
-              value = "64"
+              value = "128"
             ),
             shiny::numericInput(
               inputId = "lr",
@@ -304,12 +306,12 @@ app_model <- function() {
             shiny::numericInput(
               inputId = "stop",
               label = "Early stop",
-              value = "3"
+              value = "4"
             ),
             shiny::numericInput(
               inputId = "epochs",
               label = "Max epochs",
-              value = "50"
+              value = "20"
             )
           ),
           shiny::mainPanel(
@@ -551,7 +553,7 @@ app_model <- function() {
         spec_size = as.numeric(input$spec_size),
         window_length = as.numeric(input$window_length),
         frequency_resolution = as.numeric(input$frequency_resolution),
-        overlap = input$overlap,
+        overlap = as.numeric(input$overlap),
         dynamic_range = as.numeric(input$dynamic_range),
         freq_range = c(as.numeric(input$low), as.numeric(input$high)),
         tx = ifelse(nchar(input$tx) > 2, input$tx, as.numeric(input$tx))
@@ -672,8 +674,7 @@ app_model <- function() {
                               validation_split = 1 - input$train_per,
                               verbose = 1)
       
-      metadata <- list(parameters =  rdata_list$parameters,
-                       classes = rdata_list$classes)
+      metadata <- train_metadata(rdata_list)
       save(metadata,
            file = "fitted_model_metadata.RDATA")
       

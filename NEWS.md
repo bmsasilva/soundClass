@@ -23,3 +23,5 @@ now reads the file path correctly
 
 - Added checkbox input for Butterworth filter in app_label()
 
+- Minor updates in the documentation
+
