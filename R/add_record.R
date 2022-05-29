@@ -19,5 +19,4 @@ add_record <- function(path, df) {
   if(!DBI::dbExistsTable(my_db$con, "labels")) stop("Table 'labels' was not
                                                      found in the database")
   DBI::dbWriteTable(my_db$con, "labels", df, append = TRUE, row.names = FALSE)
-  suppressWarnings(DBI::dbDisconnect(my_db$con))
 }

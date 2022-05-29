@@ -49,7 +49,6 @@ create_db <- function(path, db_name = NA, table_name = "labels",
       observations = character()
     )
     dplyr::copy_to(my_db, table, table_name, temporary = FALSE)
-    DBI::dbDisconnect(my_db$con)
   }
   if (!file.exists(db) & type == "id") {
     dplyr::src_sqlite(db, create = TRUE)
@@ -62,6 +61,5 @@ create_db <- function(path, db_name = NA, table_name = "labels",
       fmaxe = numeric()
     )
     dplyr::copy_to(my_db, table, table_name, temporary = FALSE)
-    suppressWarnings(DBI::dbDisconnect(my_db$con))
   }
 }
