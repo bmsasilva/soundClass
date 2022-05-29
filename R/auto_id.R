@@ -56,7 +56,7 @@ auto_id <- function(model_path,
   
   if (!dir.exists(out_dir)) dir.create(out_dir)
   
-  if (class(metadata) == "character") {
+  if (is.character(metadata)) {
     env <- load2env(as.character(metadata))
     metadata <- env[[names(env)[1]]]
     rm(env)
