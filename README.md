@@ -22,7 +22,8 @@ install.packages("soundClass")
 https://doi.org/10.6084/m9.figshare.19550605
 
 ## To install the github development version:
-#install.packages("devtools") /n
+#install.packages("devtools")
+
 devtools::install_github("bmsasilva/soundClass")
 
     
