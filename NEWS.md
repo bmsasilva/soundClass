@@ -25,3 +25,6 @@ now reads the file path correctly
 
 - Minor updates in the documentation
 
+# soundClass 0.0.9.3
+
+- Added function to plot training spectrograms
