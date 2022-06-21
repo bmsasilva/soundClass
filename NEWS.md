@@ -28,3 +28,5 @@ now reads the file path correctly
 # soundClass 0.0.9.3
 
 - Added function to plot training spectrograms
+
+- Added parameter "frequency resolution" to function soundClass()

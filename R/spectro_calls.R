@@ -51,11 +51,12 @@ spectro_calls <- function(files_path, update_progress = NA,
    if(overlap < 0.5 | overlap > 0.75) 
      stop("Overlap must be between 0.5 and 0.75")
   
-  frequency_resolution <- 1
+  #frequency_resolution <- 1 # linha usada para manter a freq resolution fixa em 1
   time_step_size <- (1 - as.numeric(overlap)) * as.numeric(window_length)
   input_shape <- c(
     spec_size / time_step_size,
-    (freq_range[2] - freq_range[1]) * window_length
+   # (freq_range[2] - freq_range[1]) * window_length # a linha em baixo ja inclui freq resolution
+    ((freq_range[2] - freq_range[1]) * frequency_resolution) * window_length
   )
   
   conn <- dplyr::src_sqlite(db_path, create = FALSE)

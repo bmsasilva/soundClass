@@ -1,6 +1,6 @@
 Package: soundClass
 Title: Sound Classification Using Convolutional Neural Networks
-Version: 0.1.0
+Version: 0.0.9.3
 Author: Bruno Silva [aut, cre]
 Maintainer: Bruno Silva <bmsasilva@gmail.com>
 Description: Provides an all-in-one solution for automatic classification of 
@@ -10,7 +10,7 @@ Description: Provides an all-in-one solution for automatic classification of
     situations. Using the package requires a pre-compiled collection of 
     recordings with sound events of interest and it can be employed for: 
     1) Annotation: create a database of annotated recordings, 
-    2) Training: prepare train data from annotated recordings and fit CNN models, 
+    2) Training: prepare training data from annotated recordings and fit CNN models, 
     3) Classification: automate the use of the fitted model for classifying 
     new recordings. By using automatic feature selection and a user-friendly GUI
     for managing data and training/deploying models, this package is intended 
