@@ -65,8 +65,9 @@ spectro_calls <- function(files_path, update_progress = NA,
   audio_files <- unique(db_table$recording)
   
   spec_image <- matrix(NA, ncol = input_shape[1] * input_shape[2])
+  
   label <- c()
-  for (i in seq(audio_files)) {
+    for (i in seq(audio_files)) {
     try({
       sound_peaks <- dplyr::pull(db_table[
         db_table$recording == audio_files[i],
@@ -96,8 +97,9 @@ spectro_calls <- function(files_path, update_progress = NA,
         dynamic_range,
         freq_range
       )
+     spec_image <- rbind(spec_image, calls$spec_calls) 
       
-      spec_image <- rbind(spec_image, calls$spec_calls)
+      
       label <- c(label, pull(db_table[
         db_table$recording == audio_files[i],
         "label_class"
@@ -109,9 +111,9 @@ spectro_calls <- function(files_path, update_progress = NA,
       }
     })
     print(paste0("recording ",i , " of ", length(audio_files)))
-  }
+    }
   spec_image <- spec_image[-1, ]
-  
+
   parameters <- data.frame(
     spec_size = spec_size,
     window_length = window_length,
