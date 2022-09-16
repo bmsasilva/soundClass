@@ -27,7 +27,7 @@
 #' @return  Nothing
 #' @export
 #' @author Bruno Silva
-#' @import dplyr DBI
+#' @import dplyr DBI RSQLite
 
 create_db <- function(path, db_name = NA, table_name = "labels",
                       type = "reference") {
@@ -40,19 +40,18 @@ create_db <- function(path, db_name = NA, table_name = "labels",
   if (file.exists(db)) message("Database already exists")
 
   if (!file.exists(db) & type == "reference") {
-    dplyr::src_sqlite(db, create = TRUE)
-    my_db <- dplyr::src_sqlite(db, create = FALSE)
+    my_db <- DBI::dbConnect(RSQLite::SQLite(), db)
     table <- data.frame(
       recording = character(),
       label_position = numeric(),
       label_class = character(),
       observations = character()
     )
-    dplyr::copy_to(my_db, table, table_name, temporary = FALSE)
+    dplyr::copy_to(my_db, table, table_name, temporary = FALSE) 
+    
   }
   if (!file.exists(db) & type == "id") {
-    dplyr::src_sqlite(db, create = TRUE)
-    my_db <- dplyr::src_sqlite(db, create = FALSE)
+    my_db <- DBI::dbConnect(RSQLite::SQLite(), db)
     table <- data.frame(
       recording = character(),
       label_position = numeric(),
