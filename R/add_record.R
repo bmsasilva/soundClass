@@ -11,12 +11,12 @@
 #' @author Bruno Silva
 #' @keywords internal
 #' @noRd
-#' @import dplyr DBI
+#' @import DBI
 
 add_record <- function(path, df) {
   if(!file.exists(path)) stop("Database doesn't exist. Run create_db() first")
-  my_db <- dplyr::src_sqlite(path, create = FALSE)
-  if(!DBI::dbExistsTable(my_db$con, "labels")) stop("Table 'labels' was not
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), path)
+  if(!DBI::dbExistsTable(my_db, "labels")) stop("Table 'labels' was not
                                                      found in the database")
-  DBI::dbWriteTable(my_db$con, "labels", df, append = TRUE, row.names = FALSE)
+  DBI::dbWriteTable(my_db, "labels", df, append = TRUE, row.names = FALSE)
 }
