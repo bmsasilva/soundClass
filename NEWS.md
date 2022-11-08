@@ -30,3 +30,5 @@ now reads the file path correctly
 - Added function to plot training spectrograms
 
 - Added parameter "frequency resolution" to function soundClass()
+
+- Updated to remove deprecated function dbplyr::src_sqlite() 
