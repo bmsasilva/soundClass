@@ -32,9 +32,12 @@
 #' be indicated or "auto" should be selected. If tx = "auto" the function
 #' assumes that sampling rates < 50kHz corresponds to
 #' tx = 10 and > 50kHz to tx = 1.
+#' @param butt_filter Logical. Indicate if a butterworth filter is applied to the
+#' recordings
 #' @usage auto_id(model_path, update_progress = NA, metadata,
 #' file_path, out_file, out_dir, save_png = TRUE, win_size = 50,
-#' plot2console = FALSE, remove_noise = TRUE, recursive = FALSE, tx = 1)
+#' plot2console = FALSE, remove_noise = TRUE, recursive = FALSE, tx = 1,
+#' butt_filter = FALSE)
 #' @return Nothing.
 #' @details Runs a classification task on the recordings of a specified folder
 #' and saves the results of the analysis.
@@ -52,7 +55,8 @@ auto_id <- function(model_path,
                     plot2console = FALSE,
                     remove_noise = TRUE,
                     recursive = FALSE,
-                    tx = 1) {
+                    tx = 1,
+                    butt_filter = FALSE) {
   
   if (!dir.exists(out_dir)) dir.create(out_dir)
   
@@ -86,9 +90,9 @@ auto_id <- function(model_path,
     try({
       morc <- import_audio(
         path = paste0(file_path, file_name[i]),
-        butt = FALSE,
         low = freq_range[1], high = freq_range[2],
-        tx = tx
+        tx = tx,
+        butt = butt_filter
       )
 
       if (recursive == TRUE) morc$file_name_full_path <- file_name[i]

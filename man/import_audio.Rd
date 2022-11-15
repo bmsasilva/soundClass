@@ -4,7 +4,7 @@
 \alias{import_audio}
 \title{Import a recording}
 \usage{
-import_audio(path, butt = TRUE, low, high, tx = 1)
+import_audio(path, butt = FALSE, low, high, tx = 1)
 }
 \arguments{
 \item{path}{Character. Full path to the recording}

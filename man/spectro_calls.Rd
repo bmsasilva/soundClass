@@ -6,8 +6,8 @@
 \usage{
 spectro_calls(files_path, update_progress = NA,
 db_path, spec_size = NA, window_length = NA,
-frequency_resolution = 1, overlap = NA,
-dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
+frequency_resolution = 1, overlap = NA, dynamic_range = NA,
+freq_range = NA, tx = 1, seed = 1002, butt_filter = FALSE)
 }
 \arguments{
 \item{files_path}{Character. Path for the folder containing sound recordings.}
@@ -46,6 +46,9 @@ assumes that sampling rates < 50kHz corresponds to
 tx = 10 and > 50kHz to tx = 1.}
 
 \item{seed}{Integer. Define a custom seed for randomizing data.}
+
+\item{butt_filter}{Logical. Should a butterworth filter be applied to the
+recording?}
 }
 \value{
 A list with the following components:

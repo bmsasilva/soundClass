@@ -6,7 +6,8 @@
 \usage{
 auto_id(model_path, update_progress = NA, metadata,
 file_path, out_file, out_dir, save_png = TRUE, win_size = 50,
-plot2console = FALSE, remove_noise = TRUE, recursive = FALSE, tx = 1)
+plot2console = FALSE, remove_noise = TRUE, recursive = FALSE, tx = 1,
+butt_filter = FALSE)
 }
 \arguments{
 \item{model_path}{Character. Path to the fitted model.}
@@ -51,6 +52,9 @@ time expanded the numeric value corresponding to the time expansion should
 be indicated or "auto" should be selected. If tx = "auto" the function
 assumes that sampling rates < 50kHz corresponds to
 tx = 10 and > 50kHz to tx = 1.}
+
+\item{butt_filter}{Logical. Indicate if a butterworth filter is applied to the
+recordings}
 }
 \value{
 Nothing.

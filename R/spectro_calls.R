@@ -28,10 +28,12 @@
 #' assumes that sampling rates < 50kHz corresponds to
 #' tx = 10 and > 50kHz to tx = 1.
 #' @param seed Integer. Define a custom seed for randomizing data.
+#' @param butt_filter Logical. Should a butterworth filter be applied to the
+#' recording?
 #' @usage spectro_calls(files_path, update_progress = NA,
 #' db_path, spec_size = NA, window_length = NA,
-#' frequency_resolution = 1, overlap = NA,
-#' dynamic_range = NA, freq_range = NA, tx = 1, seed = 1002)
+#' frequency_resolution = 1, overlap = NA, dynamic_range = NA,
+#'freq_range = NA, tx = 1, seed = 1002, butt_filter = FALSE)
 #' @return A list with the following components:
 #' \itemize{
 #'   \item data_x -- an array with the spectrogram matrices
@@ -46,16 +48,14 @@ spectro_calls <- function(files_path, update_progress = NA,
                           db_path, spec_size = NA, window_length = NA,
                           frequency_resolution = 1, overlap = NA,
                           dynamic_range = NA, freq_range = NA, tx = 1,
-                          seed = 1002) {
+                          seed = 1002, butt_filter = FALSE) {
   
    if(overlap < 0.5 | overlap > 0.75) 
      stop("Overlap must be between 0.5 and 0.75")
   
-  #frequency_resolution <- 1 # linha usada para manter a freq resolution fixa em 1
   time_step_size <- (1 - as.numeric(overlap)) * as.numeric(window_length)
   input_shape <- c(
     spec_size / time_step_size,
-   # (freq_range[2] - freq_range[1]) * window_length # a linha em baixo ja inclui freq resolution
     ((freq_range[2] - freq_range[1]) * frequency_resolution) * window_length
   )
   
@@ -82,10 +82,10 @@ spectro_calls <- function(files_path, update_progress = NA,
 
       morc <- import_audio(
         name,
-        butt = FALSE,
         low = freq_range[1],
         high = freq_range[2],
-        tx = tx)
+        tx = tx,
+        butt = butt_filter)
       
       calls <- peaks2spec(
         morc,

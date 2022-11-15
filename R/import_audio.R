@@ -16,7 +16,7 @@
 #' be indicated or "auto" should be selected. If tx = "auto" the function
 #' assumes that sampling rates < 50kHz corresponds to
 #' tx = 10 and > 50kHz to tx = 1.
-#' @usage import_audio(path, butt = TRUE, low, high, tx = 1)
+#' @usage import_audio(path, butt = FALSE, low, high, tx = 1)
 #' @examples
 #' # Create a sample wav file in a temporary directory
 #' recording <- tuneR::sine(440)
@@ -41,7 +41,7 @@
 #' @author Bruno Silva
 #' @export
 
-import_audio <- function(path, butt = TRUE, low, high, tx = 1) {
+import_audio <- function(path, butt = FALSE, low, high, tx = 1) {
   if (!is.logical(butt)) stop("Parameter butt must be TRUE or FALSE",
                               call. = FALSE)
   if (!is.character(path)) stop("Parameter path must be character",
