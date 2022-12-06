@@ -74,7 +74,7 @@ spectro_calls <- function(files_path, update_progress = NA,
         "label_position"
       ], 1)
       
-      if (grepl(".wav", audio_files[i])) {
+      if (grepl(".wav|.WAV", audio_files[i])) {
         name <- paste0(files_path, audio_files[i])
       } else {
         name <- paste0(files_path, audio_files[i], ".wav")
