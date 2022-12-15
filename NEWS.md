@@ -29,6 +29,13 @@ now reads the file path correctly
 
 - Added function to plot training spectrograms
 
-- Added parameter "frequency resolution" to function soundClass()
+- Added parameter "frequency resolution" to function spectro_calls()
+
+- Added functionality to apply a butterworth filter prior to recording 
+processing. Respective parameter added to functions spectro_calls() and
+auto_id()
 
 - Updated to remove deprecated function dbplyr::src_sqlite() 
+
+- The "Run model" GUI (in app_model()) now accepts butterworth filter and
+custom windows size for spliting the recording into chuncks

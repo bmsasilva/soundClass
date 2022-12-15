@@ -397,17 +397,29 @@ app_model <- function() {
                                                  ),
                                                )
                                              ),
-                                             htmltools::br(),
+                                         #    htmltools::br(),
+                                             shiny::numericInput(
+                                               inputId = "win_chunck",
+                                               label = "Window size (ms)",
+                                               value = "50"),
+                                           
+                                            #   htmltools::br(),
+                                             
                                              shiny::textInput(inputId = "out_file",
                                                               label = "Name of output file",
                                                               value = "id_results"),
-                                             htmltools::br(),
+                                            # htmltools::br(),
                                              
-                                             shiny::radioButtons("rem_noise",
-                                                                 "Irrelevant class?",
+                                             shiny::radioButtons("bt_filt",
+                                                                 "Butterworth",
                                                                  c("Yes" = TRUE,
                                                                    "No" = FALSE)),
-                                             htmltools::br(),
+                                             
+                                             shiny::radioButtons("rem_noise",
+                                                                 "Irrelevant class",
+                                                                 c("Yes" = TRUE,
+                                                                   "No" = FALSE)),
+                                            # htmltools::br(),
                                              
                                              shiny::radioButtons("lab_plots",
                                                                  "Export labeled plots",
@@ -778,11 +790,12 @@ app_model <- function() {
               out_file = input$out_file,
               out_dir = paste0(fitted_files_path(), "/", "output/"),
               save_png = as.logical(input$lab_plots),
-              win_size = fitted_metadata()$parameters$spec_size * 2,
+              win_size = as.numeric(input$win_chunck),
               remove_noise = as.logical(input$rem_noise),
               plot2console = FALSE,
               recursive = FALSE,
-              tx = ifelse(nchar(input$tx2) > 2, input$tx2, as.numeric(input$tx2)))
+              tx = ifelse(nchar(input$tx2) > 2, input$tx2, as.numeric(input$tx2)),
+              butt_filter = as.logical(input$bt_filt))
     })
   }
   shiny::shinyApp(ui = ui, server = server)
